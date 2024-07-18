@@ -1,0 +1,46 @@
+{
+  "name": "aosdtoaosdconverter",
+  "version": "1.0.0",
+  "description": "aosd converter",
+  "main": "main.ts",
+  "scripts": {
+    "convertup": "cross-env RUN_MODE=production ts-node mainup.ts",
+    "convertdown": "cross-env RUN_MODE=production ts-node maindown.ts",
+    "test": "cross-env RUN_MODE=test INPUT_JSON_PATH=./tests/data/input/ OUTPUT_JSON_PATH=./tests/data/output/ jest"
+},
+"repository": {
+    "type": "git",
+    "url": "git+https://gitlab.com/digitalwerk/checkoss/aosdtoaosdconverter.git"
+  },
+  "keywords": [
+    "aosd2.1",
+    "aosd2.0",
+    "converter",
+    "json",
+    "schema"
+  ],
+  "dependencies": {
+    "ajv": "^8.16.0",
+    "ajv-errors": "^3.0.0",
+    "cross-env": "^7.0.3",
+    "dotenv": "^16.4.5"
+},
+"devDependencies": {
+    "@babel/core": "^7.24.7",
+    "@babel/preset-env": "^7.24.7",
+    "@babel/preset-typescript": "^7.24.7",
+    "@jest/globals": "^29.7.0",
+    "@types/node": "^20.14.9",
+    "babel-jest": "^29.7.0",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.1.5",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.5.2"
+},
+"author": "Digitalwerk GmbH",
+"license": "UNLICENSED",
+  "bugs": {
+    "url": "https://gitlab.com/digitalwerk/checkoss/aosdtoaosdconverter/issues"
+  },
+  "homepage": "https://gitlab.com/digitalwerk/checkoss/aosdtoaosdconverter#readme"
+}

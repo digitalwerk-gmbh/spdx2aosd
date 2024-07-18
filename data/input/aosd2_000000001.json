@@ -1,0 +1,1637 @@
+{
+	"$schema": "./aosd.schema.json",
+	"directDependencies": [
+		"pkg:npm/cross-env",
+		"pkg:npm/hash.js",
+		"pkg:npm/jsonschema",
+		"pkg:npm/JSONStream"
+	],
+	"dependencies": [
+		{
+			"id": "pkg:npm/cross-env",
+			"name": "cross-env",
+			"version": "7.0.3",
+			"versionRange": "7.0.3",
+			"scmUrl": "https://registry.npmjs.org/cross-env/-/cross-env-7.0.3.tgz",
+			"licenses": [
+				{
+					"name": "MIT License",
+					"spdxId": "MIT",
+					"text": "Permission is hereby granted, free of charge, to any person obtaining a copy\nof this software and associated documentation files (the \"Software\"), to deal\nin the Software without restriction, including without limitation the rights\nto use, copy, modify, merge, publish, distribute, sublicense, and/or sell\ncopies of the Software, and to permit persons to whom the Software is\nfurnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all\ncopies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\nFITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\nAUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\nLIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\nOUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\nSOFTWARE.",
+					"copyrights": {
+						"holders": [
+							"Kent C. Dodds"
+						],
+						"notice": "Copyright (c) 2017 Kent C. Dodds"
+					},
+					"origin": "packagemanagement"
+				}
+			],
+			"parts": [
+				{
+					"name": "default",
+					"description": "File - path:node_modules/cross-env/LICENSE score: 100",
+					"providers": [
+						{
+							"additionalLicenses": [
+								{
+									"name": "MIT License",
+									"spdxId": "MIT",
+									"text": "The MIT License (MIT)",
+									"url": "http://opensource.org/licenses/mit-license.php",
+									"copyrights": {
+										"holders": [
+											"Kent C. Dodds"
+										],
+										"notice": "Copyright (c) 2017 Kent C. Dodds"
+									},
+									"origin": "packagemanagement"
+								}
+							]
+						}
+					],
+					"modified": false,
+					"usage": "dynamic_linking",
+					"external": true
+				},
+				{
+					"name": "node_modules/cross-env/LICENSE_1",
+					"description": "File - path:node_modules/cross-env/LICENSE score: 100",
+					"providers": [
+						{
+							"additionalLicenses": [
+								{
+									"name": "MIT License",
+									"spdxId": "MIT",
+									"text": "Permission is hereby granted, free of charge, to any person obtaining a copy\nof this software and associated documentation files (the \"Software\"), to deal\nin the Software without restriction, including without limitation the rights\nto use, copy, modify, merge, publish, distribute, sublicense, and/or sell\ncopies of the Software, and to permit persons to whom the Software is\nfurnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all\ncopies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\nFITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\nAUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\nLIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\nOUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\nSOFTWARE.",
+									"url": "http://opensource.org/licenses/mit-license.php",
+									"copyrights": {
+										"holders": [
+											"Kent C. Dodds"
+										],
+										"notice": "Copyright (c) 2017 Kent C. Dodds"
+									},
+									"origin": "packagemanagement"
+								}
+							]
+						}
+					],
+					"modified": false,
+					"usage": "dynamic_linking",
+					"external": true
+				},
+				{
+					"name": "node_modules/cross-env/README.md_0",
+					"description": "File - path:node_modules/cross-env/README.md score: 100",
+					"providers": [
+						{
+							"additionalLicenses": [
+								{
+									"name": "MIT License",
+									"spdxId": "MIT",
+									"text": "MIT License][",
+									"url": "http://opensource.org/licenses/mit-license.php",
+									"copyrights": {
+										"holders": [],
+										"notice": ""
+									},
+									"origin": "packagemanagement"
+								}
+							]
+						}
+					],
+					"modified": false,
+					"usage": "dynamic_linking",
+					"external": true
+				},
+				{
+					"name": "node_modules/cross-env/README.md_1",
+					"description": "File - path:node_modules/cross-env/README.md score: 100",
+					"providers": [
+						{
+							"additionalLicenses": [
+								{
+									"name": "MIT License",
+									"spdxId": "MIT",
+									"text": "LICENSE\n\nMIT",
+									"url": "http://opensource.org/licenses/mit-license.php",
+									"copyrights": {
+										"holders": [],
+										"notice": ""
+									},
+									"origin": "packagemanagement"
+								}
+							]
+						}
+					],
+					"modified": false,
+					"usage": "dynamic_linking",
+					"external": true
+				}
+			],
+			"deployPackage": {
+				"name": "default",
+				"downloadUrl": "",
+				"checksums": {
+					"sha512": "fbf1ca77a1207100891a1d8f4a366e522b50050ca72a8af8c2b15b460e03b40812d5a58efa0539db1a47eccf52706817498980552f5b209f04cee686c34a0d03"
+				}
+			},
+			"externalDependencies": [
+				"pkg:npm/cross-spawn"
+			]
+		},
+		{
+			"id": "pkg:npm/cross-spawn",
+			"name": "cross-spawn",
+			"version": "7.0.3",
+			"versionRange": "7.0.3",
+			"scmUrl": "https://registry.npmjs.org/cross-spawn/-/cross-spawn-7.0.3.tgz",
+			"licenses": [
+				{
+					"name": "MIT License",
+					"spdxId": "MIT",
+					"text": "Permission is hereby granted, free of charge, to any person obtaining a copy\nof this software and associated documentation files (the \"Software\"), to deal\nin the Software without restriction, including without limitation the rights\nto use, copy, modify, merge, publish, distribute, sublicense, and/or sell\ncopies of the Software, and to permit persons to whom the Software is\nfurnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in\nall copies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\nFITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\nAUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\nLIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\nOUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN\nTHE SOFTWARE.",
+					"copyrights": {
+						"holders": [
+							"Made With MOXY Lda"
+						],
+						"notice": "Copyright (c) 2018 Made With MOXY Lda"
+					},
+					"origin": "packagemanagement"
+				}
+			],
+			"parts": [
+				{
+					"name": "default",
+					"description": "File - path:node_modules/cross-spawn/LICENSE score: 100",
+					"providers": [
+						{
+							"additionalLicenses": [
+								{
+									"name": "MIT License",
+									"spdxId": "MIT",
+									"text": "The MIT License (MIT)",
+									"url": "http://opensource.org/licenses/mit-license.php",
+									"copyrights": {
+										"holders": [
+											"Made With MOXY Lda"
+										],
+										"notice": "Copyright (c) 2018 Made With MOXY Lda"
+									},
+									"origin": "packagemanagement"
+								}
+							]
+						}
+					],
+					"modified": false,
+					"usage": "dynamic_linking",
+					"external": true
+				},
+				{
+					"name": "node_modules/cross-spawn/LICENSE_1",
+					"description": "File - path:node_modules/cross-spawn/LICENSE score: 100",
+					"providers": [
+						{
+							"additionalLicenses": [
+								{
+									"name": "MIT License",
+									"spdxId": "MIT",
+									"text": "Permission is hereby granted, free of charge, to any person obtaining a copy\nof this software and associated documentation files (the \"Software\"), to deal\nin the Software without restriction, including without limitation the rights\nto use, copy, modify, merge, publish, distribute, sublicense, and/or sell\ncopies of the Software, and to permit persons to whom the Software is\nfurnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in\nall copies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\nFITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\nAUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\nLIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\nOUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN\nTHE SOFTWARE.",
+									"url": "http://opensource.org/licenses/mit-license.php",
+									"copyrights": {
+										"holders": [
+											"Made With MOXY Lda"
+										],
+										"notice": "Copyright (c) 2018 Made With MOXY Lda"
+									},
+									"origin": "packagemanagement"
+								}
+							]
+						}
+					],
+					"modified": false,
+					"usage": "dynamic_linking",
+					"external": true
+				},
+				{
+					"name": "node_modules/cross-spawn/README.md_0",
+					"description": "File - path:node_modules/cross-spawn/README.md score: 100",
+					"providers": [
+						{
+							"additionalLicenses": [
+								{
+									"name": "MIT License",
+									"spdxId": "MIT",
+									"text": "under the [MIT License](https://www.opensource.org/licenses/mit-license.php).",
+									"url": "http://opensource.org/licenses/mit-license.php",
+									"copyrights": {
+										"holders": [],
+										"notice": ""
+									},
+									"origin": "packagemanagement"
+								}
+							]
+						}
+					],
+					"modified": false,
+					"usage": "dynamic_linking",
+					"external": true
+				}
+			],
+			"deployPackage": {
+				"name": "default",
+				"downloadUrl": "",
+				"checksums": {
+					"sha512": "8910cf24a50f544343edd1cf3bcae46ce9cfa720f281c0c5b568e9796342832f163f6ad77315cbf13b2445e425e8eac1d86efe509ada82cd6ad7916e75cec6eb"
+				}
+			},
+			"externalDependencies": [
+				"pkg:npm/path-key",
+				"pkg:npm/shebang-command",
+				"pkg:npm/which"
+			]
+		},
+		{
+			"id": "pkg:npm/hash.js",
+			"name": "hash.js",
+			"version": "1.1.7",
+			"versionRange": "1.1.7",
+			"scmUrl": "https://registry.npmjs.org/hash.js/-/hash.js-1.1.7.tgz",
+			"licenses": [
+				{
+					"name": "MIT License",
+					"spdxId": "MIT",
+					"text": "Permission is hereby granted, free of charge, to any person obtaining a\ncopy of this software and associated documentation files (the\n\"Software\"), to deal in the Software without restriction, including\nwithout limitation the rights to use, copy, modify, merge, publish,\ndistribute, sublicense, and/or sell copies of the Software, and to permit\npersons to whom the Software is furnished to do so, subject to the\nfollowing conditions:\n\nThe above copyright notice and this permission notice shall be included\nin all copies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS\nOR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF\nMERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN\nNO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,\nDAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR\nOTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE\nUSE OR OTHER DEALINGS IN THE SOFTWARE.",
+					"copyrights": {
+						"holders": [
+							"Fedor Indutny"
+						],
+						"notice": "Copyright Fedor Indutny, 2014"
+					},
+					"origin": "packagemanagement"
+				}
+			],
+			"parts": [
+				{
+					"name": "default",
+					"description": "File - path:node_modules/hash.js/README.md score: 53.33",
+					"providers": [
+						{
+							"additionalLicenses": [
+								{
+									"name": "SIL Open Font License 1.1",
+									"spdxId": "OFL-1.1",
+									"text": "#### LICENSE\n\nThis software is licensed under the MIT License.",
+									"url": "http://scripts.sil.org/cms/scripts/page.php?item_id=OFL_web",
+									"copyrights": {
+										"holders": [
+											"Fedor Indutny"
+										],
+										"notice": "Copyright Fedor Indutny, 2014"
+									},
+									"origin": "packagemanagement"
+								}
+							]
+						}
+					],
+					"modified": false,
+					"usage": "dynamic_linking",
+					"external": true
+				},
+				{
+					"name": "node_modules/hash.js/README.md_1",
+					"description": "File - path:node_modules/hash.js/README.md score: 100",
+					"providers": [
+						{
+							"additionalLicenses": [
+								{
+									"name": "MIT License",
+									"spdxId": "MIT",
+									"text": "Permission is hereby granted, free of charge, to any person obtaining a\ncopy of this software and associated documentation files (the\n\"Software\"), to deal in the Software without restriction, including\nwithout limitation the rights to use, copy, modify, merge, publish,\ndistribute, sublicense, and/or sell copies of the Software, and to permit\npersons to whom the Software is furnished to do so, subject to the\nfollowing conditions:\n\nThe above copyright notice and this permission notice shall be included\nin all copies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS\nOR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF\nMERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN\nNO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,\nDAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR\nOTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE\nUSE OR OTHER DEALINGS IN THE SOFTWARE.",
+									"url": "http://opensource.org/licenses/mit-license.php",
+									"copyrights": {
+										"holders": [
+											"Fedor Indutny"
+										],
+										"notice": "Copyright Fedor Indutny, 2014"
+									},
+									"origin": "packagemanagement"
+								}
+							]
+						}
+					],
+					"modified": false,
+					"usage": "dynamic_linking",
+					"external": true
+				},
+				{
+					"name": "node_modules/hash.js/lib/hash/utils.js_0",
+					"description": "File - path:node_modules/hash.js/lib/hash/utils.js score: 50",
+					"providers": [
+						{
+							"additionalLicenses": [
+								{
+									"name": "Apache License 2.0",
+									"spdxId": "Apache-2.0",
+									"text": "      // Apache License 2.0",
+									"url": "http://www.apache.org/licenses/LICENSE-2.0",
+									"copyrights": {
+										"holders": [],
+										"notice": ""
+									},
+									"origin": "packagemanagement"
+								}
+							]
+						}
+					],
+					"modified": false,
+					"usage": "dynamic_linking",
+					"external": true
+				}
+			],
+			"deployPackage": {
+				"name": "default",
+				"downloadUrl": "",
+				"checksums": {
+					"sha512": "b5a39ab241ade33e1238034db1e3af8980ef8c42629c8911826a7b2db28fd984d3995c56065f3bb3fbb32bdafee3805c9414a9d97ecad61a9e35fcfd25b05e5c"
+				}
+			},
+			"externalDependencies": [
+				"pkg:npm/inherits",
+				"pkg:npm/minimalistic-assert"
+			]
+		},
+		{
+			"id": "pkg:npm/inherits",
+			"name": "inherits",
+			"version": "2.0.4",
+			"versionRange": "2.0.4",
+			"scmUrl": "https://registry.npmjs.org/inherits/-/inherits-2.0.4.tgz",
+			"licenses": [
+				{
+					"name": "ISC License",
+					"spdxId": "ISC",
+					"text": "Permission to use, copy, modify, and/or distribute this software for any\npurpose with or without fee is hereby granted, provided that the above\ncopyright notice and this permission notice appear in all copies.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH\nREGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND\nFITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,\nINDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM\nLOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR\nOTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR\nPERFORMANCE OF THIS SOFTWARE.",
+					"copyrights": {
+						"holders": [
+							"Isaac Z. Schlueter"
+						],
+						"notice": "Copyright (c) Isaac Z. Schlueter"
+					},
+					"origin": "packagemanagement"
+				}
+			],
+			"parts": [
+				{
+					"name": "default",
+					"description": "File - path:node_modules/inherits/LICENSE score: 99",
+					"providers": [
+						{
+							"additionalLicenses": [
+								{
+									"name": "ISC License",
+									"spdxId": "ISC",
+									"text": "The ISC License",
+									"url": "http://fedoraproject.org/wiki/Licensing:MIT#Old_Style_with_legal_disclaimer_2",
+									"copyrights": {
+										"holders": [
+											"Isaac Z. Schlueter"
+										],
+										"notice": "Copyright (c) Isaac Z. Schlueter"
+									},
+									"origin": "packagemanagement"
+								}
+							]
+						}
+					],
+					"modified": false,
+					"usage": "dynamic_linking",
+					"external": true
+				},
+				{
+					"name": "node_modules/inherits/LICENSE_1",
+					"description": "File - path:node_modules/inherits/LICENSE score: 100",
+					"providers": [
+						{
+							"additionalLicenses": [
+								{
+									"name": "ISC License",
+									"spdxId": "ISC",
+									"text": "Permission to use, copy, modify, and/or distribute this software for any\npurpose with or without fee is hereby granted, provided that the above\ncopyright notice and this permission notice appear in all copies.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH\nREGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND\nFITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,\nINDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM\nLOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR\nOTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR\nPERFORMANCE OF THIS SOFTWARE.",
+									"url": "http://fedoraproject.org/wiki/Licensing:MIT#Old_Style_with_legal_disclaimer_2",
+									"copyrights": {
+										"holders": [
+											"Isaac Z. Schlueter"
+										],
+										"notice": "Copyright (c) Isaac Z. Schlueter"
+									},
+									"origin": "packagemanagement"
+								}
+							]
+						}
+					],
+					"modified": false,
+					"usage": "dynamic_linking",
+					"external": true
+				}
+			],
+			"deployPackage": {
+				"name": "default",
+				"downloadUrl": "",
+				"checksums": {
+					"sha512": "93fbc6697e3f6256b75b3c8c0af4d039761e207bea38ab67a8176ecd31e9ce9419cc0b2428c859d8af849c189233dcc64a820578ca572b16b8758799210a9ec1"
+				}
+			},
+			"externalDependencies": []
+		},
+		{
+			"id": "pkg:npm/isexe",
+			"name": "isexe",
+			"version": "2.0.0",
+			"versionRange": "2.0.0",
+			"scmUrl": "https://registry.npmjs.org/isexe/-/isexe-2.0.0.tgz",
+			"licenses": [
+				{
+					"name": "ISC License",
+					"spdxId": "ISC",
+					"text": "Permission to use, copy, modify, and/or distribute this software for any\npurpose with or without fee is hereby granted, provided that the above\ncopyright notice and this permission notice appear in all copies.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\" AND THE AUTHOR DISCLAIMS ALL WARRANTIES\nWITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF\nMERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR\nANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES\nWHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN\nACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR\nIN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.",
+					"copyrights": {
+						"holders": [
+							"Isaac Z. Schlueter and Contributors"
+						],
+						"notice": "Copyright (c) Isaac Z. Schlueter and Contributors"
+					},
+					"origin": "packagemanagement"
+				}
+			],
+			"parts": [
+				{
+					"name": "default",
+					"description": "File - path:node_modules/isexe/LICENSE score: 99",
+					"providers": [
+						{
+							"additionalLicenses": [
+								{
+									"name": "ISC License",
+									"spdxId": "ISC",
+									"text": "The ISC License",
+									"url": "http://fedoraproject.org/wiki/Licensing:MIT#Old_Style_with_legal_disclaimer_2",
+									"copyrights": {
+										"holders": [
+											"Isaac Z. Schlueter and Contributors"
+										],
+										"notice": "Copyright (c) Isaac Z. Schlueter and Contributors"
+									},
+									"origin": "packagemanagement"
+								}
+							]
+						}
+					],
+					"modified": false,
+					"usage": "dynamic_linking",
+					"external": true
+				},
+				{
+					"name": "node_modules/isexe/LICENSE_1",
+					"description": "File - path:node_modules/isexe/LICENSE score: 100",
+					"providers": [
+						{
+							"additionalLicenses": [
+								{
+									"name": "ISC License",
+									"spdxId": "ISC",
+									"text": "Permission to use, copy, modify, and/or distribute this software for any\npurpose with or without fee is hereby granted, provided that the above\ncopyright notice and this permission notice appear in all copies.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\" AND THE AUTHOR DISCLAIMS ALL WARRANTIES\nWITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF\nMERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR\nANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES\nWHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN\nACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR\nIN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.",
+									"url": "http://fedoraproject.org/wiki/Licensing:MIT#Old_Style_with_legal_disclaimer_2",
+									"copyrights": {
+										"holders": [
+											"Isaac Z. Schlueter and Contributors"
+										],
+										"notice": "Copyright (c) Isaac Z. Schlueter and Contributors"
+									},
+									"origin": "packagemanagement"
+								}
+							]
+						}
+					],
+					"modified": false,
+					"usage": "dynamic_linking",
+					"external": true
+				}
+			],
+			"deployPackage": {
+				"name": "default",
+				"downloadUrl": "",
+				"checksums": {
+					"sha512": "447c4c2e9f659ca1c61d19e0f5016144231b600715a67ebdb2648672addfdfac638155564e18f8aaa2db4cb96aed2b23f01f9f210d44b8210623694ab3241e23"
+				}
+			},
+			"externalDependencies": []
+		},
+		{
+			"id": "pkg:npm/jsonparse",
+			"name": "jsonparse",
+			"version": "1.3.1",
+			"versionRange": "1.3.1",
+			"scmUrl": "https://registry.npmjs.org/jsonparse/-/jsonparse-1.3.1.tgz",
+			"licenses": [
+				{
+					"name": "MIT License",
+					"spdxId": "MIT",
+					"text": "Permission is hereby granted, free of charge, \nto any person obtaining a copy of this software and \nassociated documentation files (the \"Software\"), to \ndeal in the Software without restriction, including \nwithout limitation the rights to use, copy, modify, \nmerge, publish, distribute, sublicense, and/or sell \ncopies of the Software, and to permit persons to whom \nthe Software is furnished to do so, \nsubject to the following conditions:\n\nThe above copyright notice and this permission notice \nshall be included in all copies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, \nEXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES \nOF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. \nIN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR \nANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, \nTORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE \nSOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.",
+					"copyrights": {
+						"holders": [
+							"Tim Caswell"
+						],
+						"notice": "Copyright (c) 2012 Tim Caswell"
+					},
+					"origin": "packagemanagement"
+				}
+			],
+			"parts": [
+				{
+					"name": "default",
+					"description": "File - path:node_modules/jsonparse/LICENSE score: 100",
+					"providers": [
+						{
+							"additionalLicenses": [
+								{
+									"name": "MIT License",
+									"spdxId": "MIT",
+									"text": "The MIT License",
+									"url": "http://opensource.org/licenses/mit-license.php",
+									"copyrights": {
+										"holders": [
+											"Tim Caswell"
+										],
+										"notice": "Copyright (c) 2012 Tim Caswell"
+									},
+									"origin": "packagemanagement"
+								}
+							]
+						}
+					],
+					"modified": false,
+					"usage": "dynamic_linking",
+					"external": true
+				},
+				{
+					"name": "node_modules/jsonparse/LICENSE_1",
+					"description": "File - path:node_modules/jsonparse/LICENSE score: 100",
+					"providers": [
+						{
+							"additionalLicenses": [
+								{
+									"name": "MIT License",
+									"spdxId": "MIT",
+									"text": "Permission is hereby granted, free of charge, \nto any person obtaining a copy of this software and \nassociated documentation files (the \"Software\"), to \ndeal in the Software without restriction, including \nwithout limitation the rights to use, copy, modify, \nmerge, publish, distribute, sublicense, and/or sell \ncopies of the Software, and to permit persons to whom \nthe Software is furnished to do so, \nsubject to the following conditions:\n\nThe above copyright notice and this permission notice \nshall be included in all copies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, \nEXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES \nOF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. \nIN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR \nANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, \nTORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE \nSOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.",
+									"url": "http://opensource.org/licenses/mit-license.php",
+									"copyrights": {
+										"holders": [
+											"Tim Caswell"
+										],
+										"notice": "Copyright (c) 2012 Tim Caswell"
+									},
+									"origin": "packagemanagement"
+								}
+							]
+						}
+					],
+					"modified": false,
+					"usage": "dynamic_linking",
+					"external": true
+				},
+				{
+					"name": "node_modules/jsonparse/README.markdown_0",
+					"description": "File - path:node_modules/jsonparse/README.markdown score: 100",
+					"providers": [
+						{
+							"additionalLicenses": [
+								{
+									"name": "MIT License",
+									"spdxId": "MIT",
+									"text": "The MIT License (MIT)",
+									"url": "http://opensource.org/licenses/mit-license.php",
+									"copyrights": {
+										"holders": [
+											"Tim Caswell"
+										],
+										"notice": "Copyright (c) 2011-2012 Tim Caswell"
+									},
+									"origin": "packagemanagement"
+								}
+							]
+						}
+					],
+					"modified": false,
+					"usage": "dynamic_linking",
+					"external": true
+				},
+				{
+					"name": "node_modules/jsonparse/README.markdown_1",
+					"description": "File - path:node_modules/jsonparse/README.markdown score: 100",
+					"providers": [
+						{
+							"additionalLicenses": [
+								{
+									"name": "MIT License",
+									"spdxId": "MIT",
+									"text": "Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the \"Software\"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so,\n subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.",
+									"url": "http://opensource.org/licenses/mit-license.php",
+									"copyrights": {
+										"holders": [
+											"Tim Caswell"
+										],
+										"notice": "Copyright (c) 2011-2012 Tim Caswell"
+									},
+									"origin": "packagemanagement"
+								}
+							]
+						}
+					],
+					"modified": false,
+					"usage": "dynamic_linking",
+					"external": true
+				}
+			],
+			"deployPackage": {
+				"name": "default",
+				"downloadUrl": "",
+				"checksums": {
+					"sha512": "3ce417be974bebdf8296e62c8a5949ed25212afcad6235bdbc6fc62a99dffb13fc51681810cfd168ccc71e87db00b0e229b6cfd56f141189a01a5dfd5a43d9b2"
+				}
+			},
+			"externalDependencies": []
+		},
+		{
+			"id": "pkg:npm/jsonschema",
+			"name": "jsonschema",
+			"version": "1.4.1",
+			"versionRange": "1.4.1",
+			"scmUrl": "https://registry.npmjs.org/jsonschema/-/jsonschema-1.4.1.tgz",
+			"licenses": [
+				{
+					"name": "MIT License",
+					"spdxId": "MIT",
+					"text": "Permission is hereby granted, free of charge, to any person obtaining a copy of\nthis software and associated documentation files (the \"Software\"), to deal in\nthe Software without restriction, including without limitation the rights to\nuse, copy, modify, merge, publish, distribute, sublicense, and/or sell copies\nof the Software, and to permit persons to whom the Software is furnished to do\nso, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all\ncopies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\nFITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\nAUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\nLIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\nOUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\nSOFTWARE.",
+					"copyrights": {
+						"holders": [
+							"Tom de Grunt"
+						],
+						"notice": "Copyright (c) 2012-2015 Tom de Grunt <tom@degrunt.nl>"
+					},
+					"origin": "packagemanagement"
+				}
+			],
+			"parts": [
+				{
+					"name": "default",
+					"description": "File - path:node_modules/jsonschema/LICENSE score: 100",
+					"providers": [
+						{
+							"additionalLicenses": [
+								{
+									"name": "MIT License",
+									"spdxId": "MIT",
+									"text": "jsonschema is licensed under MIT license.",
+									"url": "http://opensource.org/licenses/mit-license.php",
+									"copyrights": {
+										"holders": [
+											"Tom de Grunt"
+										],
+										"notice": "Copyright (c) 2012-2015 Tom de Grunt <tom@degrunt.nl>"
+									},
+									"origin": "packagemanagement"
+								}
+							]
+						}
+					],
+					"modified": false,
+					"usage": "dynamic_linking",
+					"external": true
+				},
+				{
+					"name": "node_modules/jsonschema/LICENSE_1",
+					"description": "File - path:node_modules/jsonschema/LICENSE score: 100",
+					"providers": [
+						{
+							"additionalLicenses": [
+								{
+									"name": "MIT License",
+									"spdxId": "MIT",
+									"text": "Permission is hereby granted, free of charge, to any person obtaining a copy of\nthis software and associated documentation files (the \"Software\"), to deal in\nthe Software without restriction, including without limitation the rights to\nuse, copy, modify, merge, publish, distribute, sublicense, and/or sell copies\nof the Software, and to permit persons to whom the Software is furnished to do\nso, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all\ncopies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\nFITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\nAUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\nLIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\nOUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\nSOFTWARE.",
+									"url": "http://opensource.org/licenses/mit-license.php",
+									"copyrights": {
+										"holders": [
+											"Tom de Grunt"
+										],
+										"notice": "Copyright (c) 2012-2015 Tom de Grunt <tom@degrunt.nl>"
+									},
+									"origin": "packagemanagement"
+								}
+							]
+						}
+					],
+					"modified": false,
+					"usage": "dynamic_linking",
+					"external": true
+				},
+				{
+					"name": "node_modules/jsonschema/README.md_0",
+					"description": "File - path:node_modules/jsonschema/README.md score: 100",
+					"providers": [
+						{
+							"additionalLicenses": [
+								{
+									"name": "MIT License",
+									"spdxId": "MIT",
+									"text": "    jsonschema is licensed under MIT license.",
+									"url": "http://opensource.org/licenses/mit-license.php",
+									"copyrights": {
+										"holders": [
+											"Tom de Grunt"
+										],
+										"notice": "Copyright (c) 2012-2019 Tom de Grunt <tom@degrunt.nl>"
+									},
+									"origin": "packagemanagement"
+								}
+							]
+						}
+					],
+					"modified": false,
+					"usage": "dynamic_linking",
+					"external": true
+				},
+				{
+					"name": "node_modules/jsonschema/README.md_1",
+					"description": "File - path:node_modules/jsonschema/README.md score: 100",
+					"providers": [
+						{
+							"additionalLicenses": [
+								{
+									"name": "MIT License",
+									"spdxId": "MIT",
+									"text": "    Permission is hereby granted, free of charge, to any person obtaining a copy of\n    this software and associated documentation files (the \"Software\"), to deal in\n    the Software without restriction, including without limitation the rights to\n    use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies\n    of the Software, and to permit persons to whom the Software is furnished to do\n    so, subject to the following conditions:\n\n    The above copyright notice and this permission notice shall be included in all\n    copies or substantial portions of the Software.\n\n    THE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\n    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\n    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\n    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\n    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\n    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\n    SOFTWARE.",
+									"url": "http://opensource.org/licenses/mit-license.php",
+									"copyrights": {
+										"holders": [
+											"Tom de Grunt"
+										],
+										"notice": "Copyright (c) 2012-2019 Tom de Grunt <tom@degrunt.nl>"
+									},
+									"origin": "packagemanagement"
+								}
+							]
+						}
+					],
+					"modified": false,
+					"usage": "dynamic_linking",
+					"external": true
+				}
+			],
+			"deployPackage": {
+				"name": "default",
+				"downloadUrl": "",
+				"checksums": {
+					"sha512": "4ba7004c83d5bf5cf4225c5d37ecd493910f8e418276784de30552065be850ed6d38b268a2d6e8f42aae34999b221e328a458789479d85162b34f9f56aba4499"
+				}
+			},
+			"externalDependencies": []
+		},
+		{
+			"id": "pkg:npm/JSONStream",
+			"name": "JSONStream",
+			"version": "1.3.5",
+			"versionRange": "1.3.5",
+			"scmUrl": "https://registry.npmjs.org/JSONStream/-/JSONStream-1.3.5.tgz",
+			"licenses": [
+				{
+					"name": "MIT License",
+					"spdxId": "MIT",
+					"text": "Permission is hereby granted, free of charge, \nto any person obtaining a copy of this software and \nassociated documentation files (the \"Software\"), to \ndeal in the Software without restriction, including \nwithout limitation the rights to use, copy, modify, \nmerge, publish, distribute, sublicense, and/or sell \ncopies of the Software, and to permit persons to whom \nthe Software is furnished to do so, \nsubject to the following conditions:\n\nThe above copyright notice and this permission notice \nshall be included in all copies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, \nEXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES \nOF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. \nIN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR \nANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, \nTORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE \nSOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.",
+					"copyrights": {
+						"holders": [
+							"Dominic Tarr"
+						],
+						"notice": "Copyright (c) 2011 Dominic Tarr"
+					},
+					"origin": "packagemanagement"
+				}
+			],
+			"parts": [
+				{
+					"name": "default",
+					"description": "File - path:node_modules/JSONStream/LICENSE.APACHE2 score: 100",
+					"providers": [
+						{
+							"additionalLicenses": [
+								{
+									"name": "Apache License 2.0",
+									"spdxId": "Apache-2.0",
+									"text": "Apache License, Version 2.0",
+									"url": "http://www.apache.org/licenses/LICENSE-2.0",
+									"copyrights": {
+										"holders": [
+											"Dominic Tarr"
+										],
+										"notice": "Copyright (c) 2011 Dominic Tarr"
+									},
+									"origin": "packagemanagement"
+								}
+							]
+						}
+					],
+					"modified": false,
+					"usage": "dynamic_linking",
+					"external": true
+				},
+				{
+					"name": "node_modules/JSONStream/LICENSE.APACHE2_1",
+					"description": "File - path:node_modules/JSONStream/LICENSE.APACHE2 score: 100",
+					"providers": [
+						{
+							"additionalLicenses": [
+								{
+									"name": "Apache License 2.0",
+									"spdxId": "Apache-2.0",
+									"text": "Licensed under the Apache License, Version 2.0 (the \"License\");\nyou may not use this file except in compliance with the License.\nYou may obtain a copy of the License at\n\n    http://www.apache.org/licenses/LICENSE-2.0\n\nUnless required by applicable law or agreed to in writing, software\ndistributed under the License is distributed on an \"AS IS\" BASIS,\nWITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\nSee the License for the specific language governing permissions and\nlimitations under the License.",
+									"url": "http://www.apache.org/licenses/LICENSE-2.0",
+									"copyrights": {
+										"holders": [
+											"Dominic Tarr"
+										],
+										"notice": "Copyright (c) 2011 Dominic Tarr"
+									},
+									"origin": "packagemanagement"
+								}
+							]
+						}
+					],
+					"modified": false,
+					"usage": "dynamic_linking",
+					"external": true
+				},
+				{
+					"name": "node_modules/JSONStream/LICENSE.MIT_0",
+					"description": "File - path:node_modules/JSONStream/LICENSE.MIT score: 100",
+					"providers": [
+						{
+							"additionalLicenses": [
+								{
+									"name": "MIT License",
+									"spdxId": "MIT",
+									"text": "The MIT License",
+									"url": "http://opensource.org/licenses/mit-license.php",
+									"copyrights": {
+										"holders": [
+											"Dominic Tarr"
+										],
+										"notice": "Copyright (c) 2011 Dominic Tarr"
+									},
+									"origin": "packagemanagement"
+								}
+							]
+						}
+					],
+					"modified": false,
+					"usage": "dynamic_linking",
+					"external": true
+				},
+				{
+					"name": "node_modules/JSONStream/LICENSE.MIT_1",
+					"description": "File - path:node_modules/JSONStream/LICENSE.MIT score: 100",
+					"providers": [
+						{
+							"additionalLicenses": [
+								{
+									"name": "MIT License",
+									"spdxId": "MIT",
+									"text": "Permission is hereby granted, free of charge, \nto any person obtaining a copy of this software and \nassociated documentation files (the \"Software\"), to \ndeal in the Software without restriction, including \nwithout limitation the rights to use, copy, modify, \nmerge, publish, distribute, sublicense, and/or sell \ncopies of the Software, and to permit persons to whom \nthe Software is furnished to do so, \nsubject to the following conditions:\n\nThe above copyright notice and this permission notice \nshall be included in all copies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, \nEXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES \nOF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. \nIN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR \nANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, \nTORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE \nSOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.",
+									"url": "http://opensource.org/licenses/mit-license.php",
+									"copyrights": {
+										"holders": [
+											"Dominic Tarr"
+										],
+										"notice": "Copyright (c) 2011 Dominic Tarr"
+									},
+									"origin": "packagemanagement"
+								}
+							]
+						}
+					],
+					"modified": false,
+					"usage": "dynamic_linking",
+					"external": true
+				},
+				{
+					"name": "node_modules/JSONStream/readme.markdown_0",
+					"description": "File - path:node_modules/JSONStream/readme.markdown score: 100",
+					"providers": [
+						{
+							"additionalLicenses": [
+								{
+									"name": "Unknown License file reference",
+									"spdxId": "LicenseRef-scancode-unknown-license-reference",
+									"text": "Dual-licensed under the MIT License or the Apache License, version 2.0",
+									"url": "",
+									"copyrights": {
+										"holders": [],
+										"notice": ""
+									},
+									"origin": "packagemanagement"
+								}
+							]
+						}
+					],
+					"modified": false,
+					"usage": "dynamic_linking",
+					"external": true
+				},
+				{
+					"name": "node_modules/JSONStream/readme.markdown_1",
+					"description": "File - path:node_modules/JSONStream/readme.markdown score: 100",
+					"providers": [
+						{
+							"additionalLicenses": [
+								{
+									"name": "MIT License",
+									"spdxId": "MIT",
+									"text": "Dual-licensed under the MIT License or the Apache License, version 2.0",
+									"url": "http://opensource.org/licenses/mit-license.php",
+									"copyrights": {
+										"holders": [],
+										"notice": ""
+									},
+									"origin": "packagemanagement"
+								}
+							]
+						}
+					],
+					"modified": false,
+					"usage": "dynamic_linking",
+					"external": true
+				},
+				{
+					"name": "node_modules/JSONStream/readme.markdown_2",
+					"description": "File - path:node_modules/JSONStream/readme.markdown score: 100",
+					"providers": [
+						{
+							"additionalLicenses": [
+								{
+									"name": "Apache License 2.0",
+									"spdxId": "Apache-2.0",
+									"text": "Dual-licensed under the MIT License or the Apache License, version 2.0",
+									"url": "http://www.apache.org/licenses/LICENSE-2.0",
+									"copyrights": {
+										"holders": [],
+										"notice": ""
+									},
+									"origin": "packagemanagement"
+								}
+							]
+						}
+					],
+					"modified": false,
+					"usage": "dynamic_linking",
+					"external": true
+				}
+			],
+			"deployPackage": {
+				"name": "default",
+				"downloadUrl": "",
+				"checksums": {
+					"sha512": "13e8abb8d398f1557db382446ded5a3449ba322b333d1aff51f707333d13421d415d2c472be01257547a5b81e98c1852792fb9e0f22c00c0819b00f4e8b2eca9"
+				}
+			},
+			"externalDependencies": [
+				"pkg:npm/jsonparse",
+				"pkg:npm/through"
+			]
+		},
+		{
+			"id": "pkg:npm/minimalistic-assert",
+			"name": "minimalistic-assert",
+			"version": "1.0.1",
+			"versionRange": "1.0.1",
+			"scmUrl": "https://registry.npmjs.org/minimalistic-assert/-/minimalistic-assert-1.0.1.tgz",
+			"licenses": [
+				{
+					"name": "ISC License",
+					"spdxId": "ISC",
+					"text": "Permission to use, copy, modify, and/or distribute this software for any purpose\nwith or without fee is hereby granted, provided that the above copyright notice\nand this permission notice appear in all copies.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH\nREGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND\nFITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,\nINDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM\nLOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE\nOR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR\nPERFORMANCE OF THIS SOFTWARE.",
+					"copyrights": {
+						"holders": [
+							"Calvin Metcalf"
+						],
+						"notice": "Copyright 2015 Calvin Metcalf"
+					},
+					"origin": "packagemanagement"
+				}
+			],
+			"parts": [
+				{
+					"name": "default",
+					"description": "File - path:node_modules/minimalistic-assert/LICENSE score: 100",
+					"providers": [
+						{
+							"additionalLicenses": [
+								{
+									"name": "ISC License",
+									"spdxId": "ISC",
+									"text": "Permission to use, copy, modify, and/or distribute this software for any purpose\nwith or without fee is hereby granted, provided that the above copyright notice\nand this permission notice appear in all copies.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH\nREGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND\nFITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,\nINDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM\nLOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE\nOR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR\nPERFORMANCE OF THIS SOFTWARE.",
+									"url": "http://fedoraproject.org/wiki/Licensing:MIT#Old_Style_with_legal_disclaimer_2",
+									"copyrights": {
+										"holders": [
+											"Calvin Metcalf"
+										],
+										"notice": "Copyright 2015 Calvin Metcalf"
+									},
+									"origin": "packagemanagement"
+								}
+							]
+						}
+					],
+					"modified": false,
+					"usage": "dynamic_linking",
+					"external": true
+				}
+			],
+			"deployPackage": {
+				"name": "default",
+				"downloadUrl": "",
+				"checksums": {
+					"sha512": "52d25c003e3211a1ad8cf7b35ae3bdc02e27c149d51fff3f226df210740fe1bebb717943fd0afd85d213094d710db4845e0d9728d68ff23b11795eef41dd34fc"
+				}
+			},
+			"externalDependencies": []
+		},
+		{
+			"id": "pkg:npm/path-key",
+			"name": "path-key",
+			"version": "3.1.1",
+			"versionRange": "3.1.1",
+			"scmUrl": "https://registry.npmjs.org/path-key/-/path-key-3.1.1.tgz",
+			"licenses": [
+				{
+					"name": "MIT License",
+					"spdxId": "MIT",
+					"text": "Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the \"Software\"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so,\n subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.",
+					"copyrights": {
+						"holders": [
+							"Sindre Sorhus"
+						],
+						"notice": "Copyright (c) Sindre Sorhus <sindresorhus@gmail.com> (sindresorhus.com)"
+					},
+					"origin": "packagemanagement"
+				}
+			],
+			"parts": [
+				{
+					"name": "default",
+					"description": "File - path:node_modules/path-key/license score: 100",
+					"providers": [
+						{
+							"additionalLicenses": [
+								{
+									"name": "MIT License",
+									"spdxId": "MIT",
+									"text": "MIT License",
+									"url": "http://opensource.org/licenses/mit-license.php",
+									"copyrights": {
+										"holders": [
+											"Sindre Sorhus"
+										],
+										"notice": "Copyright (c) Sindre Sorhus <sindresorhus@gmail.com> (sindresorhus.com)"
+									},
+									"origin": "packagemanagement"
+								}
+							]
+						}
+					],
+					"modified": false,
+					"usage": "dynamic_linking",
+					"external": true
+				},
+				{
+					"name": "node_modules/path-key/license_1",
+					"description": "File - path:node_modules/path-key/license score: 100",
+					"providers": [
+						{
+							"additionalLicenses": [
+								{
+									"name": "MIT License",
+									"spdxId": "MIT",
+									"text": "Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the \"Software\"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so,\n subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.",
+									"url": "http://opensource.org/licenses/mit-license.php",
+									"copyrights": {
+										"holders": [
+											"Sindre Sorhus"
+										],
+										"notice": "Copyright (c) Sindre Sorhus <sindresorhus@gmail.com> (sindresorhus.com)"
+									},
+									"origin": "packagemanagement"
+								}
+							]
+						}
+					],
+					"modified": false,
+					"usage": "dynamic_linking",
+					"external": true
+				}
+			],
+			"deployPackage": {
+				"name": "default",
+				"downloadUrl": "",
+				"checksums": {
+					"sha512": "a2399e374a9dfb2d23b3312da18e3caf43deab97703049089423aee90e5fe3595f92cc17b8ab58ae18284e92e7c887079b6e1486ac7ee53aa6d889d2c0b844e9"
+				}
+			},
+			"externalDependencies": []
+		},
+		{
+			"id": "pkg:npm/shebang-command",
+			"name": "shebang-command",
+			"version": "2.0.0",
+			"versionRange": "2.0.0",
+			"scmUrl": "https://registry.npmjs.org/shebang-command/-/shebang-command-2.0.0.tgz",
+			"licenses": [
+				{
+					"name": "MIT License",
+					"spdxId": "MIT",
+					"text": "Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the \"Software\"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so,\n subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.",
+					"copyrights": {
+						"holders": [
+							"Kevin Martensson"
+						],
+						"notice": "Copyright (c) Kevin Martensson <kevinmartensson@gmail.com>"
+					},
+					"origin": "packagemanagement"
+				}
+			],
+			"parts": [
+				{
+					"name": "default",
+					"description": "File - path:node_modules/shebang-command/license score: 100",
+					"providers": [
+						{
+							"additionalLicenses": [
+								{
+									"name": "MIT License",
+									"spdxId": "MIT",
+									"text": "MIT License",
+									"url": "http://opensource.org/licenses/mit-license.php",
+									"copyrights": {
+										"holders": [
+											"Kevin Martensson"
+										],
+										"notice": "Copyright (c) Kevin Martensson <kevinmartensson@gmail.com>"
+									},
+									"origin": "packagemanagement"
+								}
+							]
+						}
+					],
+					"modified": false,
+					"usage": "dynamic_linking",
+					"external": true
+				},
+				{
+					"name": "node_modules/shebang-command/license_1",
+					"description": "File - path:node_modules/shebang-command/license score: 100",
+					"providers": [
+						{
+							"additionalLicenses": [
+								{
+									"name": "MIT License",
+									"spdxId": "MIT",
+									"text": "Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the \"Software\"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so,\n subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.",
+									"url": "http://opensource.org/licenses/mit-license.php",
+									"copyrights": {
+										"holders": [
+											"Kevin Martensson"
+										],
+										"notice": "Copyright (c) Kevin Martensson <kevinmartensson@gmail.com>"
+									},
+									"origin": "packagemanagement"
+								}
+							]
+						}
+					],
+					"modified": false,
+					"usage": "dynamic_linking",
+					"external": true
+				}
+			],
+			"deployPackage": {
+				"name": "default",
+				"downloadUrl": "",
+				"checksums": {
+					"sha512": "907c6bdb366962d766acdd6a0e3aeb5ff675ad1d641bc0f1fa09292b51b87979af5ecc26704d614d6056614ce5ada630d7fc99a7a62e0d8efb62dbdb3747660c"
+				}
+			},
+			"externalDependencies": [
+				"pkg:npm/shebang-regex"
+			]
+		},
+		{
+			"id": "pkg:npm/shebang-regex",
+			"name": "shebang-regex",
+			"version": "3.0.0",
+			"versionRange": "3.0.0",
+			"scmUrl": "https://registry.npmjs.org/shebang-regex/-/shebang-regex-3.0.0.tgz",
+			"licenses": [
+				{
+					"name": "MIT License",
+					"spdxId": "MIT",
+					"text": "Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the \"Software\"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so,\n subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.",
+					"copyrights": {
+						"holders": [
+							"Sindre Sorhus"
+						],
+						"notice": "Copyright (c) Sindre Sorhus <sindresorhus@gmail.com> (sindresorhus.com)"
+					},
+					"origin": "packagemanagement"
+				}
+			],
+			"parts": [
+				{
+					"name": "default",
+					"description": "File - path:node_modules/shebang-regex/license score: 100",
+					"providers": [
+						{
+							"additionalLicenses": [
+								{
+									"name": "MIT License",
+									"spdxId": "MIT",
+									"text": "MIT License",
+									"url": "http://opensource.org/licenses/mit-license.php",
+									"copyrights": {
+										"holders": [
+											"Sindre Sorhus"
+										],
+										"notice": "Copyright (c) Sindre Sorhus <sindresorhus@gmail.com> (sindresorhus.com)"
+									},
+									"origin": "packagemanagement"
+								}
+							]
+						}
+					],
+					"modified": false,
+					"usage": "dynamic_linking",
+					"external": true
+				},
+				{
+					"name": "node_modules/shebang-regex/license_1",
+					"description": "File - path:node_modules/shebang-regex/license score: 100",
+					"providers": [
+						{
+							"additionalLicenses": [
+								{
+									"name": "MIT License",
+									"spdxId": "MIT",
+									"text": "Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the \"Software\"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so,\n subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.",
+									"url": "http://opensource.org/licenses/mit-license.php",
+									"copyrights": {
+										"holders": [
+											"Sindre Sorhus"
+										],
+										"notice": "Copyright (c) Sindre Sorhus <sindresorhus@gmail.com> (sindresorhus.com)"
+									},
+									"origin": "packagemanagement"
+								}
+							]
+						}
+					],
+					"modified": false,
+					"usage": "dynamic_linking",
+					"external": true
+				},
+				{
+					"name": "node_modules/shebang-regex/readme.md_0",
+					"description": "File - path:node_modules/shebang-regex/readme.md score: 100",
+					"providers": [
+						{
+							"additionalLicenses": [
+								{
+									"name": "MIT License",
+									"spdxId": "MIT",
+									"text": "## License\n\nMIT © [Sindre Sorhus](https://sindresorhus.com)",
+									"url": "http://opensource.org/licenses/mit-license.php",
+									"copyrights": {
+										"holders": [
+											"Sindre Sorhus"
+										],
+										"notice": "(c) Sindre Sorhus (https://sindresorhus.com)"
+									},
+									"origin": "packagemanagement"
+								}
+							]
+						}
+					],
+					"modified": false,
+					"usage": "dynamic_linking",
+					"external": true
+				}
+			],
+			"deployPackage": {
+				"name": "default",
+				"downloadUrl": "",
+				"checksums": {
+					"sha512": "efef9d161b5cc77df9dee05aabc0c347836ec417ad0730bb6503a19934089c711de9b4ab5dd884cb30af1b4ed9e3851874b4a1594c97b7933fca1cfc7a471bd4"
+				}
+			},
+			"externalDependencies": []
+		},
+		{
+			"id": "pkg:npm/through",
+			"name": "through",
+			"version": "2.3.8",
+			"versionRange": "2.3.8",
+			"scmUrl": "https://registry.npmjs.org/through/-/through-2.3.8.tgz",
+			"licenses": [
+				{
+					"name": "MIT License",
+					"spdxId": "MIT",
+					"text": "Permission is hereby granted, free of charge, \nto any person obtaining a copy of this software and \nassociated documentation files (the \"Software\"), to \ndeal in the Software without restriction, including \nwithout limitation the rights to use, copy, modify, \nmerge, publish, distribute, sublicense, and/or sell \ncopies of the Software, and to permit persons to whom \nthe Software is furnished to do so, \nsubject to the following conditions:\n\nThe above copyright notice and this permission notice \nshall be included in all copies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, \nEXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES \nOF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. \nIN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR \nANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, \nTORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE \nSOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.",
+					"copyrights": {
+						"holders": [
+							"Dominic Tarr"
+						],
+						"notice": "Copyright (c) 2011 Dominic Tarr"
+					},
+					"origin": "packagemanagement"
+				}
+			],
+			"parts": [
+				{
+					"name": "default",
+					"description": "File - path:node_modules/through/LICENSE.APACHE2 score: 100",
+					"providers": [
+						{
+							"additionalLicenses": [
+								{
+									"name": "Apache License 2.0",
+									"spdxId": "Apache-2.0",
+									"text": "Apache License, Version 2.0",
+									"url": "http://www.apache.org/licenses/LICENSE-2.0",
+									"copyrights": {
+										"holders": [
+											"Dominic Tarr"
+										],
+										"notice": "Copyright (c) 2011 Dominic Tarr"
+									},
+									"origin": "packagemanagement"
+								}
+							]
+						}
+					],
+					"modified": false,
+					"usage": "dynamic_linking",
+					"external": true
+				},
+				{
+					"name": "node_modules/through/LICENSE.APACHE2_1",
+					"description": "File - path:node_modules/through/LICENSE.APACHE2 score: 100",
+					"providers": [
+						{
+							"additionalLicenses": [
+								{
+									"name": "Apache License 2.0",
+									"spdxId": "Apache-2.0",
+									"text": "Licensed under the Apache License, Version 2.0 (the \"License\");\nyou may not use this file except in compliance with the License.\nYou may obtain a copy of the License at\n\n    http://www.apache.org/licenses/LICENSE-2.0\n\nUnless required by applicable law or agreed to in writing, software\ndistributed under the License is distributed on an \"AS IS\" BASIS,\nWITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\nSee the License for the specific language governing permissions and\nlimitations under the License.",
+									"url": "http://www.apache.org/licenses/LICENSE-2.0",
+									"copyrights": {
+										"holders": [
+											"Dominic Tarr"
+										],
+										"notice": "Copyright (c) 2011 Dominic Tarr"
+									},
+									"origin": "packagemanagement"
+								}
+							]
+						}
+					],
+					"modified": false,
+					"usage": "dynamic_linking",
+					"external": true
+				},
+				{
+					"name": "node_modules/through/LICENSE.MIT_0",
+					"description": "File - path:node_modules/through/LICENSE.MIT score: 100",
+					"providers": [
+						{
+							"additionalLicenses": [
+								{
+									"name": "MIT License",
+									"spdxId": "MIT",
+									"text": "The MIT License",
+									"url": "http://opensource.org/licenses/mit-license.php",
+									"copyrights": {
+										"holders": [
+											"Dominic Tarr"
+										],
+										"notice": "Copyright (c) 2011 Dominic Tarr"
+									},
+									"origin": "packagemanagement"
+								}
+							]
+						}
+					],
+					"modified": false,
+					"usage": "dynamic_linking",
+					"external": true
+				},
+				{
+					"name": "node_modules/through/LICENSE.MIT_1",
+					"description": "File - path:node_modules/through/LICENSE.MIT score: 100",
+					"providers": [
+						{
+							"additionalLicenses": [
+								{
+									"name": "MIT License",
+									"spdxId": "MIT",
+									"text": "Permission is hereby granted, free of charge, \nto any person obtaining a copy of this software and \nassociated documentation files (the \"Software\"), to \ndeal in the Software without restriction, including \nwithout limitation the rights to use, copy, modify, \nmerge, publish, distribute, sublicense, and/or sell \ncopies of the Software, and to permit persons to whom \nthe Software is furnished to do so, \nsubject to the following conditions:\n\nThe above copyright notice and this permission notice \nshall be included in all copies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, \nEXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES \nOF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. \nIN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR \nANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, \nTORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE \nSOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.",
+									"url": "http://opensource.org/licenses/mit-license.php",
+									"copyrights": {
+										"holders": [
+											"Dominic Tarr"
+										],
+										"notice": "Copyright (c) 2011 Dominic Tarr"
+									},
+									"origin": "packagemanagement"
+								}
+							]
+						}
+					],
+					"modified": false,
+					"usage": "dynamic_linking",
+					"external": true
+				},
+				{
+					"name": "node_modules/through/readme.markdown_0",
+					"description": "File - path:node_modules/through/readme.markdown score: 100",
+					"providers": [
+						{
+							"additionalLicenses": [
+								{
+									"name": "MIT License",
+									"spdxId": "MIT",
+									"text": "## License\n\nMIT / Apache2",
+									"url": "http://opensource.org/licenses/mit-license.php",
+									"copyrights": {
+										"holders": [],
+										"notice": ""
+									},
+									"origin": "packagemanagement"
+								}
+							]
+						}
+					],
+					"modified": false,
+					"usage": "dynamic_linking",
+					"external": true
+				}
+			],
+			"deployPackage": {
+				"name": "default",
+				"downloadUrl": "",
+				"checksums": {
+					"sha512": "c3cf6a83b3c8f3001dbd7eb46cc0cff9b1680f90ef866f682e1785a793b86b6405d1c4811ac057e2a66669d3ccbd5aa52c9041722f96a8618e00fbdc0de35256"
+				}
+			},
+			"externalDependencies": []
+		},
+		{
+			"id": "pkg:npm/which",
+			"name": "which",
+			"version": "2.0.2",
+			"versionRange": "2.0.2",
+			"scmUrl": "https://registry.npmjs.org/which/-/which-2.0.2.tgz",
+			"licenses": [
+				{
+					"name": "ISC License",
+					"spdxId": "ISC",
+					"text": "Permission to use, copy, modify, and/or distribute this software for any\npurpose with or without fee is hereby granted, provided that the above\ncopyright notice and this permission notice appear in all copies.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\" AND THE AUTHOR DISCLAIMS ALL WARRANTIES\nWITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF\nMERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR\nANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES\nWHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN\nACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR\nIN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.",
+					"copyrights": {
+						"holders": [
+							"Isaac Z. Schlueter and Contributors"
+						],
+						"notice": "Copyright (c) Isaac Z. Schlueter and Contributors"
+					},
+					"origin": "packagemanagement"
+				}
+			],
+			"parts": [
+				{
+					"name": "default",
+					"description": "File - path:node_modules/which/CHANGELOG.md score: 99",
+					"providers": [
+						{
+							"additionalLicenses": [
+								{
+									"name": "ISC License",
+									"spdxId": "ISC",
+									"text": "* isc license",
+									"url": "http://fedoraproject.org/wiki/Licensing:MIT#Old_Style_with_legal_disclaimer_2",
+									"copyrights": {
+										"holders": [],
+										"notice": ""
+									},
+									"origin": "packagemanagement"
+								}
+							]
+						}
+					],
+					"modified": false,
+					"usage": "dynamic_linking",
+					"external": true
+				},
+				{
+					"name": "node_modules/which/CHANGELOG.md_1",
+					"description": "File - path:node_modules/which/CHANGELOG.md score: 80",
+					"providers": [
+						{
+							"additionalLicenses": [
+								{
+									"name": "Unknown License file reference",
+									"spdxId": "LicenseRef-scancode-unknown-license-reference",
+									"text": "* isc license\n\n## 1.0.5",
+									"url": "",
+									"copyrights": {
+										"holders": [],
+										"notice": ""
+									},
+									"origin": "packagemanagement"
+								}
+							]
+						}
+					],
+					"modified": false,
+					"usage": "dynamic_linking",
+					"external": true
+				},
+				{
+					"name": "node_modules/which/LICENSE_0",
+					"description": "File - path:node_modules/which/LICENSE score: 99",
+					"providers": [
+						{
+							"additionalLicenses": [
+								{
+									"name": "ISC License",
+									"spdxId": "ISC",
+									"text": "The ISC License",
+									"url": "http://fedoraproject.org/wiki/Licensing:MIT#Old_Style_with_legal_disclaimer_2",
+									"copyrights": {
+										"holders": [
+											"Isaac Z. Schlueter and Contributors"
+										],
+										"notice": "Copyright (c) Isaac Z. Schlueter and Contributors"
+									},
+									"origin": "packagemanagement"
+								}
+							]
+						}
+					],
+					"modified": false,
+					"usage": "dynamic_linking",
+					"external": true
+				},
+				{
+					"name": "node_modules/which/LICENSE_1",
+					"description": "File - path:node_modules/which/LICENSE score: 100",
+					"providers": [
+						{
+							"additionalLicenses": [
+								{
+									"name": "ISC License",
+									"spdxId": "ISC",
+									"text": "Permission to use, copy, modify, and/or distribute this software for any\npurpose with or without fee is hereby granted, provided that the above\ncopyright notice and this permission notice appear in all copies.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\" AND THE AUTHOR DISCLAIMS ALL WARRANTIES\nWITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF\nMERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR\nANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES\nWHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN\nACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR\nIN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.",
+									"url": "http://fedoraproject.org/wiki/Licensing:MIT#Old_Style_with_legal_disclaimer_2",
+									"copyrights": {
+										"holders": [
+											"Isaac Z. Schlueter and Contributors"
+										],
+										"notice": "Copyright (c) Isaac Z. Schlueter and Contributors"
+									},
+									"origin": "packagemanagement"
+								}
+							]
+						}
+					],
+					"modified": false,
+					"usage": "dynamic_linking",
+					"external": true
+				}
+			],
+			"deployPackage": {
+				"name": "default",
+				"downloadUrl": "",
+				"checksums": {
+					"sha512": "04b2374e5d535b73ef97bd25df2ab763ae22f9ac29c17aac181616924a8cb676d782b303fb28fbae15b492e103c7325a6171a3116e6881aa4a34c10a34c8e26c"
+				}
+			},
+			"externalDependencies": [
+				"pkg:npm/isexe"
+			]
+		}
+	]
+}
