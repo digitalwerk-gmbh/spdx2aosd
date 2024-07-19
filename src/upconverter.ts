@@ -93,8 +93,6 @@ export const convertUp = async (cliArgument: string): Promise<void> => {
                     componentObject['subcomponents'].push(subcomponentObject);
             }); 
             }
-            console.log("MODIFIED", tmpModified);
-            console.log("LINKING", tmpLinking);
             // Make array data unique
             tmpModified = Array.from(new Set(tmpModified));
             tmpLinking = Array.from(new Set(tmpLinking));
@@ -143,11 +141,10 @@ export const convertUp = async (cliArgument: string): Promise<void> => {
         // const validationAosdResult = validateAosd(outputFileName);
         // console.log(validationAosdResult);
         
-
         console.log("We are done! - Thank's for using our aosd2.0 to aosd2.1 converter!");
     } catch(error) {
-        // console.error(error);
-        console.log("Sorry for that - we have found some errors so please open the error.log in root directory!");
+        console.error(error);
+        console.log("Sorry for that - something went wrong! Please check the error.log file in the root folder for detailed information.");
     }
 }
 

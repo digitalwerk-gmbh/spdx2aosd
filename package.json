@@ -1,16 +1,16 @@
 {
   "name": "aosdtoaosdconverter",
-  "version": "1.0.0",
-  "description": "aosd converter",
+  "version": "1.0.0-beta",
+  "description": "cli tool for aosd2.1 to aosd2.0 respectively aosd2.0 to aosd2.1 conversion",
   "main": "main.ts",
   "scripts": {
-    "convertup": "cross-env RUN_MODE=production ts-node mainup.ts",
-    "convertdown": "cross-env RUN_MODE=production ts-node maindown.ts",
+    "up": "cross-env RUN_MODE=production VERSION=up ts-node main.ts",
+    "down": "cross-env RUN_MODE=production VERSION=down ts-node main.ts",
     "test": "cross-env RUN_MODE=test INPUT_JSON_PATH=./tests/data/input/ OUTPUT_JSON_PATH=./tests/data/output/ jest"
 },
 "repository": {
-    "type": "git",
-    "url": "git+https://gitlab.com/digitalwerk/checkoss/aosdtoaosdconverter.git"
+    "type": "gitlab",
+    "url": "gitlab+https://gitlab.com/digitalwerk/checkoss/aosdtoaosdconverter.git"
   },
   "keywords": [
     "aosd2.1",
@@ -42,5 +42,5 @@
   "bugs": {
     "url": "https://gitlab.com/digitalwerk/checkoss/aosdtoaosdconverter/issues"
   },
-  "homepage": "https://gitlab.com/digitalwerk/checkoss/aosdtoaosdconverter#readme"
+  "homepage": "https://gitlab.com/digitalwerk/checkoss/aosdtoaosdconverter#README"
 }

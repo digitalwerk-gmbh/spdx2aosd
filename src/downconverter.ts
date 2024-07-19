@@ -140,7 +140,6 @@ export const convertDown = async (cliArgument: string): Promise<void> => {
             }
             // Push data into the new objects
             dependenciesObject['licenses'].push(licensesObject);
-            console.log("DEBUG-NOW: ", dependenciesObject);
             dependenciesArray.push(dependenciesObject);
         }
 
@@ -153,7 +152,7 @@ export const convertDown = async (cliArgument: string): Promise<void> => {
         
 
         // Prepare output file
-        const outputFileName: string = cliArgument.replace(".json", "") + "_aosd2.1" + ".json";
+        const outputFileName: string = cliArgument.replace(".json", "") + "_aosd2.0" + ".json";
         outputFile = outputJsonPath + outputFileName;
         
         // Write data to aosd json format
@@ -165,6 +164,6 @@ export const convertDown = async (cliArgument: string): Promise<void> => {
         console.log("We are done! - Thank's for using our aosd2.1 to aosd2.0 converter!");
     } catch(error) {
         console.error(error);
-        console.log("We are done! - Thank's for using our aosd2.0 to aosd2.1 converter!");
+        console.log("Sorry for that - something went wrong! Please check the error.log file in the root folder for detailed information.");
     }
 }
