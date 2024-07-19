@@ -58,8 +58,6 @@ export interface Part {
     name: string,
     description: string,
     providers: Array<Provider>,
-    modified: boolean,
-    usage: string,
     external: boolean,
 }
 
@@ -78,6 +76,8 @@ interface Checksums {
 
 export interface Provider {
     additionalLicenses: Array<License>,
+    modified: boolean,
+    usage: string,
     //modified: boolean,
     //usage: string,
     //external: boolean,

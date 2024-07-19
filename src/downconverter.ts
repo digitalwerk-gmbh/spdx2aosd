@@ -1,7 +1,8 @@
 const fs = require('fs');
 require('dotenv').config();
-import { AosdObject, AosdComponent, AosdSubComponent, DependencyObject, License, Part, DeployPackage, Provider } from "../interfaces/interfaces";
-import { validateAosd } from "./aosdvalidator";
+import { writeErrorLog, checkErrorMessage } from './errorhandler'
+import { AosdSubComponent, DependencyObject, License, Part, DeployPackage, Provider } from '../interfaces/interfaces';
+import { validateAosd } from './aosdvalidator';
 let inputJsonPath: string | undefined = '';
 let outputJsonPath: string | undefined = '';
 let outputFile: string = '';
@@ -27,8 +28,8 @@ export const convertDown = async (cliArgument: string): Promise<void> => {
         inputJsonPath = process.env.INPUT_JSON_PATH + cliArgument;
         outputJsonPath = process.env.OUTPUT_JSON_PATH;
         
-        // First validate input spdx file
-        // const validationSpdxResult = validateSpdx(cliArgument);
+        // First validate input aosd file
+        const validationSpdxResult = validateAosd(cliArgument);
         //console.log(validationSpdxResult);
 
         // Read the input spdx json file
@@ -112,12 +113,12 @@ export const convertDown = async (cliArgument: string): Promise<void> => {
                         name: partName,
                         description: '',
                         providers: [],
-                        modified: componentsArray[i]['modified'],
-                        usage: linkingType,
                         external: true,
                     };
                     let providersObject: Provider = {
                         additionalLicenses: [],
+                        modified: componentsArray[i]['modified'],
+                        usage: linkingType !== null ? linkingType : 'unknown',
                     };
 
                     // Create object for additional licenses data
@@ -161,9 +162,12 @@ export const convertDown = async (cliArgument: string): Promise<void> => {
         // Validate the aosd json result 
         // const validationAosdResult = validateAosd(outputFileName);
         // console.log(validationAosdResult);
+
+        // fs.writeFileSync('error.log', error);
+
         console.log("We are done! - Thank's for using our aosd2.1 to aosd2.0 converter!");
     } catch(error) {
-        console.error(error);
+	    writeErrorLog({ message: checkErrorMessage(error) })
         console.log("Sorry for that - something went wrong! Please check the error.log file in the root folder for detailed information.");
     }
 }

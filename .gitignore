@@ -9,3 +9,5 @@
 **/data/output/*
 # nmp Integrity file
 package-lock.json
+# error.log
+error.log

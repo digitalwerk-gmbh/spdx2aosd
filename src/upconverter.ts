@@ -1,5 +1,6 @@
 const fs = require('fs');
 require('dotenv').config();
+import { writeErrorLog, checkErrorMessage } from './errorhandler'
 import { AosdObject, AosdComponent, AosdSubComponent, License } from "../interfaces/interfaces";
 import { validateAosd } from "./aosdvalidator";
 let inputJsonPath: string | undefined = '';
@@ -71,8 +72,9 @@ export const convertUp = async (cliArgument: string): Promise<void> => {
                     if (adl.hasOwnProperty('copyrights')) {
                         tmpCopyright = [adl['copyrights']['notice']];
                     }
+
                     let subcomponentObject: AosdSubComponent = {
-                        subcomponentName: dependenciesArray[i]['parts'][j]['name'],
+                        subcomponentName: dependenciesArray[i]['parts'][j]['name'] === 'default' ? 'main' : dependenciesArray[i]['parts'][j]['name'],
                         spdxId: adl['spdxId'],
                         copyrights: tmpCopyright,
                         authors: [],
@@ -140,10 +142,12 @@ export const convertUp = async (cliArgument: string): Promise<void> => {
         // Validate the aosd json result 
         // const validationAosdResult = validateAosd(outputFileName);
         // console.log(validationAosdResult);
+
+        // fs.writeFileSync('error.log', error);
         
         console.log("We are done! - Thank's for using our aosd2.0 to aosd2.1 converter!");
     } catch(error) {
-        console.error(error);
+        writeErrorLog({ message: checkErrorMessage(error) })
         console.log("Sorry for that - something went wrong! Please check the error.log file in the root folder for detailed information.");
     }
 }
@@ -159,8 +163,9 @@ const CheckValue = (value: any, arrayData: any[], objectkey: string) => {
           break;
       }
     } catch (error) {
-      console.log(error);
-      return Object;
+        writeErrorLog({ message: checkErrorMessage(error) })
+        console.log("Sorry for that - something went wrong! Please check the error.log file in the root folder for detailed information.");
+        return Object;
     }
     return Object;
 };

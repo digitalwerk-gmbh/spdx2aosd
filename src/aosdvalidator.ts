@@ -6,13 +6,13 @@ export const validateAosd = async (inputFile: string): Promise<void> => {
     try{
         // Read the aosd json scheme
         const aosd2_schema = JSON.parse(
-          fs.readFileSync(process.env.AOSD_JSON_SCHEME, {
+          fs.readFileSync(process.env.AOSD2_1_JSON_SCHEME, {
             encoding: "utf8",
           }),
         );        
 
         // Read the spdx json file for validation
-        const inputJsonPath = process.env.OUTPUT_JSON_PATH + inputFile;
+        const inputJsonPath = process.env.INPUT_JSON_PATH + inputFile;
         const aosdJsonFile = fs.readFileSync(inputJsonPath);
         let data = JSON.parse(aosdJsonFile);
 
