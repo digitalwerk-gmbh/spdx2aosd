@@ -61,6 +61,8 @@ $ npm run test
 
 ## AOSDtoAOSDConverter folder Structure
 
+This is the folder structure and the files you should see after succesful setup.
+
 ```
 aosdtoaosdconverter
 │	
