@@ -2,7 +2,7 @@
 
 ## Getting started
 
-To setup and install this cli tool local on your device please follow the nest 3 steps.
+To setup and install this cli tool local on your device please follow the next 3 steps.
 
 Open your CLI command line tool (Power Shell, Visual Code Terminal) and navigate into the folder where you want to install the tool.
 
@@ -20,7 +20,7 @@ After the clone command was successful navigate into the new folder aosdtoaosdco
 
 Step 2:
 
-In the next step the following command to create a new .env file from the existing .env.example file in the repo.
+In the next step run the following command to create a new .env file from the existing .env.example file in the repo.
 
 ```sh
 
@@ -42,7 +42,7 @@ After finsishing these 3 steps the cli tool converter should be ready for use.
 
 ## How to use the cli command tool
 
-With this cli tool you can convert aosd json input files from version 2.0 to 2.1 and the other way round from 2.1 to 2.0.
+With this cli tool you can convert aosd json input files from version 2.0 to 2.1 and vice versa from 2.1 to 2.0.
 
 Also you can run the unit tests to check the script works correct.
 
@@ -61,9 +61,6 @@ $ npm run down <filename>
 $ npm run test
 
 ```
-
-
-
 
 ## AOSDtoAOSDConverter folder Structure
 
@@ -121,3 +118,9 @@ aosdtoaosdconverter
    tsconfig.json
 
 ```
+
+## Good to know
+
+To note when convert data from version 2.1 to version 2.0 there are some particularities.
+
+
