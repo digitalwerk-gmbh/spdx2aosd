@@ -23,7 +23,6 @@ Step 2:
 In the next step run the following command to create a new .env file from the existing .env.example file in the repo.
 
 ```sh
-
 $ cp .env.example .env
 
 ```
@@ -33,7 +32,6 @@ Step 3:
 Finnaly run the npm command to install the needed dependencies for the converter.
 
 ```sh
-
 $ npm install
 
 ```
@@ -47,7 +45,6 @@ With this cli tool you can convert aosd json input files from version 2.0 to 2.1
 Also you can run the unit tests to check the script works correct.
 
 ```sh
-
 # convert the json file from 2.0 to 2.1
 
 $ npm run up <filename>
