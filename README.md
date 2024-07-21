@@ -118,6 +118,6 @@ aosdtoaosdconverter
 
 ## Good to know
 
-To note when convert data from version 2.1 to version 2.0 there are some particularities.
+To note when converting data from version 2.1 to version 2.0 there are some particularities.
 
 
