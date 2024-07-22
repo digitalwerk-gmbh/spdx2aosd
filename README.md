@@ -88,6 +88,7 @@ aosdtoaosdconverter
 │  aosdvalidator.ts
 │  downconverter.ts
 │  errorhandler.ts
+│  helper.ts
 │  upconverter.ts
 │	
 └──tests
@@ -121,5 +122,12 @@ aosdtoaosdconverter
 ## Good to know
 
 To note when converting data from version 2.1 to version 2.0 there are some particularities.
+
+With the 2.1 and 2.0 there is a incompatibility with the data regarding the two paramaters usage (linking) and modification.
+
+In AOSD2.1 these fields are conditionally mandatory and in the AOSD2.0 mandatory.
+
+This means if the values null as ... is used in AOSD2.1 we have no chance to convert this value other than null to AOSD2.0. 
+Means if someone trys to import this fileds with value null in AOSD2.0 it will throw an error.
 
 

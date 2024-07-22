@@ -1,6 +1,7 @@
 const fs = require('fs');
 require('dotenv').config();
 import { writeErrorLog, checkErrorMessage } from './errorhandler'
+import { checkValue, getUniqueValues } from './helper'
 import { AosdObject, AosdComponent, AosdSubComponent, License } from "../interfaces/interfaces";
 import { validateAosd } from "./aosdvalidator";
 let inputJsonPath: string | undefined = '';
@@ -147,7 +148,7 @@ export const convertUp = async (cliArgument: string): Promise<void> => {
         
         console.log("We are done! - Thank's for using our aosd2.0 to aosd2.1 converter!");
     } catch(error) {
-        writeErrorLog({ message: checkErrorMessage(error) })
+        // writeErrorLog({ message: checkErrorMessage(error) })
         console.log("Sorry for that - something went wrong! Please check the error.log file in the root folder for detailed information.");
     }
 }
@@ -163,7 +164,7 @@ const CheckValue = (value: any, arrayData: any[], objectkey: string) => {
           break;
       }
     } catch (error) {
-        writeErrorLog({ message: checkErrorMessage(error) })
+        // writeErrorLog({ message: checkErrorMessage(error) })
         console.log("Sorry for that - something went wrong! Please check the error.log file in the root folder for detailed information.");
         return Object;
     }

@@ -1,26 +1,19 @@
 const fs = require('fs');
 require('dotenv').config();
-import { writeErrorLog, checkErrorMessage } from './errorhandler'
-import { AosdSubComponent, DependencyObject, License, Part, DeployPackage, Provider } from '../interfaces/interfaces';
+import { writeErrorLog, checkErrorMessage } from './errorhandler';
+import { checkValue, getUniqueValues } from './helper';
+import { AosdSubComponent, DependencyObject, License, Part, Provider } from '../interfaces/interfaces';
 import { validateAosd } from './aosdvalidator';
 let inputJsonPath: string | undefined = '';
 let outputJsonPath: string | undefined = '';
 let outputFile: string = '';
-let counter: number = 1;
 let externalDependenciesArray: Array<string> = [];
-
-
-// let newObject = {};
-let dependenciesObjects: Array<DependencyObject> | any = [];
 let dependenciesObject: DependencyObject;
-let licensesObjects: Array<License> = [];
 let licensesObject: License;
-let partsObjects: Array<Part> | any = [];
 let partsObject: Part;
-let providersObjects: Array<License> = [];
-let dataObject = {};
 let dependenciesArray = [];
-
+let validationResults: Array<string> = [];
+let uniqueValidationResults: Array<string> = [];
 
 export const convertDown = async (cliArgument: string): Promise<void> => {
     try {
@@ -98,9 +91,7 @@ export const convertDown = async (cliArgument: string): Promise<void> => {
                     partName = partName.replace(" ","_");
 
                     // Create additional licenses
-                    // chanched naming for two linking items that must be merged
                     let linkingType = componentsArray[i]['linking'];
-                    // "sys_call_dyn_link", -> "sys_call"
                     if (componentsArray[i]['linking'] === 'sys_call') {
                         linkingType = 'sys_call_dyn_link';
                     }
@@ -109,16 +100,27 @@ export const convertDown = async (cliArgument: string): Promise<void> => {
                         linkingType = 'sys_call_process';
                     }
 
+                    // create a new part
                     partsObject = {
                         name: partName,
                         description: '',
                         providers: [],
                         external: true,
                     };
+
+                    // Check for incompatibility with modified and linking
+                    if (componentsArray[i]['modified'] === null) {
+                        validationResults.push('Warning: incompatibility with modification - component name: ' + componentsArray[i]['componentName'] + ' - subcomponent: ' + subcomponent['subcomponentName']);
+                    }
+                    if (linkingType === null) {
+                        validationResults.push('Warning: incompatibility with linking      - component name: ' + componentsArray[i]['componentName'] + ' - subcomponent: ' + subcomponent['subcomponentName']);
+                    }
+
+                    // Add data to provider object
                     let providersObject: Provider = {
                         additionalLicenses: [],
                         modified: componentsArray[i]['modified'],
-                        usage: linkingType !== null ? linkingType : 'unknown',
+                        usage: linkingType,
                     };
 
                     // Create object for additional licenses data
@@ -163,11 +165,21 @@ export const convertDown = async (cliArgument: string): Promise<void> => {
         // const validationAosdResult = validateAosd(outputFileName);
         // console.log(validationAosdResult);
 
-        // fs.writeFileSync('error.log', error);
+        // Check for validation error
+        let validationMessage: string = '';
+        uniqueValidationResults = getUniqueValues(validationResults);
+        validationMessage = validationMessage + '-----------------------------------------------------\n';
+        validationMessage = validationMessage + 'Validation errors:\n';
+        validationMessage = validationMessage + '-----------------------------------------------------\n';
+        for (let i = 0; i < uniqueValidationResults.length; i++) {
+            validationMessage = validationMessage + uniqueValidationResults[i] + '\n';
+        }
+        const result = fs.writeFileSync(process.env.LOG_FILE_PATH, validationMessage, { encoding: 'utf8' });
 
         console.log("We are done! - Thank's for using our aosd2.1 to aosd2.0 converter!");
     } catch(error) {
-	    writeErrorLog({ message: checkErrorMessage(error) })
-        console.log("Sorry for that - something went wrong! Please check the error.log file in the root folder for detailed information.");
+        console.log(error);
+	    //writeErrorLog({ message: checkErrorMessage(error) })
+        console.log("Sorry for that - something went wrong! Please check the  file in the root folder for detailed information.");
     }
 }

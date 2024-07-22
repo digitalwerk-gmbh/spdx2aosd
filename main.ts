@@ -13,7 +13,7 @@ if(cliArgument ===  undefined) {
     console.log('<filename> is mandatory!');      
 } else {
     // Create empty error.log
-    fs.writeFileSync('error.log', '');
+    fs.writeFileSync(process.env.LOG_FILE_PATH, '');
 
     // Write data to aosd json format
     try {
@@ -24,7 +24,7 @@ if(cliArgument ===  undefined) {
             const response = convertUp(cliArgument);      
         }
     } catch(error) {
-        writeErrorLog({ message: checkErrorMessage(error) })
+        //writeErrorLog({ message: checkErrorMessage(error) })
         console.log("Sorry for that - something went wrong! Please check the error.log file in the root folder for detailed information.")
     }
 }
