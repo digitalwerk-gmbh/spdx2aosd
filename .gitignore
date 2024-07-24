@@ -6,7 +6,11 @@
 node_modules
 # Output folders
 **/tests/data/output/*
+!**/tests/data/output/.gitkeep
+**/data/input/*
+!**/data/input/.gitkeep
 **/data/output/*
+!**/data/output/.gitkeep
 # nmp Integrity file
 package-lock.json
 # error.log
