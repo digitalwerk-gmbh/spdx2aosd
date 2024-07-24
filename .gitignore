@@ -3,7 +3,7 @@
 # Envoirenment file
 .env
 # Dependency directories
-**/node_modules/
+node_modules
 # Output folders
 **/tests/data/output/*
 **/data/output/*
