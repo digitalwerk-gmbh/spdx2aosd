@@ -4,6 +4,29 @@ export const getUniqueValues = (arrayData: Array<string> | any) => (
     ))
 )
 
+export const getMultibleUsedIds = (dArray: Array<number> | any, tArray: Array<number> | any): Array<number> => {
+  const intersect: Array<number> = dArray.filter((element: number) => tArray.includes(element));
+  return intersect;
+}
+
+export const getMissingComponentIds = (dArray: Array<number> | any, tArray: Array<number> | any, cArray: Array<number> | any ): Array<number> => {
+  const directAndTrans = dArray.concat(tArray);
+  const missingComponents:  Array<number> = cArray.filter((element: number) => !directAndTrans.includes(element));
+  return missingComponents;
+}
+
+export const generateDataValidationMessage = (messagesArray: Array<number> | any): string => {
+  let uniqueValidationResults: Array<string> = [];
+  let messageText: string = '';
+  uniqueValidationResults = getUniqueValues(messagesArray);
+  messageText = messageText + '-----------------------------------------------------\n';
+  messageText = messageText + 'Data-Validation errors:\n';
+  messageText = messageText + '-----------------------------------------------------\n';
+  for (let i = 0; i < uniqueValidationResults.length; i++) {
+    messageText = messageText + uniqueValidationResults[i] + '\n';
+  }
+  return messageText;
+}
 
 export const checkValue = async (value: any, arrayData: any[], objectkey: string) => {
     let Array = [];

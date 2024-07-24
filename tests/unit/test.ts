@@ -2,9 +2,109 @@ import * as fs from "fs";
 import { describe, expect, test } from '@jest/globals';
 import { convertDown } from '../../src/downconverter';
 import { convertUp } from '../../src/upconverter';
+import { getUniqueValues, getMultibleUsedIds, getMissingComponentIds, generateDataValidationMessage } from '../../src/helper';
+
+describe("Test for helper functions", () => {
+    test('Test getUniqueValues exists', async () => {
+        expect(getUniqueValues).toBeDefined();
+    });
+
+    test('Test - 01 getUniqueValues works as expected', async () => {
+        const testArray1: Array<number> = [1,2,3,4,5,6,7,7,6,5,10];
+        const response = getUniqueValues(testArray1);
+        expect(response).toContain(1);
+        expect(response).toContain(2);
+        expect(response).toContain(3);
+        expect(response).toContain(4);
+        expect(response).toContain(5);
+        expect(response).toContain(6);
+        expect(response).toContain(7);
+        expect(response).toContain(10);
+        expect(response.length).toBe(8);
+    });
+
+    test('Test - 02 getUniqueValues works as expected', async () => {
+        const testArray1: Array<number> = [1,2,1];
+        const response = getUniqueValues(testArray1);
+        expect(response).toContain(1);
+        expect(response).toContain(2);
+        expect(response.length).toBe(2);
+    });
+
+    test('Test getMultibleUsedIds exists', async () => {
+        expect(getMultibleUsedIds).toBeDefined();
+    });
+
+    test('Test - 01 getMultibleUsedIds works as expected', async () => {
+        const testArray1: Array<number> = [1,2,3,4,5,6,7];
+        const testArray2: Array<number> = [1,5,8,9,10];
+        const response = getMultibleUsedIds(testArray1, testArray2);
+        expect(response).toContain(1);
+        expect(response).toContain(5);
+        expect(response.length).toBe(2);
+    });
+
+    test('Test - 02 getMultibleUsedIds works as expected', async () => {
+        const testArray1: Array<number> = [1,2,3,4,5,6,7,7,6,5,10];
+        const testArray2: Array<number> = [10];
+        const response = getMultibleUsedIds(testArray1, testArray2);
+        expect(response).toContain(10);
+        expect(response.length).toBe(1);
+    });
+
+    test('Test getMissingComponentIds exists', async () => {
+        expect(getMissingComponentIds).toBeDefined();
+    });
+
+    test('Test - 01 getMissingComponentIds works as expected', async () => {
+        const testArray1: Array<number> = [1,2,3];
+        const testArray2: Array<number> = [4,5,6];
+        const testArray3: Array<number> = [1,2,3,4,5,6,7,8];
+        const response = getMissingComponentIds(testArray1, testArray2, testArray3);
+        expect(response).toContain(7);
+        expect(response).toContain(8);
+        expect(response.length).toBe(2);
+    });
+
+    test('Test - 02 getMissingComponentIds works as expected', async () => {
+        const testArray1: Array<number> = [1,2,3];
+        const testArray2: Array<number> = [4,5,6];
+        const testArray3: Array<number> = [1,2,3,4,5,6];
+        const response = getMissingComponentIds(testArray1, testArray2, testArray3);
+        expect(response.length).toBe(0);
+    });    
+
+    test('Test generateDataValidationMessage exists', async () => {
+        expect(generateDataValidationMessage).toBeDefined();
+    });
+
+    test('Test - 01 generateDataValidationMessage works as expected', async () => {
+        const testArray1: Array<string> = [
+            'Warning: incompatibility with linking      - component name: test_component_4 - subcomponent: main', 
+            'Warning: incompatibility with linking      - component name: test_component_4 - subcomponent: subcomponent_4_2',
+            'Warning: incompatibility with linking      - component name: test_component_4 - subcomponent: main',
+            'Warning: incompatibility with linking      - component name: test_component_4 - subcomponent: subcomponent_4_2',
+            'Warning: incompatibility with modification - component name: test_component_6 - subcomponent: main',
+            'Warning: incompatibility with linking      - component name: test_component_6 - subcomponent: main',
+            'Warning: incompatibility with modification - component name: test_component_6 - subcomponent: subcomponent_6_2',
+            'Warning: incompatibility with linking      - component name: test_component_6 - subcomponent: subcomponent_6_2',
+            'Warning: incompatibility with modification - component name: test_component_7 - subcomponent: main',
+            'Warning: incompatibility with modification - component name: test_component_7 - subcomponent: subcomponent_7_2'
+        ];
+        const response = generateDataValidationMessage(testArray1);
+        expect(response).toContain('Data-Validation errors:');
+    });
+
+    test('Test - 02 generateDataValidationMessage works as expected', async () => {
+        const testArray1: Array<string> = [''];
+        const response = generateDataValidationMessage(testArray1);
+        expect(response).toContain('Data-Validation errors:');
+    });
+});
+
 
 describe("AOSD2.1 to AOSD2.0 converter test", () => {
-    test('Test convertDown is to be defined', async () => {
+    test('Test convertDown exists', async () => {
         expect(convertDown).toBeDefined();
     });
 
@@ -63,7 +163,7 @@ describe("AOSD2.1 to AOSD2.0 converter test", () => {
 });
 
 describe("AOSD2.0 to AOSD2.1 converter test", () => {
-    test('Test convertUp is to be defined', async () => {
+    test('Test convertUp exists', async () => {
         expect(convertUp).toBeDefined();
     });
 

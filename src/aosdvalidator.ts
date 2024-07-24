@@ -21,7 +21,7 @@ export const validateAosd = async (inputFile: string): Promise<void> => {
         const valid = validate(data);
 
         if (!valid) {
-            console.log("ERROR", validate.errors);
+          console.log("ERROR-2", validate.errors);
         }
     } catch(error: any) {
       console.error(error);

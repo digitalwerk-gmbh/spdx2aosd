@@ -1,7 +1,7 @@
 const fs = require('fs');
 require('dotenv').config();
 import { writeErrorLog, checkErrorMessage } from './errorhandler';
-import { checkValue, getUniqueValues } from './helper';
+import { checkValue, getUniqueValues, getMultibleUsedIds, generateDataValidationMessage, getMissingComponentIds } from './helper';
 import { AosdSubComponent, DependencyObject, License, Part, Provider } from '../interfaces/interfaces';
 import { validateAosd } from './aosdvalidator';
 let inputJsonPath: string | undefined = '';
@@ -13,7 +13,6 @@ let licensesObject: License;
 let partsObject: Part;
 let dependenciesArray = [];
 let validationResults: Array<string> = [];
-let uniqueValidationResults: Array<string> = [];
 
 export const convertDown = async (cliArgument: string): Promise<void> => {
     try {
@@ -22,12 +21,17 @@ export const convertDown = async (cliArgument: string): Promise<void> => {
         outputJsonPath = process.env.OUTPUT_JSON_PATH;
         
         // First validate input aosd file
-        const validationSpdxResult = validateAosd(cliArgument);
-        //console.log(validationSpdxResult);
+        const validationResult = validateAosd(cliArgument);
+        console.log(validationResult);
 
         // Read the input spdx json file
         let jsonInputFile = fs.readFileSync(inputJsonPath);
         let inputDataArray = JSON.parse(jsonInputFile);
+
+        // Set id arrays for check data validation
+        const directCheckArray: Array<number> = inputDataArray['directDependencies'];
+        let transCheckArray: Array<number> = [];
+        let componentIdCheckArray: Array<number> = [];
 
         // Convert direct dependencies to strings
         const tempArray: Array<string> = [];
@@ -45,7 +49,12 @@ export const convertDown = async (cliArgument: string): Promise<void> => {
                 externalDependenciesArray = [];
                 for (let k = 0; k < componentsArray[i]['transitiveDependencies'].length; k++) {
                     externalDependenciesArray.push(componentsArray[i]['transitiveDependencies'][k].toString());
+                    // Collect transitive dependencies
+                    transCheckArray.push(componentsArray[i]['transitiveDependencies'][k]);
                 }
+
+                // Collect component ids
+                componentIdCheckArray.push(componentsArray[i]['id']);
 
                 // Create dependency object
                 dependenciesObject = {
@@ -110,10 +119,10 @@ export const convertDown = async (cliArgument: string): Promise<void> => {
 
                     // Check for incompatibility with modified and linking
                     if (componentsArray[i]['modified'] === null) {
-                        validationResults.push('Warning: incompatibility with modification - component name: ' + componentsArray[i]['componentName'] + ' - subcomponent: ' + subcomponent['subcomponentName']);
+                        validationResults.push('Warning: incompatibility with null value for modification - component name: ' + componentsArray[i]['componentName'] + ' - subcomponent: ' + subcomponent['subcomponentName']);
                     }
                     if (linkingType === null) {
-                        validationResults.push('Warning: incompatibility with linking      - component name: ' + componentsArray[i]['componentName'] + ' - subcomponent: ' + subcomponent['subcomponentName']);
+                        validationResults.push('Warning: incompatibility with null value for linking      - component name: ' + componentsArray[i]['componentName'] + ' - subcomponent: ' + subcomponent['subcomponentName']);
                     }
 
                     // Add data to provider object
@@ -165,17 +174,23 @@ export const convertDown = async (cliArgument: string): Promise<void> => {
         // const validationAosdResult = validateAosd(outputFileName);
         // console.log(validationAosdResult);
 
-        // Check for validation error
-        let validationMessage: string = '';
-        uniqueValidationResults = getUniqueValues(validationResults);
-        validationMessage = validationMessage + '-----------------------------------------------------\n';
-        validationMessage = validationMessage + 'Validation errors:\n';
-        validationMessage = validationMessage + '-----------------------------------------------------\n';
-        for (let i = 0; i < uniqueValidationResults.length; i++) {
-            validationMessage = validationMessage + uniqueValidationResults[i] + '\n';
+        // Check if component is in direct and transitive dependencies
+        const duplicateIds = getMultibleUsedIds(directCheckArray, transCheckArray);
+        for (let i=0; i < duplicateIds.length; i++) {
+            validationResults.push('Warning: we have found a possible circle dependency for - component name: ' + componentsArray[i]['componentName'] + ' - with id: ' + componentsArray[i]['id']);
         }
+
+        // Check if component is neither in direct dependencies nor in transitive dependencies
+        const missingIds = getMissingComponentIds(directCheckArray, transCheckArray, componentIdCheckArray);
+        for (let i=0; i < missingIds.length; i++) {
+            validationResults.push('Warning: we have found component(s) that is neither in direct dependencies nor in transitive dependencies - component id: ' + missingIds[i]);
+        }
+
+        // Check for validation error
+        const validationMessage: string = generateDataValidationMessage(validationResults);
         const result = fs.writeFileSync(process.env.LOG_FILE_PATH, validationMessage, { encoding: 'utf8' });
 
+        // Display success message
         console.log("We are done! - Thank's for using our aosd2.1 to aosd2.0 converter!");
     } catch(error) {
         console.log(error);
