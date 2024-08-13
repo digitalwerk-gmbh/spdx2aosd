@@ -70,7 +70,7 @@ export const convertUp = async (cliArgument: string): Promise<void> => {
                 dependenciesArray[i]['parts'][j]['providers'][0]['additionalLicenses'].map((adl: License) => {
                     // Create subcomponent object
                     let tmpCopyright: Array<string> = [];
-                    if (adl.hasOwnProperty('copyrights')) {
+                    if (adl.hasOwnProperty('copyrights') && adl['copyrights']['notice']) {
                         tmpCopyright = [adl['copyrights']['notice']];
                     }
 
