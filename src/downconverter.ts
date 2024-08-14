@@ -4,6 +4,7 @@ import { writeErrorLog, checkErrorMessage } from './errorhandler';
 import { checkValue, getUniqueValues, getMultibleUsedIds, generateDataValidationMessage, getMissingComponentIds } from './helper';
 import { AosdSubComponent, DependencyObject, License, Part, Provider } from '../interfaces/interfaces';
 import { validateAosd } from './aosdvalidator';
+import validation from 'ajv/dist/vocabularies/validation';
 let inputJsonPath: string | undefined = '';
 let outputJsonPath: string | undefined = '';
 let outputFile: string = '';
@@ -22,7 +23,10 @@ export const convertDown = async (cliArgument: string): Promise<void> => {
         
         // First validate input aosd file
         const validationResult = validateAosd(cliArgument);
-        console.log(validationResult);
+        // If the scheme validation returns errors add them to log
+        if (validationResult.length > 0) {
+            validationResults = validationResults.concat(validationResult);
+        }
 
         // Read the input spdx json file
         let jsonInputFile = fs.readFileSync(inputJsonPath);
