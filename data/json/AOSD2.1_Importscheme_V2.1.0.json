@@ -3,28 +3,56 @@
     "description": "Defines the JSON format for automated and manual import for software components and their dependencies into AOSD. - All fields in this schema are mandatory but not all values. - Fields with optional values are marked with default value in the description.",
     "type": "object",
     "required": ["schemaVersion", "externalId", "scanned", "directDependencies", "components"],
+    "errorMessage": {
+        "required": {
+            "schemaVersion": "schemaVersion - is a required field!",
+            "externalId": "externalId - is a required field!",
+            "scanned": "scanned - is a required field!",
+            "directDependencies": "directDependencies - is a required field!",
+            "components": "components - is a required field!"
+        }
+    },
     "properties": {
         "schemaVersion": {
             "type": "string",
             "minLength": 5,
             "pattern": "[0-99].[0-99].[0-99]",
-            "description": "Field and value are mandatory - Version of the schema according to SemVer. - Latest version is 2.0.0."
+            "description": "Field and value are mandatory - Version of the schema according to SemVer. - Latest version is 2.0.0.",
+            "errorMessage": {
+                "type": "schemaVersion - data type must be a string!",
+                "minLength": "schemaVersion - must have at least 5 characters!",
+                "pattern": "schemaVersion - should follow semver rules!"
+            }
         },
         "externalId": {
             "type": "string",
             "description": "Field is mandatory but value is optional default is empty string - This is a label that can be used in AOSD for search and identification of custom information as optional field. This can be also used for linking your system with AOSD.",
-            "default": ""
+            "default": "",
+            "errorMessage": {
+                "type": "externalId - data type must be a string!"
+            }
         },
         "scanned": {
             "type": "boolean",
-            "description": "Field and value are mandatory - Flag to mark if the software component information is the output from a scan tool like BlackDuck Deep License Scan, ScanCode, Fossology e.g. or if it was prepared manually."
+            "description": "Field and value are mandatory - Flag to mark if the software component information is the output from a scan tool like BlackDuck Deep License Scan, ScanCode, Fossology e.g. or if it was prepared manually.",
+            "errorMessage": {
+                "type": "scanned - data type must be a boolean!"
+            }
         },
         "directDependencies": {
             "type": "array",
+            "minItems": 1,
             "uniqueItems": true,
             "description": "Field and value are mandatory - Array with ID's of top level dependencies directly related to the product. However, transitive dependencies, i.e. components that are only included via direct dependencies, do not have to be listed here but as transitiveDependencies. - A product must at least contain one direct dependency.",
+            "errorMessage": {
+                "type": "directDependencies - data type must be an array!",
+                "minItems": "directDependencies - should have at least one item!"
+            },
             "items": {
-                "type": "number"
+                "type": "number",
+                "errorMessage": {
+                    "type": "directDependencies item - data type must be a number!"
+                }
             }
         },
         "components": {
@@ -32,38 +60,78 @@
             "minItems": 1,
             "uniqueItems": true,
             "description": "Mandatory - Array with all software components used in this product. - A product must at least contain one component.",
+            "errorMessage": {
+                "type": "components - data type must be an array!",
+                "minItems": "components - should have at least one item!",
+                "uniqueItems": "components - every item must be a unique component!"
+            },
             "items": {
                 "type": "object",
                 "description": "Mandatory - Software component with all needed information.",
                 "required": ["id", "componentName", "componentVersion", "scmUrl", "modified", "linking", "transitiveDependencies", "subcomponents"],
+                "errorMessage": {
+                    "type": "components item - data type must be an object!",
+                    "required": {
+                        "id": "components - id: is a required field!",
+                        "componentName": "components - id: is a required field!",
+                        "componentVersion": "components - componentVersion: - is a required field!",
+                        "scmUrl": "components - scmUrl: is a required field!",
+                        "modified": "components - modified: is a required field!",
+                        "linking": "components - linking: is a required field!",
+                        "transitiveDependencies": "components - transitiveDependencies: is a required field!",
+                        "subcomponents": "components - subcomponents: is a required field!"
+                    }
+                },               
                 "properties": {
                     "id": {
                         "type": "integer",
                         "minimum": 0,
-                        "description": "Field and value are mandatory - Id of the component in this file as mandatory field. The ID must be unique!"
+                        "description": "Field and value are mandatory - Id of the component in this file as mandatory field. The ID must be unique!",
+                        "errorMessage": {
+                            "type": "components - id: data type must be an integer!",
+                            "minimum": "components - id: allowed minimum value is 0!"
+                        }
                     },
                     "componentName": {
                         "type": "string",
                         "minLength": 1,
                         "pattern": "[0-9a-zA-Z]+",
-                        "description": "Field and value are mandatory - Name of the software component as mandatory field."
+                        "description": "Field and value are mandatory - Name of the software component as mandatory field.",
+                        "errorMessage": {
+                            "type": "components - componentName: data type must be an string!",
+                            "minLength": "components - componentName: must have at least 1 character!",
+                            "pattern": "components - componentName: can have numbers and charatcers only!"
+                        }
                     },
                     "componentVersion": {
                         "type": "string",
                         "minLength": 1,
                         "maxLength": 50,
                         "pattern": "[0-9a-zA-Z]+",
-                        "description": "Field and value are mandatory - Exact version of the software component as mandatory field."
+                        "description": "Field and value are mandatory - Exact version of the software component as mandatory field.",
+                        "errorMessage": {
+                            "type": "components - componentVersion: data type must be an string!",
+                            "minLength": "components - componentVersion: must have at least 1 character!",
+                            "maxLength": "components - componentVersion: must have at least 50 characters!",
+                            "pattern": "components - componentVersion: can have numbers and charatcers only!"
+                        }
                     },
                     "scmUrl": {
                         "type": "string",
                         "minLength": 5,
-                        "description": "Field and value are mandatory - Url for the source code repository / alternatively the homepage URL for the component."
+                        "description": "Field and value are mandatory - Url for the source code repository / alternatively the homepage URL for the component.",
+                        "errorMessage": {
+                            "type": "components - scmUrl: data type must be an string!",
+                            "minLength": "components - scmUrl: must have at least 5 characters!"
+                        }
                     },
                     "modified": {
                         "type": ["boolean", "null"],
                         "description": "Field is mandatory and value is optional, default is null, except for licenses with conditions for modification e.g. copyleft licenses - Information about modification of source code of the component.",
-                        "default": null
+                        "default": null,
+                        "errorMessage": {
+                            "type": "components - modified: data type must be boolean or null!"
+                        }
                     },
                     "linking": {
                         "type": ["string", "null"],
@@ -75,13 +143,22 @@
                             "process_call",
                             null
                         ],
-                        "default": null
+                        "default": null,
+                        "errorMessage": {
+                            "type": "components - linking: data type must be string of dynamic_linking, static_linking, sys_call, process_call or null!"
+                        }
                     },
                     "transitiveDependencies": {
                         "type": "array",
                         "description": "Field is mandatory and value is optional, default is an empty array, except if the component has further dependencies. Such further dependencies are also known as transitive dependencies. These transitive dependencies need to be listed as specific components with ID's in the component list. The ID's of this components shall be referenced here.",
+                        "errorMessage": {
+                            "type": "components - transitiveDependencies: data type must be an array!"
+                        },
                         "items": {
-                            "type": "integer"
+                            "type": "integer",
+                            "errorMessage": {
+                                "type": "components - transitiveDependencies item: data type must be a number!"
+                            }
                         },
                         "default": []
                     },
@@ -89,57 +166,106 @@
                         "type": "array",
                         "minItems": 1,
                         "description": "Mandatory - Array with all subcomponents of the specific software component. A subcomponent is a finding in a software component with license and / or copyright information (sometimes also referred to as part). Usually there is a main license of the component and further subcomponent licenses in individual directories or files of the component. - Important hint: The first subcomponent in every component block must be named main!",
+                        "errorMessage": {
+                            "type": "subcomponents: data type must be an array!"
+                        },
                         "items": {
                             "type": "object",
                             "description": "Mandatory - for every license identified within all files of the softwarecomponent shall a subcomponent be provided. - The first subcomponent in a component block should contain the main license of the component and must be named main. - All following subcomponents inside a component can be freely assigned.",
                             "required": ["subcomponentName", "spdxId", "copyrights", "authors", "licenseText", "licenseTextUrl", "selectedLicense", "additionalLicenseInfos"],
+                            "errorMessage": {
+                                "type": "subcomponents item - data type must be an object!",
+                                "required": {
+                                    "subcomponentName": "subcomponents - subcomponentName: is a required field!",
+                                    "spdxId": "subcomponents - spdxId: is a required field!",
+                                    "copyrights": "subcomponents - copyrights: is a required field!",
+                                    "authors": "subcomponents - authors: is a required field!",
+                                    "licenseText": "subcomponents - licenseText: is a required field!",
+                                    "licenseTextUrl": "subcomponents - licenseTextUrl: is a required field!",
+                                    "selectedLicense": "subcomponents - selectedLicense: is a required field!",
+                                    "additionalLicenseInfos": "subcomponents - additionalLicenseInfos: is a required field!"
+                                }
+                            },
                             "properties": {
                                 "subcomponentName": {
                                     "type": "string",
                                     "minLength": 1,
-                                    "description": "Field and value are mandatory - label of the subcomponent as mandatory field. You could use 'GPL-PARTS' / 'BSD-PARTS' or 'A' / 'B' for example- Minimum length 1 character. - Hint: The first subcomponent in a component block must be named main!"
+                                    "description": "Field and value are mandatory - label of the subcomponent as mandatory field. You could use 'GPL-PARTS' / 'BSD-PARTS' or 'A' / 'B' for example- Minimum length 1 character. - Hint: The first subcomponent in a component block must be named main!",
+                                    "errorMessage": {
+                                        "type": "subcomponents - subcomponentName: data type must be an string!",
+                                        "minLength": "subcomponents - subcomponentName: must have at least 1 character!"
+                                    }
                                 },
                                 "spdxId": {
                                     "type": "string",
                                     "minLength": 1,
-                                    "description": "Field and value are mandatory - can be spdx ID or scancode identifier. Please see https://spdx.org/licenses/ and https://scancode-licensedb.aboutcode.org/index.html - if license exceptions are in use, please follow spdx instructions and connect license identifier and exception identifier using the operator 'with'. In case of alternative licensing connect the referring license identifier with the operator 'or' in between and provide the selectedlicense information."
+                                    "description": "Field and value are mandatory - can be spdx ID or scancode identifier. Please see https://spdx.org/licenses/ and https://scancode-licensedb.aboutcode.org/index.html - if license exceptions are in use, please follow spdx instructions and connect license identifier and exception identifier using the operator 'with'. In case of alternative licensing connect the referring license identifier with the operator 'or' in between and provide the selectedlicense information.",
+                                    "errorMessage": {
+                                        "type": "subcomponents - spdxId: data type must be an string!",
+                                        "minLength": "subcomponents - spdxId: must have at least 1 character!"
+                                    }
                                 },
                                 "copyrights": {
                                     "type": "array",
                                     "description": "Field is mandatory and value is optional, default is an empty array - except the subcomponent has copyrights - may only be an empty array if no Copyrights were found. - Array with all copyrights that are linked to this license subcomponent.",
+                                    "errorMessage": {
+                                        "type": "subcomponents - copyrights: data type must be an array!"
+                                    },
                                     "items": {
                                         "type": "string",
-                                        "description": "Every item here is a copyright line / note."
+                                        "description": "Every item here is a copyright line / note.",
+                                        "errorMessage": {
+                                            "type": "subcomponents - copyrights item: data type must be an string!"
+                                        }
                                     },
                                     "default": []
                                 },
                                 "authors": {
                                     "type": "array",
                                     "description": "Field is mandatory and value is optional, default is empty array - except the subcomponent has no copyrights but authors - Array with all authors that are related to this subcomponent's license.",
+                                    "errorMessage": {
+                                        "type": "subcomponents - authors: data type must be an array!"
+                                    },
                                     "items": {
                                         "type": "string",
-                                        "description": "Authors are normally listed by their names."
+                                        "description": "Authors are normally listed by their names.",
+                                        "errorMessage": {
+                                            "type": "subcomponents - authors item: data type must be an string!"
+                                        }
                                     },
                                     "default": []
                                 },
                                 "licenseText": {
                                     "type": "string",
                                     "minLength": 20,
-                                    "description": "Field and value are mandatory - complete license text or permission note that was found for this specific subcomponent in the source code. Make sure to include the individualized license text if the specific license provides such variable parts e.g. BSD-3-Clause in clause 3 and disclaimer."
+                                    "description": "Field and value are mandatory - complete license text or permission note that was found for this specific subcomponent in the source code. Make sure to include the individualized license text if the specific license provides such variable parts e.g. BSD-3-Clause in clause 3 and disclaimer.",
+                                    "errorMessage": {
+                                        "type": "subcomponents - licenseText: data type must be an string!",
+                                        "minLength": "subcomponents - licenseText: must have at least 20 characters!"
+                                    }
                                 },
                                 "licenseTextUrl": {
                                     "type": "string",
                                     "description": "Field is mandatory and value is optional, default is empty string - value is mandatory if the license information are not the result of a file level scan - in this case the link to the specific license text for this subcomponent from the source code is necessary.",
+                                    "errorMessage": {
+                                            "type": "subcomponents - licenseTextUrl: data type must be an string!"
+                                    },
                                     "default": ""
                                 },
                                 "selectedLicense": {
                                     "type": "string",
                                     "description": "Field is mandatory and value is optional, default is empty string - in case of alternative licensing for the subcomponent you have to include the license identifier of the license you elect. - If used please choose one of the license identifiers you provided in spdxId of this subcomponent.",
+                                    "errorMessage": {
+                                            "type": "subcomponents - selectedLicense: data type must be an string!"
+                                    },
                                     "default": ""
                                 },
                                 "additionalLicenseInfos": {
                                     "type": "string",
                                     "description": "Field is mandatory and value is optional, default is empty string - the field is not for any specific information but can be used for notes regarding the licenses. (e.g. text is a permission note)",
+                                    "errorMessage": {
+                                        "type": "subcomponents - additionalLicenseInfos: data type must be an string!"
+                                    },
                                     "default": ""
                                 }
                             }

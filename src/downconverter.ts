@@ -4,7 +4,6 @@ import { writeErrorLog, checkErrorMessage } from './errorhandler';
 import { checkValue, getUniqueValues, getMultibleUsedIds, generateDataValidationMessage, getMissingComponentIds } from './helper';
 import { AosdSubComponent, DependencyObject, License, Part, Provider } from '../interfaces/interfaces';
 import { validateAosd } from './aosdvalidator';
-import validation from 'ajv/dist/vocabularies/validation';
 let inputJsonPath: string | undefined = '';
 let outputJsonPath: string | undefined = '';
 let outputFile: string = '';
@@ -27,6 +26,7 @@ export const convertDown = async (cliArgument: string): Promise<void> => {
         if (validationResult.length > 0) {
             validationResults = validationResults.concat(validationResult);
         }
+        validationResults.push('\n-----------------------------------------------------\nData-Validation errors:\n-----------------------------------------------------\n');
 
         // Read the input spdx json file
         let jsonInputFile = fs.readFileSync(inputJsonPath);
@@ -174,10 +174,6 @@ export const convertDown = async (cliArgument: string): Promise<void> => {
         // Write data to aosd json format
         fs.writeFileSync(outputFile, JSON.stringify(newObject, null, '\t'));
                 
-        // Validate the aosd json result 
-        // const validationAosdResult = validateAosd(outputFileName);
-        // console.log(validationAosdResult);
-
         // Check if component is in direct and transitive dependencies
         const duplicateIds = getMultibleUsedIds(directCheckArray, transCheckArray);
         for (let i=0; i < duplicateIds.length; i++) {
@@ -188,6 +184,13 @@ export const convertDown = async (cliArgument: string): Promise<void> => {
         const missingIds = getMissingComponentIds(directCheckArray, transCheckArray, componentIdCheckArray);
         for (let i=0; i < missingIds.length; i++) {
             validationResults.push('Warning: we have found component(s) that is neither in direct dependencies nor in transitive dependencies - component id: ' + missingIds[i]);
+        }
+
+        // Validate the aosd json result 
+        const validationAosdResult = validateAosd(outputFileName);
+        // If the scheme validation returns errors add them to log
+        if (validationAosdResult.length > 0) {
+            validationResults = validationResults.concat(validationAosdResult);
         }
 
         // Check for validation error

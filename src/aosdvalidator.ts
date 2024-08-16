@@ -1,6 +1,9 @@
 require('dotenv').config();
 const fs = require('fs');
-import Ajv from "ajv";
+const Ajv = require('ajv').default;
+const ajv = new Ajv({allErrors: true, keepErrors: false});
+const AjvErrors = require('ajv-errors');
+AjvErrors(ajv, { singleError: false, keepErrors: false });
 
 export const validateAosd = (inputFile: string): Array<string> => {
     let messageArray: Array<string> = [];
@@ -19,11 +22,13 @@ export const validateAosd = (inputFile: string): Array<string> => {
         let data = JSON.parse(aosdJsonFile);
 
         // Run validation
-        const validate = new Ajv().compile(aosd2_schema);
+        const validate = ajv.compile(aosd2_schema);
         const valid = validate(data);
 
         if (!valid) {
           // write data to error.log
+          console.log("AJV", validate.errors);
+          messageArray.push('\n-----------------------------------------------------\n' + inputFile + ' scheme validation errors:\n-----------------------------------------------------\n');
           if (validate.hasOwnProperty('errors') && validate.errors ) {
             validationErrors = validate.errors
           }
@@ -34,12 +39,12 @@ export const validateAosd = (inputFile: string): Array<string> => {
             // console.log("ERROR-3", validationErrors[k].keyword);
             // console.log("ERROR-4", validationErrors[k].params);
             // console.log("ERROR-5", validationErrors[k].message);
-            messageArray.push('SchemeValidationError: ' + validationErrors[k].instancePath + '/' + validationErrors[k].schemaPath + '/' + validationErrors[k].keyword + '/' + validationErrors[k].params + '/' + validationErrors[k].message);
+            messageArray.push('Input: SchemeValidationError: ' + validationErrors[k].message);
           }
         }
         return messageArray;
     } catch(error: any) {
-      console.error(error);
+      //console.error(error);
       return messageArray;
     }
 }

@@ -92,13 +92,7 @@ describe("Test for helper functions", () => {
             'Warning: incompatibility with modification - component name: test_component_7 - subcomponent: subcomponent_7_2'
         ];
         const response = generateDataValidationMessage(testArray1);
-        expect(response).toContain('Data-Validation errors:');
-    });
-
-    test('Test - 02 generateDataValidationMessage works as expected', async () => {
-        const testArray1: Array<string> = [''];
-        const response = generateDataValidationMessage(testArray1);
-        expect(response).toContain('Data-Validation errors:');
+        expect(response).toContain('test_component_4 - subcomponent: main');
     });
 });
 
@@ -111,7 +105,6 @@ describe("AOSD2.1 to AOSD2.0 converter test", () => {
     test('Test convertDown works as expected', async () => {
 
         const response = convertDown('aosd2.1_import.json');
-        console.log(response);
         const path = './tests/data/input/aosd2.1_import.json';
         const resultFile = './tests/data/output/aosd2.1_import_aosd2.0.json';
         const testDataArray = JSON.parse(fs.readFileSync(resultFile, 'utf8')); 
@@ -263,7 +256,6 @@ describe("AOSD2.0 to AOSD2.1 converter test", () => {
     test('Test convertUp works as expected', async () => {
 
         const response = convertUp('aosd2.0_import.json');
-        console.log(response);
         const path = './tests/data/input/aosd2.0_import.json';
         const resultFile = './tests/data/output/aosd2.0_import_aosd2.1.json';
         const testDataArray = JSON.parse(fs.readFileSync(resultFile, 'utf8')); 

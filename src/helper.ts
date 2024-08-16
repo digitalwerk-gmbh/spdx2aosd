@@ -19,9 +19,7 @@ export const generateDataValidationMessage = (messagesArray: Array<number> | any
   let uniqueValidationResults: Array<string> = [];
   let messageText: string = '';
   uniqueValidationResults = getUniqueValues(messagesArray);
-  messageText = messageText + '-----------------------------------------------------\n';
-  messageText = messageText + 'Data-Validation errors:\n';
-  messageText = messageText + '-----------------------------------------------------\n';
+  messageText = '';
   for (let i = 0; i < uniqueValidationResults.length; i++) {
     messageText = messageText + uniqueValidationResults[i] + '\n';
   }

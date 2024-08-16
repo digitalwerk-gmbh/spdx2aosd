@@ -1,6 +1,6 @@
 {
 	"schemaVersion": "2.1.0",
-	"externalId": "",
+	"externalId": "myOwnId",
 	"scanned": true,
 	"directDependencies": [
 		1,
@@ -9,7 +9,7 @@
 	],
 	"components": [
 		{
-			"id": 1,
+			"id": "1",
 			"componentName": "test_component_1",
 			"componentVersion": "7.0.3",
 			"scmUrl": "https://registry.npmjs.org/test_comonent_1/test_comonent_1.tgz",
