@@ -1,6 +1,4 @@
 {
-    "$schema": "http://json-schema.org/draft-07/schema#",
-    "$id": "https://www.cip.audi.de/bitbucket/projects/AEVAOSD/repos/aosd_importer/raw/scripts/aosdjsongenerator/schema/product_import.schema.json",
     "type": "object",
     "title": "The AOSD 2.0 JSON import",
     "description": "Defines the JSON format for automatically importing product dependencies into AOSD2.0",
@@ -14,34 +12,63 @@
           "text"
         ],
         "additionalProperties": false,
+        "errorMessage": {
+          "type": "license - type: data type must be an object!",
+          "required": {
+            "spdxId": "license - spdxId: is a required field!",
+            "text": "license - text: is a required field!"
+          }
+        },
         "properties": {
           "name": {
             "description": "Full name of the license",
-            "type": "string"
+            "type": "string",
+            "errorMessage": {
+                "type": "license - name: data type must be a string!"
+            }
           },
           "spdxId": {
             "description": "SPDX license identifier from https://spdx.org/licenses/",
             "type": "string",
+            "errorMessage": {
+                "type": "license - spdxId: data type must be a string!"
+            },
             "default": "Commercial"
           },
           "text": {
             "description": "License text",
-            "type": "string"
+            "type": "string",
+            "errorMessage": {
+                "type": "license - text: data type must be a string!"
+            }
           },
           "url": {
             "description": "URL where the license is published and can be read.",
             "type": "string",
+            "errorMessage": {
+                "type": "license - url: data type must be a string!"
+            },
             "default": "https://..."
           },
           "copyrights": {
             "type": "object",
             "additionalProperties": false,
+            "errorMessage": {
+                "type": "license - copyrights: data type must be an object!",
+                "additionalProperties": "license: no additional properties are allowed!"
+            },
             "properties": {
               "holders": {
-                "type": "array"
+                "type": "array",
+                "errorMessage": {
+                  "type": "license - copyright holders: data type must be an array!"
+                }
               },
               "notice": {
-                "type": "string"
+                "type": "string",
+                "errorMessage": {
+                  "type": "license - copyright notice: data type must be a string!"
+                }
               }
             }
           },
@@ -52,7 +79,11 @@
               "packagemanagement",
               "scm",
               "licensefile"
-            ]
+            ],
+            "errorMessage": {
+              "type": "license - origin: data type must be a string!",
+              "enum": "license - origin: data must be on of the allowed values packagemanagement, scm, licensefile!"
+            }
           }
         }
       },

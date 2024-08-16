@@ -1,7 +1,6 @@
 const fs = require('fs');
 require('dotenv').config();
-import { writeErrorLog, checkErrorMessage } from './errorhandler';
-import { checkValue, getUniqueValues, getMultibleUsedIds, generateDataValidationMessage, getMissingComponentIds } from './helper';
+import { getMultibleUsedIds, generateDataValidationMessage, getMissingComponentIds } from './helper';
 import { AosdSubComponent, DependencyObject, License, Part, Provider } from '../interfaces/interfaces';
 import { validateAosd } from './aosdvalidator';
 let inputJsonPath: string | undefined = '';
@@ -21,15 +20,15 @@ export const convertDown = async (cliArgument: string): Promise<void> => {
         outputJsonPath = process.env.OUTPUT_JSON_PATH;
         
         // First validate input aosd file
-        const validationResult = validateAosd(cliArgument);
+        const validationResult = validateAosd(process.env.INPUT_JSON_PATH + cliArgument, process.env.AOSD2_1_JSON_SCHEME);
         // If the scheme validation returns errors add them to log
         if (validationResult.length > 0) {
             validationResults = validationResults.concat(validationResult);
         }
         validationResults.push('\n-----------------------------------------------------\nData-Validation errors:\n-----------------------------------------------------\n');
 
-        // Read the input spdx json file
-        let jsonInputFile = fs.readFileSync(inputJsonPath);
+        // Read the input aosd json file
+        let jsonInputFile = fs.readFileSync(inputJsonPath, { encoding: 'utf8' });
         let inputDataArray = JSON.parse(jsonInputFile);
 
         // Set id arrays for check data validation
@@ -187,7 +186,7 @@ export const convertDown = async (cliArgument: string): Promise<void> => {
         }
 
         // Validate the aosd json result 
-        const validationAosdResult = validateAosd(outputFileName);
+        const validationAosdResult = validateAosd(process.env.OUTPUT_JSON_PATH + outputFileName, process.env.AOSD2_0_JSON_SCHEME);
         // If the scheme validation returns errors add them to log
         if (validationAosdResult.length > 0) {
             validationResults = validationResults.concat(validationAosdResult);

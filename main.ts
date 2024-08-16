@@ -1,6 +1,5 @@
 require('dotenv').config();
 const fs = require('fs');
-import { writeErrorLog, checkErrorMessage } from './src/errorhandler'
 import { convertDown } from './src/downconverter';
 import { convertUp } from './src/upconverter';
 let cliArgument: string = process.argv[2];

@@ -1,9 +1,8 @@
 const fs = require('fs');
 require('dotenv').config();
-import { writeErrorLog, checkErrorMessage } from './errorhandler'
-import { checkValue, getUniqueValues } from './helper'
+import { generateDataValidationMessage,  } from './helper'
 import { AosdObject, AosdComponent, AosdSubComponent, License } from "../interfaces/interfaces";
-import { validateAosd } from "./aosdvalidator";
+import { validateAosd } from './aosdvalidator';
 let inputJsonPath: string | undefined = '';
 let outputJsonPath: string | undefined = '';
 let outputFile: string = '';
@@ -11,6 +10,7 @@ let counter: number = 1;
 let idMapping: Array<object> = [];
 let tmpModified: Array<boolean> = [];
 let tmpLinking: Array<string> = [];
+let validationResults: Array<string> = [];
 
 export const convertUp = async (cliArgument: string): Promise<void> => {
     try {
@@ -18,13 +18,17 @@ export const convertUp = async (cliArgument: string): Promise<void> => {
         inputJsonPath = process.env.INPUT_JSON_PATH + cliArgument;
         outputJsonPath = process.env.OUTPUT_JSON_PATH;
 
-        // First validate input spdx file
-        // const validationSpdxResult = validateSpdx(cliArgument);
-        // console.log(validationSpdxResult);
+        // First validate input aosd file
+        const validationResult = validateAosd(process.env.INPUT_JSON_PATH + cliArgument, process.env.AOSD2_0_JSON_SCHEME);
+        // If the scheme validation returns errors add them to log
+        if (validationResult.length > 0) {
+            validationResults = validationResults.concat(validationResult);
+        }
+        validationResults.push('\n-----------------------------------------------------\nData-Validation errors:\n-----------------------------------------------------\n');
 
-        const inputData = fs.readFileSync(inputJsonPath, { encoding: 'utf8' });
-        // Convert JSON string to object
-        const inputDataArray = JSON.parse(inputData);
+        // Read the input aosd json file
+        const jsonInputFile = fs.readFileSync(inputJsonPath, { encoding: 'utf8' });
+        const inputDataArray = JSON.parse(jsonInputFile);
 
         // Create new Aosd JSON Object
         let newObject: AosdObject  = {
@@ -139,12 +143,19 @@ export const convertUp = async (cliArgument: string): Promise<void> => {
         // Write data to aosd json format
         fs.writeFileSync(outputFile, JSON.stringify(newObject, null, '\t'));
 
+        // Build in data validation with checks in helper.ts !!!
+
 
         // Validate the aosd json result 
-        // const validationAosdResult = validateAosd(outputFileName);
-        // console.log(validationAosdResult);
+        const validationAosdResult = validateAosd(process.env.OUTPUT_JSON_PATH + outputFileName, process.env.AOSD2_0_JSON_SCHEME);
+        // If the scheme validation returns errors add them to log
+        if (validationAosdResult.length > 0) {
+            validationResults = validationResults.concat(validationAosdResult);
+        }
 
-        // fs.writeFileSync('error.log', error);
+        // Check for validation error
+        const validationMessage: string = generateDataValidationMessage(validationResults);
+        const result = fs.writeFileSync(process.env.LOG_FILE_PATH, validationMessage, { encoding: 'utf8' });
         
         console.log("We are done! - Thank's for using our aosd2.0 to aosd2.1 converter!");
     } catch(error) {
