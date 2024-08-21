@@ -2,6 +2,7 @@ require('dotenv').config();
 const fs = require('fs');
 import { convertDown } from './src/downconverter';
 import { convertUp } from './src/upconverter';
+import { convertSpdx } from "./src/converter";
 let cliArgument: string = process.argv[2];
 
 // Check if we got argument for the input file name
@@ -21,6 +22,9 @@ if(cliArgument ===  undefined) {
         }
         else if (process.env.VERSION === 'up') {
             const response = convertUp(cliArgument);      
+        }
+        else if (process.env.VERSION === 'spdx') {
+            const response = convertSpdx(cliArgument);    
         }
     } catch(error) {
         // writeErrorLog({ message: checkErrorMessage(error) })

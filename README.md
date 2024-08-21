@@ -213,3 +213,68 @@ This warning tells you that you have generated data for a software component. Bu
 This component will be ignored by the AOSD import!
 
 ## Error messages explained
+
+
+#### TODO
+
+# SPDXToAOSDConverter
+
+This is a converter for the SPDX2.3 JSON format that meets the requirements of the GroupSpecification of Audi and Volkswagen.
+With this cli command line tool you can convert such an SPDX2.3 JSON file to the proprietary AOSD2.1 JSON format.
+
+## Requirments
+
+This converter can only handle SPDX2.3 JSON files that meet the requirements of the GroupSpecification of Audi and Volkswagen.
+The converter was specific build for the GroupSpecification.
+We will only validate data fields that are descibed in this Specifiaction. 
+We assume the data in the SPDX2.3 JSON file was allready kurtated and is correct. 
+ 
+## General
+
+The reason why this converter was developed is to give you the ability to convert SPDX2.3 JSON files to the proprietary AOSD2.1 JSON format in order to import the data into the AOSD.
+The converter has a modular structure and 2 main funktionalities.
+
+Functionalty 1:
+
+The tool generates a license list ith valid spdx identifiers and license texts from two sources.
+We are using the spdx license list and the scancode license DB.
+
+Functionalty 2:
+
+
+
+## Getting started
+
+How to start. Setup and installation.
+
+## Description 
+
+This cli command line tool works in two steps.
+
+
+It is recommendet to allways run step 1 the license command first to generate an license file with up to date data from spdx and scancode.
+You should only skip step 1 if you do not have an internet connection to run the update of the license list.
+In this case the initially shipped license list will be the fall back.
+
+After the license list is updated or you have skipped this step you should run the converter script.
+
+## How to use this tool
+
+
+
+## Open Questions
+
+- How to generate scanned information 
+- 
+
+
+## ToDos
+
+1. Readable error messages from scheme valaidators
+2. Better response messages
+3. More tests and test cases also for function and validators
+4. README
+5. More plausi checks component id's in directDependency OR transitiveDependency if not warning
+
+
+
