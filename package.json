@@ -9,7 +9,7 @@
     "up": "cross-env RUN_MODE=production VERSION=up ts-node main.ts",
     "down": "cross-env RUN_MODE=production VERSION=down ts-node main.ts",
     "spdx": "cross-env RUN_MODE=production VERSION=spdx ts-node main.ts",
-    "licenses": "cross-env RUN_MODE=production ts-node licenses.ts",
+    "licenses": "cross-env RUN_MODE=production ts-node ./src/licenses.ts",
     "test": "cross-env RUN_MODE=test INPUT_JSON_PATH=./tests/data/input/ OUTPUT_JSON_PATH=./tests/data/output/ jest"
   },
   "repository": {

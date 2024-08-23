@@ -1,16 +1,17 @@
 const fs = require('fs');
 require('dotenv').config();
-import { generateDataValidationMessage,  } from './helper'
-import { AosdObject, AosdComponent, AosdSubComponent, License } from "../interfaces/interfaces";
+import { generateDataValidationMessage, generateUniqueSubcomponentName } from './helper'
+import { AosdObject, AosdComponent, AosdSubComponent, LicenseAosd } from "../interfaces/interfaces";
 import { validateAosd } from './aosdvalidator';
 let inputJsonPath: string | undefined = '';
 let outputJsonPath: string | undefined = '';
 let outputFile: string = '';
 let counter: number = 1;
 let idMapping: Array<object> = [];
-let tmpModified: Array<boolean> = [];
-let tmpLinking: Array<string> = [];
+let tmpModified: Array<boolean | null> = [];
+let tmpLinking: Array<string | null> = [];
 let validationResults: Array<string> = [];
+let uniqueNameCounter: number = 0;
 
 export const convertUp = async (cliArgument: string): Promise<void> => {
     try {
@@ -69,43 +70,68 @@ export const convertUp = async (cliArgument: string): Promise<void> => {
             // Loop over all subcomponents(parts)
             tmpModified = [];
             tmpLinking = [];
+            let maincounter = 0;
             for (let j = 0; j < dependenciesArray[i]['parts'].length; j++) {
                 // Loop over providers
-                dependenciesArray[i]['parts'][j]['providers'][0]['additionalLicenses'].map((adl: License) => {
-                    // Create subcomponent object
+                dependenciesArray[i]['parts'][j]['providers'][0]['additionalLicenses'].map((adl: LicenseAosd) => {
+                    // Create new copyright array
                     let tmpCopyright: Array<string> = [];
-                    if (adl.hasOwnProperty('copyrights') && adl['copyrights']['notice']) {
-                        tmpCopyright = [adl['copyrights']['notice']];
+                    if (adl.hasOwnProperty('copyrights')) {
+                        if (adl['copyrights'].hasOwnProperty('notice') && adl['copyrights']['notice'] !== "") {
+                            tmpCopyright = [adl['copyrights']['notice']];
+                        } else {
+                            if (adl['copyrights'].hasOwnProperty('holders') && adl['copyrights']['holders'][0] !== "" ) {
+                                tmpCopyright = adl['copyrights']['holders'];
+                            }
+                        }    
                     }
 
+                    // New logic for take over part or additionalLicense name
+                    let tmpSubcomponentName: string = generateUniqueSubcomponentName(dependenciesArray[i]['parts'].length, dependenciesArray[i]['parts'][j]['providers'][0]['additionalLicenses'].length, maincounter, uniqueNameCounter, dependenciesArray[i]['parts'][j]['name'], adl['name']);
+
+                    // Create subcomponent object
                     let subcomponentObject: AosdSubComponent = {
-                        subcomponentName: dependenciesArray[i]['parts'][j]['name'] === 'default' ? 'main' : dependenciesArray[i]['parts'][j]['name'],
+                        subcomponentName: tmpSubcomponentName,
                         spdxId: adl['spdxId'],
                         copyrights: tmpCopyright,
                         authors: [],
                         licenseText: adl['text'],
-                        licenseTextUrl: adl['url'],
+                        licenseTextUrl: adl.hasOwnProperty('url') ? adl['url'] : '',
                         selectedLicense: "",
                         additionalLicenseInfos: ""
                     };
                     // collect data from all parts of a component
-                    tmpModified.push(
-                        dependenciesArray[i]['parts'][0]['modified'],
-                    );
+                    if (dependenciesArray[i]['parts'][j]['providers'][0].hasOwnProperty('modified')) {
+                        tmpModified.push(
+                            dependenciesArray[i]['parts'][j]['providers'][0]['modified'],
+                        );
+                    } else {
+                        tmpModified.push(null);
+                    }
+                
                     // collect data from all parts of a component
-                    tmpLinking.push(
-                        dependenciesArray[i]['parts'][0]['usage'],
-                    );
+                    if (dependenciesArray[i]['parts'][j]['providers'][0].hasOwnProperty('usage')) {
+                        tmpLinking.push(
+                            dependenciesArray[i]['parts'][j]['providers'][0]['usage'],
+                        );
+                    } else {
+                        tmpLinking.push(null);
+                    }
                     // Push data into new subcomponent object
                     componentObject['subcomponents'].push(subcomponentObject);
+                    // Check if we have allready a subcomponent with the name main e.q. default
+                    if (dependenciesArray[i]['parts'][j]['name'] === 'default') {
+                        maincounter++;
+                    }
+                    uniqueNameCounter++;
             }); 
             }
             // Make array data unique
             tmpModified = Array.from(new Set(tmpModified));
             tmpLinking = Array.from(new Set(tmpLinking));
             // Write data to comonent object
-            componentObject['modified'] = tmpModified[0];
-            componentObject['linking'] = tmpLinking[0];
+            componentObject['modified'] = tmpModified.length > 0 ? tmpModified[0] : null;
+            componentObject['linking'] = tmpLinking.length > 0 ? tmpLinking[0] : null;
             //Push data into the new object
             newObject['components'].push(componentObject);
             counter++;
@@ -155,11 +181,11 @@ export const convertUp = async (cliArgument: string): Promise<void> => {
 
         // Check for validation error
         const validationMessage: string = generateDataValidationMessage(validationResults);
-        const result = fs.writeFileSync(process.env.LOG_FILE_PATH, validationMessage, { encoding: 'utf8' });
+        fs.writeFileSync(process.env.LOG_FILE_PATH, validationMessage, { encoding: 'utf8' });
         
         console.log("We are done! - Thank's for using our aosd2.0 to aosd2.1 converter!");
-    } catch(error) {
-        // writeErrorLog({ message: checkErrorMessage(error) })
+    } catch(error: any) {
+        fs.writeFileSync(process.env.LOG_FILE_PATH, error.toString(), { encoding: 'utf8' });
         console.log("Sorry for that - something went wrong! Please check the error.log file in the root folder for detailed information.");
     }
 }
@@ -174,8 +200,8 @@ const CheckValue = (value: any, arrayData: any[], objectkey: string) => {
           });
           break;
       }
-    } catch (error) {
-        // writeErrorLog({ message: checkErrorMessage(error) })
+    } catch (error: any) {
+        fs.writeFileSync(process.env.LOG_FILE_PATH, error.toString(), { encoding: 'utf8' });
         console.log("Sorry for that - something went wrong! Please check the error.log file in the root folder for detailed information.");
         return Object;
     }

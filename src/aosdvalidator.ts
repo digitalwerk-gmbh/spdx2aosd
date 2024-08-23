@@ -10,10 +10,8 @@ export const validateAosd = (inputFile: string, inputScheme: string | undefined)
     try {
         let validationErrors: string | any[] = [];
         // Read the aosd json scheme
-        const aosd2_schema = JSON.parse(
-          fs.readFileSync(inputScheme, {
-            encoding: "utf8",
-          }),
+        const jsonScheme = JSON.parse(
+          fs.readFileSync(inputScheme, {encoding: "utf8",})
         );        
 
         // Read the spdx json file for validation
@@ -21,7 +19,7 @@ export const validateAosd = (inputFile: string, inputScheme: string | undefined)
         let data = JSON.parse(aosdJsonFile);
 
         // Run validation
-        const validate = ajv.compile(aosd2_schema);
+        const validate = ajv.compile(jsonScheme);
         const valid = validate(data);
 
         if (!valid) {

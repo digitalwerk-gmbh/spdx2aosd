@@ -4,6 +4,7 @@
     "type": "object",
     "required": ["schemaVersion", "externalId", "scanned", "directDependencies", "components"],
     "errorMessage": {
+        "type": "jsonfile: data type must be a object!",
         "required": {
             "schemaVersion": "schemaVersion - is a required field!",
             "externalId": "externalId - is a required field!",
@@ -81,7 +82,7 @@
                         "transitiveDependencies": "components ${0/componentName} - transitiveDependencies: is a required field!",
                         "subcomponents": "components ${0/componentName} - subcomponents: is a required field!"
                     }
-                },               
+                },          
                 "properties": {
                     "id": {
                         "type": "integer",

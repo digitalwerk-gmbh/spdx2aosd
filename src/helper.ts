@@ -43,3 +43,26 @@ export const checkValue = async (value: any, arrayData: any[], objectkey: string
     }
     return Array;
 };
+
+export const generateUniqueSubcomponentName = (partsCount: number, adlCount: number, mainCount: number, uniqueNameCounter: number, partName: string, licenseName: string): string => {
+  let newSubcomponentName: string = '';
+
+  // variants only 1 part and 1 additionalLicense
+  if (partsCount === 1 && adlCount === 1) {
+    newSubcomponentName = partName === 'default' && mainCount === 0 ? 'main' : partName + '_' + uniqueNameCounter;
+  }
+  // variants only 1 part and more then 1  additionalLicense
+  if (partsCount === 1 && adlCount > 1) {
+    newSubcomponentName = partName === 'default' && mainCount === 0 ? 'main' : licenseName + '_' + uniqueNameCounter;
+  }
+  // variants more then 1 part and 1 additionalLicense
+  if (partsCount > 1 && adlCount === 1) {
+    newSubcomponentName = partName === 'default' && mainCount === 0 ? 'main' : partName + '_' + uniqueNameCounter;
+  }
+  // variants more then 1 part and more then 1 additionalLicense
+  if (partsCount > 1 && adlCount > 1) {
+    newSubcomponentName = partName === 'default' && mainCount === 0 ? 'main' : partName + '_' + licenseName + '_' + uniqueNameCounter;
+  }
+  return newSubcomponentName;
+}
+

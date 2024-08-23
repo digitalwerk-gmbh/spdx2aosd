@@ -2,7 +2,7 @@ require('dotenv').config();
 const fs = require('fs');
 import { convertDown } from './src/downconverter';
 import { convertUp } from './src/upconverter';
-import { convertSpdx } from "./src/converter";
+import { convertSpdx } from "./src/spdxconverter";
 let cliArgument: string = process.argv[2];
 
 // Check if we got argument for the input file name

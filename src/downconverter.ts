@@ -1,14 +1,14 @@
 const fs = require('fs');
 require('dotenv').config();
 import { getMultibleUsedIds, generateDataValidationMessage, getMissingComponentIds } from './helper';
-import { AosdSubComponent, DependencyObject, License, Part, Provider } from '../interfaces/interfaces';
+import { AosdSubComponent, DependencyObject, LicenseAosd, Part, Provider } from '../interfaces/interfaces';
 import { validateAosd } from './aosdvalidator';
 let inputJsonPath: string | undefined = '';
 let outputJsonPath: string | undefined = '';
 let outputFile: string = '';
 let externalDependenciesArray: Array<string> = [];
 let dependenciesObject: DependencyObject;
-let licensesObject: License;
+let licensesObject: LicenseAosd;
 let partsObject: Part;
 let dependenciesArray = [];
 let validationResults: Array<string> = [];

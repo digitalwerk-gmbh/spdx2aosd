@@ -1,5 +1,11 @@
-# AOSDtoAOSDConverter
+# AOSDConverter
 
+This is a converter for the aosd ecosystem.
+It is an cli tool with different functionalities.
+With this tool you will be able to generate an up to date json file with all spdx and scancode licenses.
+With this cli tool you can convert proprietary aosd json input files from version 2.0 to 2.1 and vice versa from 2.1 to 2.0.
+You can convert spdx2.3 json files that meet the requirements of the GroupSpecification of Audi and Volkswagen to proprietary aosd2.1 json files.
+For detailed information of the GroupSpecification for Audi and Volkswagen see also the docs folder.
 
 ## Getting started
 
@@ -51,45 +57,64 @@ After finsishing these 4 steps the cli tool converter should be ready for use.
 
 ## How to use the cli command tool
 
-With this cli tool you can convert aosd json input files from version 2.0 to 2.1 and vice versa from 2.1 to 2.0.
-
-Also you can run the unit tests to check the script works correct.
+The command line tool (cli) offers a series of commands to run.
+Also you can run the unit tests to check all the scripts work correct.
+Here you find an overview of all possible commands.
 
 ```sh
-# convert the json file from 2.0 to 2.1
+
+# get up to date license json file with spdx identifiers
+
+$ npm run licenses
+
+# convert the json file from aosd2.0 to aosd2.1 format
 
 $ npm run up <filename>
 
-# convert the json file from 2.1 to 2.0
+# convert the json file from aosd2.1 to aosd2.0 format
 
 $ npm run down <filename>
 
-# run the unit tests
+# convert the spdx2.3 groupspec json to aosd2.1 json
+
+$ npm run spdx <filename>
+
+# run the unit test suites for all converters
 
 $ npm run test
 
 ```
 
-
-## aosdtoaosdconverter folder Structure
+## AOSDConverter folder structure
 
 This is the folder structure and the files you should see after succesful setup.
 
 ```
 aosdtoaosdconverter
 │	
-│	
 └──data
 │  │
 │  └──input
+│  │  .gitkeep
 │  │
 │  └──json
 │  │  AOSD2.0_Importscheme_V2.0.0.json
+│  │  AOSD2.1_Example_Json_Import_File_V2.1.0.json
 │  │  AOSD2.1_Importscheme_V2.1.0.json
+│  │  spdx-schema_original.json
+│  │  spdx-schema.json
+│  │  SPDXJSONExample-v2.3.spdx.json
+│  │
+│  └──licenses
+│  │  licenses.json
 │  │
 │  └──output
+│     .gitkeep
 │	
-└──docs 
+└──docs
+│  231102_GroupSpecification_1.1_DRAFT.pdf
+│  KonzernFOSSPflichtfelder - SPDX Group Spec CycloneDX AOSD2.1.xlsx
+│  Mapping-AOSD-SPDX.xlsx
 │	
 └──interfaces
 │  interfaces.ts
@@ -99,8 +124,9 @@ aosdtoaosdconverter
 └──src
 │  aosdvalidator.ts
 │  downconverter.ts
-│  errorhandler.ts
 │  helper.ts
+│  licenses.ts
+│  spdxconverter.ts
 │  upconverter.ts
 │	
 └──tests
@@ -110,27 +136,34 @@ aosdtoaosdconverter
 │  │   └──input
 │  │   │  aosd2.0_import.json
 │  │   │  aosd2.1_import.json
+│  │   │  Example1-RELothMOD-RELcontainsFOSSreportSPDX2.3.spdx.json
+│  │   │  Example2-RELfilemod-RELcontainsFOSSreportSPDX2.3.spdx.json
+│  │   │  Example3-RELothMOD-hasFilesFOSSreportSPDX2.3.spdx.json
+│  │   │  Example4-RELfilemod-hasFilesFOSSreportSPDX2.3.spdx.json
+│  │   │  SPDXJSONExample-v2.3.spdx.json
+│  │   │  test_group_spec_spdx.json
+│  │   │  testFile.json
 │  │   │
 │  │   └──output
+│  │      .gitkeep
 │  │
 │  └──unit
 │     test.ts
 │
-└──.env
-   .env.example
-   .gitignore
-   babel.config.cjs
-   error.log
-   jest.config.cjs
-   LICENSE.txt
-   main.ts
-   package-lock.json
-   package.json
-   README.md
-   tsconfig.json
+.env 
+.env.example
+.gitignore
+babel.config.cjs
+error.log
+jest.config.cjs
+LICENSE.txt
+main.ts
+package-lock.json
+package.json
+README.md
+tsconfig.json
 
 ```
-
 
 ## Good to know
 
@@ -215,39 +248,24 @@ This component will be ignored by the AOSD import!
 ## Error messages explained
 
 
-#### TODO
+## Requirments for the spdxconverter
 
-# SPDXToAOSDConverter
-
-This is a converter for the SPDX2.3 JSON format that meets the requirements of the GroupSpecification of Audi and Volkswagen.
-With this cli command line tool you can convert such an SPDX2.3 JSON file to the proprietary AOSD2.1 JSON format.
-
-## Requirments
-
-This converter can only handle SPDX2.3 JSON files that meet the requirements of the GroupSpecification of Audi and Volkswagen.
+This spdxconverter can only handle spdx2.3 json files that meet the requirements of the GroupSpecification of Audi and Volkswagen.
 The converter was specific build for the GroupSpecification.
 We will only validate data fields that are descibed in this Specifiaction. 
-We assume the data in the SPDX2.3 JSON file was allready kurtated and is correct. 
+We assume the data in the spdx2.3 json file was allready curated and is correct. 
  
-## General
+## General information for the spdxconverter
 
-The reason why this converter was developed is to give you the ability to convert SPDX2.3 JSON files to the proprietary AOSD2.1 JSON format in order to import the data into the AOSD.
-The converter has a modular structure and 2 main funktionalities.
+The reason why this converter was developed is to give you the ability to convert spdx2.3 json files to the proprietary aosd2.1 json format in order to import the data into the AOSD Tool.
 
-Functionalty 1:
-
-The tool generates a license list ith valid spdx identifiers and license texts from two sources.
+To use the spdxconverter you should first run the licenses command to generate a valid licenses.json file with up to date spdx identifiers.
+The license command generates this license list with valid spdx identifiers and license texts from two sources.
 We are using the spdx license list and the scancode license DB.
 
-Functionalty 2:
+After the licenses.json is generated you can run the spdxconverter.
 
-
-
-## Getting started
-
-How to start. Setup and installation.
-
-## Description 
+## Description for the spdxconverter 
 
 This cli command line tool works in two steps.
 
@@ -258,23 +276,12 @@ In this case the initially shipped license list will be the fall back.
 
 After the license list is updated or you have skipped this step you should run the converter script.
 
-## How to use this tool
-
-
-
-## Open Questions
-
-- How to generate scanned information 
-- 
-
-
 ## ToDos
 
 1. Readable error messages from scheme valaidators
 2. Better response messages
 3. More tests and test cases also for function and validators
-4. README
-5. More plausi checks component id's in directDependency OR transitiveDependency if not warning
+4. More plausi checks component id's in directDependency OR transitiveDependency if not warning
 
 
 

@@ -2,8 +2,8 @@ import * as fs from "fs";
 import { describe, expect, test } from '@jest/globals';
 import { convertDown } from '../../src/downconverter';
 import { convertUp } from '../../src/upconverter';
-import { convertSpdx } from "../../src/converter";
-import { getUniqueValues, getMultibleUsedIds, getMissingComponentIds, generateDataValidationMessage } from '../../src/helper';
+import { convertSpdx } from "../../src/spdxconverter";
+import { getUniqueValues, getMultibleUsedIds, getMissingComponentIds, generateDataValidationMessage, generateUniqueSubcomponentName } from '../../src/helper';
 
 describe("Test for helper functions", () => {
     test('Test getUniqueValues exists', async () => {
@@ -95,8 +95,99 @@ describe("Test for helper functions", () => {
         const response = generateDataValidationMessage(testArray1);
         expect(response).toContain('test_component_4 - subcomponent: main');
     });
-});
 
+    test('Test generateUniqueSubcomponentName exists', async () => {
+        expect(generateUniqueSubcomponentName).toBeDefined();
+    });
+
+    test('Test - 01 generateUniqueSubcomponentName works as expected', async () => {
+        const partsCount: number  = 1;
+        const adlCount: number = 1;
+        const mainCount: number = 0;
+        const uniqueNameCounter: number = 1;
+        const partName: string = 'default';
+        const licenseName: string = 'MIT';
+        const response = generateUniqueSubcomponentName(partsCount, adlCount, mainCount, uniqueNameCounter, partName, licenseName);
+        expect(response).toBe('main');
+    });
+
+    test('Test - 02 generateUniqueSubcomponentName works as expected', async () => {
+        const partsCount: number  = 1;
+        const adlCount: number = 2;
+        const mainCount: number = 0;
+        const uniqueNameCounter: number = 1;
+        const partName: string = 'default';
+        const licenseName: string = 'MIT';
+        const response = generateUniqueSubcomponentName(partsCount, adlCount, mainCount, uniqueNameCounter, partName, licenseName);
+        expect(response).toBe('main');
+    });
+
+    test('Test - 03 generateUniqueSubcomponentName works as expected', async () => {
+        const partsCount: number  = 2;
+        const adlCount: number = 2;
+        const mainCount: number = 0;
+        const uniqueNameCounter: number = 1;
+        const partName: string = 'default';
+        const licenseName: string = 'MIT';
+        const response = generateUniqueSubcomponentName(partsCount, adlCount, mainCount, uniqueNameCounter, partName, licenseName);
+        expect(response).toBe('main');
+    });
+
+    test('Test - 04 generateUniqueSubcomponentName works as expected', async () => {
+        const partsCount: number  = 1;
+        const adlCount: number = 1;
+        const mainCount: number = 0;
+        const uniqueNameCounter: number = 1;
+        const partName: string = 'default';
+        const licenseName: string = 'MIT';
+        const response = generateUniqueSubcomponentName(partsCount, adlCount, mainCount, uniqueNameCounter, partName, licenseName);
+        expect(response).toBe('main');
+    });
+
+    test('Test - 05 generateUniqueSubcomponentName works as expected', async () => {
+        const partsCount: number  = 1;
+        const adlCount: number = 1;
+        const mainCount: number = 0;
+        const uniqueNameCounter: number = 10;
+        const partName: string = 'test_subcomponent';
+        const licenseName: string = 'MIT';
+        const response = generateUniqueSubcomponentName(partsCount, adlCount, mainCount, uniqueNameCounter, partName, licenseName);
+        expect(response).toBe('test_subcomponent_10');
+    });
+
+    test('Test - 06 generateUniqueSubcomponentName works as expected', async () => {
+        const partsCount: number  = 1;
+        const adlCount: number = 2;
+        const mainCount: number = 0;
+        const uniqueNameCounter: number = 11;
+        const partName: string = 'test_subcomponent';
+        const licenseName: string = 'MIT';
+        const response = generateUniqueSubcomponentName(partsCount, adlCount, mainCount, uniqueNameCounter, partName, licenseName);
+        expect(response).toBe('MIT_11');
+    });
+
+    test('Test - 07 generateUniqueSubcomponentName works as expected', async () => {
+        const partsCount: number  = 2;
+        const adlCount: number = 1;
+        const mainCount: number = 0;
+        const uniqueNameCounter: number = 12;
+        const partName: string = 'test_subcomponent';
+        const licenseName: string = 'MIT';
+        const response = generateUniqueSubcomponentName(partsCount, adlCount, mainCount, uniqueNameCounter, partName, licenseName);
+        expect(response).toBe('test_subcomponent_12');
+    });
+
+    test('Test - 08 generateUniqueSubcomponentName works as expected', async () => {
+        const partsCount: number  = 2;
+        const adlCount: number = 2;
+        const mainCount: number = 0;
+        const uniqueNameCounter: number = 3;
+        const partName: string = 'test_subcomponent';
+        const licenseName: string = 'MIT';
+        const response = generateUniqueSubcomponentName(partsCount, adlCount, mainCount, uniqueNameCounter, partName, licenseName);
+        expect(response).toBe('test_subcomponent_MIT_3');
+    });
+});
 
 describe("AOSD2.1 to AOSD2.0 converter test", () => {
     test('Test convertDown exists', async () => {
@@ -356,7 +447,7 @@ describe("Converter Tests", () => {
         expect(testDataArray["externalId"]).toBeDefined();
         expect(testDataArray["externalId"]).toBe("");
         expect(testDataArray["scanned"]).toBeDefined();
-        expect(testDataArray["scanned"]).toBeFalsy();
+        expect(testDataArray["scanned"]).toBeTruthy();
         expect(testDataArray["directDependencies"]).toBeDefined();
         expect(testDataArray["directDependencies"]).not.toContain(5);
         expect(testDataArray["directDependencies"]).toContain(1);
