@@ -334,5 +334,56 @@ Wenn im Tool aber für die BSD-3-Clause beide Texte auch zusammen ankommen, kön
 > Das hatten wir besprochen :)
 
 
+--------------------------------------------
+Beispiel aus Neo4j SPDX2.3 File:
+
+- Hier werden keine subcomponents angelegt:
+- Vermutung hier gibt es nur eine Lizenzinformation auf Paket Ebene
+- D.h. "licenseDeclared": "Apache-2.0", -
+-       "licenseConcluded": "NOASSERTION",
+
+Da licenseDeclared sagt Apache-2.0 und licenseConcluded "NOASSERTION" sieht es so aus als wäre hier nur ein Lizenztreffer auf Paket Basis angegeben. Daraus muss eine subcomponent main werden, da es offensichtlich die einzige Lizenz ist.
+
+Achtung evtl. sollten wir schauen ob es auch noch andere Kombinationen gibt.
+
+
+
+{
+      "SPDXID": "SPDXRef-mvn-io.airlift-airline-0.9",
+      "name": "airline",
+      "versionInfo": "0.9",
+      "filesAnalyzed": true,
+      "downloadLocation": "https://repo1.maven.org/maven2/io/airlift/airline/0.9/airline-0.9-sources.jar",
+      "originator": "Organization: Maven",
+      "supplier": "NOASSERTION",
+      "summary": "Java annotation-based framework for parsing Git like command line structures",
+      "licenseDeclared": "Apache-2.0",
+      "copyrightText": "Copyright 2011 Dain Sundstrom dain@iq80.com Copyright 2010 Cedric Beust cedric@beust.com",
+      "homepage": "https://github.com/airlift/airline",
+      "licenseConcluded": "NOASSERTION",
+      "checksums": [
+        {
+          "algorithm": "MD5",
+          "checksumValue": "b0c703d9c481fade3bc99de9f7c27979"
+        },
+        {
+          "algorithm": "SHA1",
+          "checksumValue": "89ae99ee075b92e3197427fccf59c10f2c298d13"
+        },
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "84ee02b9fd85c448fc9bbc3807bdaa3d5477e39fcd2d66316156b6fc714f6b80"
+        }
+      ],
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:maven/io.airlift/airline@0.9"
+        }
+      ]
+    },
+
+
 
 
