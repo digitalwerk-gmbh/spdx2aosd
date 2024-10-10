@@ -283,5 +283,56 @@ After the license list is updated or you have skipped this step you should run t
 3. More tests and test cases also for function and validators
 4. More plausi checks component id's in directDependency OR transitiveDependency if not warning
 
+## Feddback SPDX Konverter
+
+ich bin die Dateien für die von dir gewünschte Kontrolle durchgegangen und habe auch wegen der Fehlermeldungen geschaut. 
+Ausgangsdatei: "Example2-RELfilemod-RELcontains FOSS report SPDX2.3.spdx.json" 
+Ergbnisdatei:  "Example2-RELfilemod-RELcontainsFOSSreportSPDX2.3.spdx_aosd2.1.json".
+
+
+Modification:
+
+In meiner Datei ist das Package 3, das in deiner der Komponente 3 entspricht, modifiziert. 
+Bei der Komponente 3 sagt es aber modified "false".
+
+
+Notice File Text:
+
+Package 2 hat über sein SPDXRef-CommonsLangSrc File, dessen Daten du für Komponente 2 herangezogen hast, ein "noticeText". 
+Das müsste beim Importfile in das Feld geschrieben werden, das für die Aufnahme des Notice Files bei Apache-2.0 vorgesehen 
+ist - das war für NOTICE File Inhalte und Acknowledgements oder sonstige zusätzlich für L&C nötige Angaben glaube ich das Feld "additionalLicenseInfos", oder?
+
+
+SelectedLicense:
+
+Die Warnung, dass keine Lizenz selektiert wurde für Komponente 1 kommt soweit ich sehe daher, dass du beim Konvertieren zwar für die Wahllizenz LicenseRef-2 zu BSD-3-Clause aufgelöst hast, unter selectedLicense allerdings nicht.
+
+
+Typo:
+Wir akzeptieren nur die SPDX Keys wie in der Liste. - Kein Anpassungsbedarf
+
+Die Warnung, dass BSD-3-clause kein ordentlicher SPDX Identifier ist, kommt daher, dass es BSD-3-Clause geschrieben werden soll laut Liste.
+Das habe ich angepasst, da kann aber der Converter nichts für.
+
+Paket auf File Ebene Problem:
+
+Ich habe im Ausgangsfile nicht - wie im GroupSpec gefordert - die identischen Angaben von der Paket Ebene auch noch einmal auf File Ebene gemacht.
+Der Converter nimmt dann einfach das File und ignoriert soweit ich sehe die Paket Ebene komplett. Stimmt das? 
+Da sollte meiner Meinung nach zumindest ein Matching erfolgen und eine Warnung ausgegeben werden, wenn sich die Paket Angaben auf File Ebene nicht finden.
+
+
+Prüfen:
+
+Ich sehe es richtig, dass Packages, die unter Contains von anderen Packages referenziert werden, nicht bei den direkten Dependencies, sondern nur als transitive Dependencies gelistet werden.
+
+
+Lizenztext:
+
+Bei der OR-Lizenzierung hast du in der Import Datei für die selectedLicense BSD-3-Clause sowohl den Text der LGPL-2.0-only als auch den der BSD-3-Clause mit einem OR verknüpft in das Lizenztext Feld eingefügt.
+Wenn im Tool aber für die BSD-3-Clause beide Texte auch zusammen ankommen, können wir das nicht verifizieren.
+
+> Das hatten wir besprochen :)
+
+
 
 

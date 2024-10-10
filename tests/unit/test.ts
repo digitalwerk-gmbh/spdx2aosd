@@ -3,7 +3,7 @@ import { describe, expect, test } from '@jest/globals';
 import { convertDown } from '../../src/downconverter';
 import { convertUp } from '../../src/upconverter';
 import { convertSpdx } from "../../src/spdxconverter";
-import { getUniqueValues, getMultibleUsedIds, getMissingComponentIds, generateDataValidationMessage, generateUniqueSubcomponentName } from '../../src/helper';
+import { getUniqueValues, getMultibleUsedIds, getMissingComponentIds, generateDataValidationMessage, generateUniqueSubcomponentName, generateStringFromJsonObject } from '../../src/helper';
 
 describe("Test for helper functions", () => {
     test('Test getUniqueValues exists', async () => {
@@ -186,6 +186,13 @@ describe("Test for helper functions", () => {
         const licenseName: string = 'MIT';
         const response = generateUniqueSubcomponentName(partsCount, adlCount, mainCount, uniqueNameCounter, partName, licenseName);
         expect(response).toBe('test_subcomponent_MIT_3');
+    });
+
+    test('Test - 09 generateStringFromJsonObject works as expected', async () => {
+        const path = './tests/data/input/aosd2.1_jsonObject.json';
+        const jsonObject = JSON.parse(fs.readFileSync(path, 'utf8')); 
+        const response = await generateStringFromJsonObject(jsonObject);
+        expect(response).toContain('"externalId": "myOwnId",');
     });
 });
 
@@ -435,7 +442,7 @@ describe("Converter Tests", () => {
 
     test('Test convertSpdx function works as expected', async () => {
 
-        const response = convertSpdx('test_group_spec_spdx.json');
+        const response = await convertSpdx('test_group_spec_spdx.json');
         console.log(response);
         const path = './tests/data/input/test_group_spec_spdx.json';
         const resultFile = './tests/data/output/test_group_spec_spdx_aosd2.1.json';

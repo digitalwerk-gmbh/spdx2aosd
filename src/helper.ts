@@ -1,3 +1,5 @@
+import { AosdObject } from "../interfaces/interfaces";
+
 export const getUniqueValues = (arrayData: Array<string> | any) => (
     arrayData.filter((currentValue: any, index: any, arr: string | any[]) => (
           arr.indexOf(currentValue) === index
@@ -66,3 +68,29 @@ export const generateUniqueSubcomponentName = (partsCount: number, adlCount: num
   return newSubcomponentName;
 }
 
+export const generateStringFromJsonObject = async (jsonObject: AosdObject): Promise<string> => {
+  let fileString = "";
+  try {
+      fileString = fileString + "{\n";
+      fileString = fileString + "\"schemaVersion\": " + "\"" + jsonObject.schemaVersion + "\",\n";
+      fileString = fileString + "\"externalId\": " + "\"" + jsonObject.externalId + "\",\n";
+      fileString = fileString + "\"scanned\": "  + jsonObject.scanned + ",\n";
+      fileString = fileString + "\"directDependencies\": [\n" + jsonObject.directDependencies + "\n],\n";
+      fileString = fileString + "\"components\": [\n";
+      for (let i=0; i<jsonObject.components.length; i++) {
+        fileString = fileString + JSON.stringify(jsonObject.components[i], null, '\t');
+        if (i < jsonObject.components.length - 1) {
+          fileString = fileString + ",\n";
+        } else {
+          fileString = fileString + "\n";
+        }
+      }
+      fileString = fileString + "]\n";
+      fileString = fileString + "}\n";
+  } catch (error) {
+      // writeErrorLog({ message: checkErrorMessage(error) })
+      console.log("Sorry for that - something went wrong! Please check the error.log file in the root folder for detailed information.");
+      return fileString;
+  }
+  return fileString;
+}

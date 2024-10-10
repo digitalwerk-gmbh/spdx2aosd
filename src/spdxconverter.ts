@@ -1,8 +1,9 @@
 const fs = require('fs');
+const JSONStream = require('JSONStream');
 require('dotenv').config();
 import { validateAosd } from './aosdvalidator';
 import { LicenseDataObject, ExtractedLicense, MappedLicense, AosdObject, AosdComponent, AosdSubComponent, SpdxPackages, SpdxFiles, SpdxRelationsships, SpdxIdToInternalId, exportMapper } from "../interfaces/interfaces";
-import { generateDataValidationMessage } from './helper';
+import { generateDataValidationMessage, generateStringFromJsonObject } from './helper';
 let inputJsonPath: string | undefined = '';
 let outputJsonPath: string | undefined = '';
 let outputFile: string = '';
@@ -11,6 +12,7 @@ let licenseData: LicenseDataObject;
 let idMapping: Array<exportMapper> = [];
 let validationResults: Array<string> = [];
 let tmpLicense: Array<ExtractedLicense> = [];
+let COPYRIGHT_REPLACE_PATTERN: Array<string> = ["NOASSERTION", "NONE"];
 
 export const convertSpdx = async (cliArgument: string): Promise<void> => {
     try {
@@ -27,10 +29,10 @@ export const convertSpdx = async (cliArgument: string): Promise<void> => {
         outputJsonPath = process.env.OUTPUT_JSON_PATH;
 
         // First validate input aosd file
-        const validationResult = validateAosd(process.env.INPUT_JSON_PATH + cliArgument, process.env.SPDX_JSON_SCHEME);
+        const validationSpdxResult = validateAosd(process.env.INPUT_JSON_PATH + cliArgument, process.env.SPDX_JSON_SCHEME);
         // If the scheme validation returns errors add them to log
-        if (validationResult.length > 0) {
-            validationResults = validationResults.concat(validationResult);
+        if (validationSpdxResult.length > 0) {
+            validationResults = validationResults.concat(validationSpdxResult);
         }
         validationResults.push('\n-----------------------------------------------------\nData-Validation errors:\n-----------------------------------------------------\n');
 
@@ -222,25 +224,21 @@ export const convertSpdx = async (cliArgument: string): Promise<void> => {
                         licenseText += `\n\n${conjunction}\n\n`;
                     }
                     // maybe move this function to helper.ts
-                    const text = getLicenseText(license);
+                    const text = getLicenseText(license.replace("chosen: ", "").trim() || "");
                     licenseText += text;
                 });
-
-                console.log("DEBUG1: ", fileData[0].licenseConcluded);
-                let tmpSpdxKey: string = fileData[0].licenseConcluded;
+                let tmpSpdxKey: string = fileData[0].licenseConcluded?.replace("chosen: ", "").trim() || "";
                 for (let k=0; k<tempLicenses.length; k++) {
                     tmpLicense = jsonInputArray['hasExtractedLicensingInfos'].filter((eInfo: { licenseId: string; }) => eInfo.licenseId ===  tempLicenses[k]);
                     if (tmpLicense.length === 1) {
                         tmpSpdxKey = tmpSpdxKey.replace(tmpLicense[0]['licenseId'], tmpLicense[0]['name']);
                     }
                 }
-                console.log("DEBUG2: ", tmpSpdxKey);
-
     
                 let subcomponentObject: AosdSubComponent = {
                     subcomponentName: index === 0 ? "main" : fileData[0].fileName,
                     spdxId: tmpSpdxKey,
-                    copyrights: fileData[0].copyrightText !== "NOASSERTION" ? [fileData[0].copyrightText] : [],
+                    copyrights: !COPYRIGHT_REPLACE_PATTERN.includes(fileData[0].copyrightText) ? [fileData[0].copyrightText] : [],
                     authors: [],
                     licenseText: licenseText.trim(),
                     licenseTextUrl: "",
@@ -272,7 +270,12 @@ export const convertSpdx = async (cliArgument: string): Promise<void> => {
                 tmpIdArray.push(tmpId);
             }   
             component.transitiveDependencies = tmpIdArray;       
-            transitiveDependencies.add(Number(tmpId));       
+            transitiveDependencies.add(Number(tmpId));  
+            
+            // Check for empty subcomponent arrays
+            if (Object.keys(component.subcomponents).length === 0) {
+                validationResults.push("We have found an empty subcomponent in component with componentName: " + component.componentName);
+            }
         });
 
         // Genral - think over!
@@ -283,8 +286,23 @@ export const convertSpdx = async (cliArgument: string): Promise<void> => {
         const outputFileName: string = cliArgument.replace(".json", "") + "_aosd2.1" + ".json";
         outputFile = outputJsonPath + outputFileName;
 
+
+        // Stringify 
+        const fileString = await generateStringFromJsonObject(newObject);
+        //console.log("DEBUGG: ", fileString);
+
+        // For big data files the stringify function will throw an error because of max string length restriction
+        // Solution 1. Build the string in steps
         // Write data to aosd json format
-        fs.writeFileSync(outputFile, JSON.stringify(newObject, null, '\t'));
+        // fs.writeFileSync(outputFile, JSON.stringify(newObject, null, '\t'));
+        fs.writeFileSync(outputFile, fileString);
+
+        // Solution 2. Use a third party library to stream the data
+        // const fileStream = fs.createWriteStream(outputFile);
+        // const jsonStream = JSONStream.stringify();
+        // jsonStream.pipe(fileStream);
+        // jsonStream.write(newObject);
+        //  jsonStream.end();
 
         // Validate the aosd json result 
         const validationAosdResult = validateAosd(process.env.OUTPUT_JSON_PATH + outputFileName, process.env.AOSD2_1_JSON_SCHEME);
