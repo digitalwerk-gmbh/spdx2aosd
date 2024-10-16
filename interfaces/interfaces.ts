@@ -220,6 +220,8 @@ export interface MappedLicense {
 }
 
 export interface SpdxPackages {
+    copyrightText: string;
+    licenseDeclared: string;
     SPDXID: string;
     name: string;
     versionInfo: string;

@@ -190,6 +190,23 @@ export const convertSpdx = async (cliArgument: string): Promise<void> => {
                 newObject.scanned = true;
             }
 
+            // Check for licenseDeclared and create a subcomponent if it exists
+            if (dependency.licenseDeclared && dependency.licenseDeclared !== 'NOASSERTION'  && !dependency.hasFiles.length) {
+               let licenseText = getLicenseText(dependency.licenseDeclared); 
+               let subcomponentObject: AosdSubComponent = {
+                  subcomponentName: "main", 
+                  spdxId: dependency.licenseDeclared, 
+                  copyrights: !COPYRIGHT_REPLACE_PATTERN.includes(dependency.copyrightText) ? [dependency.copyrightText] : [],
+                  authors: [], 
+                  licenseText: licenseText.trim(), 
+                  licenseTextUrl: "", 
+                  selectedLicense: "", 
+                  additionalLicenseInfos: "", 
+               };
+               
+               componentObject['subcomponents'].push(subcomponentObject);
+            }
+
             // Iterate over files
             dependency['hasFiles'].forEach((fileId: String, index: number) => {
                 const fileData: Array<SpdxFiles> = filesArray.filter(file => file.SPDXID === fileId);
@@ -218,15 +235,47 @@ export const convertSpdx = async (cliArgument: string): Promise<void> => {
     
                 const tempLicenses = spdxKey.split("#");
 
+                let currentComponentName = dependency['name'];
+
+                const resolveSelectedLicense = (licenseComment: string, source: string = '') => {
+                    // Return empty string if licenseComment is empty
+                    if (!licenseComment?.trim()) return "";
+
+                    // Check if the licenseComment exists in licenses.json 
+                    const spdxLicense = licenseData.data.find(license => license.spdx_license_key === licenseComment);
+                    if (spdxLicense) return spdxLicense.spdx_license_key;
+
+                    // Check in hasExtractedLicensingInfos if not found in licenses.json
+                    const extractedLicense = jsonInputArray['hasExtractedLicensingInfos'].find((eInfo: { licenseId: string; }) => eInfo.licenseId === licenseComment);
+                    if (extractedLicense) {
+                        const isValidSpdxKey = licenseData.data.some(license => license.spdx_license_key === extractedLicense.name);
+                        if (isValidSpdxKey) return extractedLicense.name;
+
+                        // Log error if not a valid SPDX key in extractedLicensesInfos
+                        validationResults.push(`"${extractedLicense.name}" in component with componentName: "${currentComponentName}" is not a valid SPDX license key.`);
+                        return "";
+                    }
+
+                    // Log error if no valid key found in licenseComment
+                    if (source === 'licenseComment') {
+                        validationResults.push(`"${licenseComment}" in component with componentName: "${currentComponentName}" is not a valid SPDX license key.`);
+                    }
+                    return "";
+                };
+
                 tempLicenses.forEach((license, index) => {
                     if (index > 0) {
                         const conjunction = conjunctions[index - 1];
                         licenseText += `\n\n${conjunction}\n\n`;
                     }
+                    const resolvedLicense = resolveSelectedLicense(license.replace("chosen: ", "").trim() || "");
+                    licenseText += getLicenseText(resolvedLicense);  
+                    
                     // maybe move this function to helper.ts
                     const text = getLicenseText(license.replace("chosen: ", "").trim() || "");
                     licenseText += text;
                 });
+
                 let tmpSpdxKey: string = fileData[0].licenseConcluded?.replace("chosen: ", "").trim() || "";
                 for (let k=0; k<tempLicenses.length; k++) {
                     tmpLicense = jsonInputArray['hasExtractedLicensingInfos'].filter((eInfo: { licenseId: string; }) => eInfo.licenseId ===  tempLicenses[k]);
@@ -234,7 +283,10 @@ export const convertSpdx = async (cliArgument: string): Promise<void> => {
                         tmpSpdxKey = tmpSpdxKey.replace(tmpLicense[0]['licenseId'], tmpLicense[0]['name']);
                     }
                 }
-    
+
+                // Update the selectedLicense based on licenseComments
+                let selectedLicense = fileData[0].licenseComments?.replace("chosen: ", "").trim() || "";
+                selectedLicense = resolveSelectedLicense(selectedLicense, 'licenseComment');
                 let subcomponentObject: AosdSubComponent = {
                     subcomponentName: index === 0 ? "main" : fileData[0].fileName,
                     spdxId: tmpSpdxKey,
@@ -242,8 +294,8 @@ export const convertSpdx = async (cliArgument: string): Promise<void> => {
                     authors: [],
                     licenseText: licenseText.trim(),
                     licenseTextUrl: "",
-                    selectedLicense: fileData[0].licenseComments?.replace("chosen: ", "").trim() || "",
-                    additionalLicenseInfos: ""
+                    selectedLicense: selectedLicense,
+                    additionalLicenseInfos: fileData[0].noticeText? fileData[0].noticeText : ""
                 };
                 componentObject['subcomponents'].push(subcomponentObject);
             });
