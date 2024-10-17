@@ -166,7 +166,7 @@ export const convertSpdx = async (cliArgument: string): Promise<void> => {
                 id: Number(mappingObject.mapId),
                 componentName: dependency['name'],
                 componentVersion: dependency['versionInfo'],
-                scmUrl: dependency['downloadLocation'],
+                scmUrl: dependency['downloadLocation'] !== "NOASSERTION" ? dependency['downloadLocation'] : "",
                 modified: isModified(dependency['SPDXID'], relationships) ? true : false,
                 linking: getLinkingType(dependency['SPDXID'], relationships),
                 transitiveDependencies: getTransitiveDependencies(dependency['SPDXID'], relationships),
@@ -191,7 +191,7 @@ export const convertSpdx = async (cliArgument: string): Promise<void> => {
             }
 
             // Check for licenseDeclared and create a subcomponent if it exists
-            if (dependency.licenseDeclared && dependency.licenseDeclared !== 'NOASSERTION'  && !dependency.hasFiles.length) {
+            if (dependency.licenseDeclared && dependency.licenseDeclared !== 'NOASSERTION'  && dependency.licenseDeclared !== 'NONE' && !dependency.hasFiles.length) {
                let licenseText = getLicenseText(dependency.licenseDeclared); 
                if (!COPYRIGHT_REPLACE_PATTERN.includes(dependency.copyrightText)) {
                }
