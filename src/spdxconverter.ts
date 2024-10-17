@@ -12,7 +12,7 @@ let licenseData: LicenseDataObject;
 let idMapping: Array<exportMapper> = [];
 let validationResults: Array<string> = [];
 let tmpLicense: Array<ExtractedLicense> = [];
-let COPYRIGHT_REPLACE_PATTERN: Array<string> = ["NOASSERTION", "NONE"];
+const COPYRIGHT_REPLACE_PATTERN: Array<string> = ["NOASSERTION", "NONE"];
 
 export const convertSpdx = async (cliArgument: string): Promise<void> => {
     try {
@@ -193,10 +193,13 @@ export const convertSpdx = async (cliArgument: string): Promise<void> => {
             // Check for licenseDeclared and create a subcomponent if it exists
             if (dependency.licenseDeclared && dependency.licenseDeclared !== 'NOASSERTION'  && !dependency.hasFiles.length) {
                let licenseText = getLicenseText(dependency.licenseDeclared); 
+               if (!COPYRIGHT_REPLACE_PATTERN.includes(dependency.copyrightText)) {
+                console.log("COPYRIGHT-BUG-1", dependency.copyrightText);
+               }
                let subcomponentObject: AosdSubComponent = {
                   subcomponentName: "main", 
                   spdxId: dependency.licenseDeclared, 
-                  copyrights: !COPYRIGHT_REPLACE_PATTERN.includes(dependency.copyrightText) ? [dependency.copyrightText] : [],
+                  copyrights: !COPYRIGHT_REPLACE_PATTERN.includes(dependency.copyrightText) && dependency.copyrightText !== null && dependency.copyrightText !== undefined ? [dependency.copyrightText] : [],
                   authors: [], 
                   licenseText: licenseText.trim(), 
                   licenseTextUrl: "", 
@@ -286,11 +289,12 @@ export const convertSpdx = async (cliArgument: string): Promise<void> => {
 
                 // Update the selectedLicense based on licenseComments
                 let selectedLicense = fileData[0].licenseComments?.replace("chosen: ", "").trim() || "";
+                //console.log("COPYRIGHT-BUG-2", fileData[0].copyrightText);
                 selectedLicense = resolveSelectedLicense(selectedLicense, 'licenseComment');
                 let subcomponentObject: AosdSubComponent = {
                     subcomponentName: index === 0 ? "main" : fileData[0].fileName,
                     spdxId: tmpSpdxKey,
-                    copyrights: !COPYRIGHT_REPLACE_PATTERN.includes(fileData[0].copyrightText) ? [fileData[0].copyrightText] : [],
+                    copyrights: !COPYRIGHT_REPLACE_PATTERN.includes(fileData[0].copyrightText) && fileData[0].copyrightText !== null && fileData[0].copyrightText !== undefined ? [fileData[0].copyrightText] : [],
                     authors: [],
                     licenseText: licenseText.trim(),
                     licenseTextUrl: "",
