@@ -194,7 +194,6 @@ export const convertSpdx = async (cliArgument: string): Promise<void> => {
             if (dependency.licenseDeclared && dependency.licenseDeclared !== 'NOASSERTION'  && !dependency.hasFiles.length) {
                let licenseText = getLicenseText(dependency.licenseDeclared); 
                if (!COPYRIGHT_REPLACE_PATTERN.includes(dependency.copyrightText)) {
-                console.log("COPYRIGHT-BUG-1", dependency.copyrightText);
                }
                let subcomponentObject: AosdSubComponent = {
                   subcomponentName: "main", 
@@ -289,12 +288,25 @@ export const convertSpdx = async (cliArgument: string): Promise<void> => {
 
                 // Update the selectedLicense based on licenseComments
                 let selectedLicense = fileData[0].licenseComments?.replace("chosen: ", "").trim() || "";
-                //console.log("COPYRIGHT-BUG-2", fileData[0].copyrightText);
                 selectedLicense = resolveSelectedLicense(selectedLicense, 'licenseComment');
+
+                // Determine copyright text to use
+                let copyrightText = "";
+                if (index === 0) {
+                   // For the "main" subcomponent, check the package-level copyrightText if file-level copyrightText doesn't exist
+                   copyrightText = fileData[0].copyrightText;
+                   if (!copyrightText || COPYRIGHT_REPLACE_PATTERN.includes(copyrightText)) {
+                      copyrightText = dependency.copyrightText; 
+                   }
+                } else {
+                    // For other subcomponents, only use file-level copyrightText
+                    copyrightText = fileData[0].copyrightText;
+                }
+
                 let subcomponentObject: AosdSubComponent = {
                     subcomponentName: index === 0 ? "main" : fileData[0].fileName,
                     spdxId: tmpSpdxKey,
-                    copyrights: !COPYRIGHT_REPLACE_PATTERN.includes(fileData[0].copyrightText) && fileData[0].copyrightText !== null && fileData[0].copyrightText !== undefined ? [fileData[0].copyrightText] : [],
+                    copyrights: !COPYRIGHT_REPLACE_PATTERN.includes(copyrightText) && copyrightText !== null && copyrightText !== undefined ? [copyrightText] : [],
                     authors: [],
                     licenseText: licenseText.trim(),
                     licenseTextUrl: "",
@@ -345,7 +357,6 @@ export const convertSpdx = async (cliArgument: string): Promise<void> => {
 
         // Stringify 
         const fileString = await generateStringFromJsonObject(newObject);
-        //console.log("DEBUGG: ", fileString);
 
         // For big data files the stringify function will throw an error because of max string length restriction
         // Solution 1. Build the string in steps

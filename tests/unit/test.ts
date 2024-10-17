@@ -504,7 +504,7 @@ describe("Converter Tests", () => {
         expect(testDataArray.components[2]["subcomponents"][0]["spdxId"]).toBeDefined();
         expect(testDataArray.components[2]["subcomponents"][0]["spdxId"]).toBe("BSD-3-Clause");
         expect(testDataArray.components[2]["subcomponents"][0]["copyrights"]).toBeDefined();
-        expect(testDataArray.components[2]["subcomponents"][0]["copyrights"]).toEqual([null]);
+        expect(testDataArray.components[2]["subcomponents"][0]["copyrights"]).toHaveLength(0);
         expect(testDataArray.components[2]["subcomponents"][0]["authors"]).toBeDefined();
         expect(testDataArray.components[2]["subcomponents"][0]["authors"].length).toBe(0);
         expect(testDataArray.components[2]["subcomponents"][0]["licenseText"]).toBeDefined();
@@ -515,5 +515,13 @@ describe("Converter Tests", () => {
         expect(testDataArray.components[2]["subcomponents"][0]["selectedLicense"]).toBe("");
         expect(testDataArray.components[2]["subcomponents"][0]["additionalLicenseInfos"]).toBeDefined();
         expect(testDataArray.components[2]["subcomponents"][0]["additionalLicenseInfos"]).toBe("");
+        expect(testDataArray.components[3]["subcomponents"][0]["subcomponentName"]).toBeDefined();
+        expect(testDataArray.components[3]["subcomponents"][0]["subcomponentName"]).toBe("main");
+        expect(testDataArray.components[3]["subcomponents"][0]["copyrights"]).toBeDefined();
+        expect(testDataArray.components[3]["subcomponents"][0]["copyrights"][0]).toBe("2014 - 2016 Real Logic Ltd.");
+        expect(testDataArray.components[3]["subcomponents"][1]["subcomponentName"]).toBeDefined();
+        expect(testDataArray.components[3]["subcomponents"][1]["subcomponentName"]).toBe("pom.xml");
+        expect(testDataArray.components[3]["subcomponents"][1]["copyrights"]).toBeDefined();
+        expect(testDataArray.components[3]["subcomponents"][1]["copyrights"]).toHaveLength(0);
     });
 });
