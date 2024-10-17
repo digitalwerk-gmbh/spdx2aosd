@@ -21,6 +21,7 @@ export const convertUp = async (cliArgument: string): Promise<void> => {
 
         // First validate input aosd file
         const validationResult = validateAosd(process.env.INPUT_JSON_PATH + cliArgument, process.env.AOSD2_0_JSON_SCHEME);
+        
         // If the scheme validation returns errors add them to log
         if (validationResult.length > 0) {
             validationResults = validationResults.concat(validationResult);
@@ -117,8 +118,10 @@ export const convertUp = async (cliArgument: string): Promise<void> => {
                     } else {
                         tmpLinking.push(null);
                     }
+
                     // Push data into new subcomponent object
                     componentObject['subcomponents'].push(subcomponentObject);
+
                     // Check if we have allready a subcomponent with the name main e.q. default
                     if (dependenciesArray[i]['parts'][j]['name'] === 'default') {
                         maincounter++;
@@ -129,9 +132,11 @@ export const convertUp = async (cliArgument: string): Promise<void> => {
             // Make array data unique
             tmpModified = Array.from(new Set(tmpModified));
             tmpLinking = Array.from(new Set(tmpLinking));
+
             // Write data to comonent object
             componentObject['modified'] = tmpModified.length > 0 ? tmpModified[0] : null;
             componentObject['linking'] = tmpLinking.length > 0 ? tmpLinking[0] : null;
+
             //Push data into the new object
             newObject['components'].push(componentObject);
             counter++;
@@ -145,8 +150,6 @@ export const convertUp = async (cliArgument: string): Promise<void> => {
             temporaryId.push(findId[0]['number']);
         }
         newObject['directDependencies'] = temporaryId;
-
-        // console.log("TEST: ", newObject['components']);
 
         // Convert strings to numbers in components
         for (let i = 0; i < newObject['components'].length; i++) {
@@ -169,9 +172,6 @@ export const convertUp = async (cliArgument: string): Promise<void> => {
         // Write data to aosd json format
         fs.writeFileSync(outputFile, JSON.stringify(newObject, null, '\t'));
 
-        // Build in data validation with checks in helper.ts !!!
-
-
         // Validate the aosd json result 
         const validationAosdResult = validateAosd(process.env.OUTPUT_JSON_PATH + outputFileName, process.env.AOSD2_0_JSON_SCHEME);
         // If the scheme validation returns errors add them to log
@@ -182,7 +182,6 @@ export const convertUp = async (cliArgument: string): Promise<void> => {
         // Check for validation error
         const validationMessage: string = generateDataValidationMessage(validationResults);
         fs.writeFileSync(process.env.LOG_FILE_PATH, validationMessage, { encoding: 'utf8' });
-        
         console.log("We are done! - Thank's for using our aosd2.0 to aosd2.1 converter!");
     } catch(error: any) {
         fs.writeFileSync(process.env.LOG_FILE_PATH, error.toString(), { encoding: 'utf8' });

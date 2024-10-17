@@ -346,7 +346,6 @@ export const convertSpdx = async (cliArgument: string): Promise<void> => {
             }
         });
 
-        // Genral - think over!
         // Remove all ids in directDependencies that can be found in transitiveDependencies
         newObject.directDependencies = newObject.directDependencies.filter(id => !transitiveDependencies.has(id));
 
@@ -354,22 +353,9 @@ export const convertSpdx = async (cliArgument: string): Promise<void> => {
         const outputFileName: string = cliArgument.replace(".json", "") + "_aosd2.1" + ".json";
         outputFile = outputJsonPath + outputFileName;
 
-
         // Stringify 
         const fileString = await generateStringFromJsonObject(newObject);
-
-        // For big data files the stringify function will throw an error because of max string length restriction
-        // Solution 1. Build the string in steps
-        // Write data to aosd json format
-        // fs.writeFileSync(outputFile, JSON.stringify(newObject, null, '\t'));
         fs.writeFileSync(outputFile, fileString);
-
-        // Solution 2. Use a third party library to stream the data
-        // const fileStream = fs.createWriteStream(outputFile);
-        // const jsonStream = JSONStream.stringify();
-        // jsonStream.pipe(fileStream);
-        // jsonStream.write(newObject);
-        //  jsonStream.end();
 
         // Validate the aosd json result 
         const validationAosdResult = validateAosd(process.env.OUTPUT_JSON_PATH + outputFileName, process.env.AOSD2_1_JSON_SCHEME);
@@ -386,7 +372,6 @@ export const convertSpdx = async (cliArgument: string): Promise<void> => {
         console.log("We are done! - Thank's for using spdx to aosd2.1 converter!");
     } catch(error: any) {
         console.log(error);
-	    //writeErrorLog({ message: checkErrorMessage(error) })
         console.log("Sorry for that - something went wrong! Please check the  file in the root folder for detailed information.");
     }    
 }    

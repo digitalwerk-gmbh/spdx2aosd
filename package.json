@@ -3,7 +3,8 @@
   "version": "1.0.0-beta",
   "author": "Digitalwerk GmbH",
   "description": "cli tool for converting different formats into the aosd json format. GroupSpec (AUDI, VW) spdx2.3 to aosd2.1 JSON converter written in typescript.",
-  "license": "UNLICENSED",
+  "license": "MPL-2.0",
+  "copyright": "Copyright 2024 (c) Digitalwerk GmbH",
   "main": "main.ts",
   "scripts": {
     "up": "cross-env RUN_MODE=production VERSION=up ts-node main.ts",

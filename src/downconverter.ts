@@ -21,6 +21,7 @@ export const convertDown = async (cliArgument: string): Promise<void> => {
         
         // First validate input aosd file
         const validationResult = validateAosd(process.env.INPUT_JSON_PATH + cliArgument, process.env.AOSD2_1_JSON_SCHEME);
+       
         // If the scheme validation returns errors add them to log
         if (validationResult.length > 0) {
             validationResults = validationResults.concat(validationResult);
@@ -165,7 +166,6 @@ export const convertDown = async (cliArgument: string): Promise<void> => {
             dependencies: dependenciesArray,
         };
         
-
         // Prepare output file
         const outputFileName: string = cliArgument.replace(".json", "") + "_aosd2.0" + ".json";
         outputFile = outputJsonPath + outputFileName;
@@ -200,7 +200,6 @@ export const convertDown = async (cliArgument: string): Promise<void> => {
         console.log("We are done! - Thank's for using our aosd2.1 to aosd2.0 converter!");
     } catch(error) {
         console.log(error);
-	    //writeErrorLog({ message: checkErrorMessage(error) })
         console.log("Sorry for that - something went wrong! Please check the  file in the root folder for detailed information.");
     }
 }
