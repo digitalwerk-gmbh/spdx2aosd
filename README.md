@@ -1,4 +1,4 @@
-# AOSDConverter
+# SPDX2AOSD
 
 This is a converter for the aosd ecosystem.
 It is an cli tool with different functionalities.
@@ -19,11 +19,11 @@ Then run the following git command:
 
 
 ```sh
-$ git clone https://gitlab.com/digitalwerk/checkoss/aosdtoaosdconverter.git
+$ git clone https://gitlab.com/digitalwerk/tools/spdx2aosd.git
 
 ```
 
-After the clone command was successful navigate into the new folder aosdtoaosdconverter.
+After the clone command was successful navigate into the new folder spdx2aosd.
 
 Step 2:
 
@@ -64,6 +64,7 @@ Here you find an overview of all possible commands.
 ```sh
 
 # get up to date license json file with spdx identifiers
+# for this script to work properly you need an internet connection
 
 $ npm run licenses
 
@@ -85,7 +86,7 @@ $ npm run test
 
 ```
 
-## AOSDConverter folder structure
+## SPDX2AOSD converter folder structure
 
 This is the folder structure and the files you should see after succesful setup.
 
@@ -114,12 +115,11 @@ aosdtoaosdconverter
 └──docs
 │  231102_GroupSpecification_1.1_DRAFT.pdf
 │  KonzernFOSSPflichtfelder - SPDX Group Spec CycloneDX AOSD2.1.xlsx
-│  Mapping-AOSD-SPDX.xlsx
 │	
 └──interfaces
 │  interfaces.ts
 │	
-└──node_modules 
+└──node_modules
 │	
 └──src
 │  aosdvalidator.ts
@@ -278,7 +278,8 @@ After the license list is updated or you have skipped this step you should run t
 
 ## Roadmap
 
-1. Improvement of error messages when validating the JSON schmema
-2. Improvement of error messages in general
-3. Expansion of unit tests
-4. Expansion of plausibility checks
+1. Fix of the strict mode warning in unit tests
+2. Improvement of error messages when validating the JSON schmema
+3. Improvement of error messages in general
+4. Expansion of unit tests
+5. Expansion of plausibility checks
