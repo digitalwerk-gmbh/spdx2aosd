@@ -119,7 +119,7 @@ aosdtoaosdconverter
 └──interfaces
 │  interfaces.ts
 │	
-└──node_modules 
+└──node_modules
 │	
 └──src
 │  aosdvalidator.ts
