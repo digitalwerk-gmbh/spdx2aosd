@@ -1,7 +1,7 @@
 require('dotenv').config();
 const fs = require('fs');
 const Ajv = require('ajv').default;
-const ajv = new Ajv({allErrors: true, keepErrors: false});
+let ajv = new Ajv({allErrors: true, keepErrors: false}).addVocabulary(['object']);
 const AjvErrors = require('ajv-errors');
 AjvErrors(ajv, { singleError: false, keepErrors: false });
 

@@ -439,14 +439,12 @@ describe("Converter Tests", () => {
     test('Test convertSpdx to be defined', async () => {
         expect(convertSpdx).toBeDefined();
     });
-
     test('Test convertSpdx function works as expected', async () => {
-
         const response = await convertSpdx('test_group_spec_spdx.json');
         console.log(response);
         const path = './tests/data/input/test_group_spec_spdx.json';
         const resultFile = './tests/data/output/test_group_spec_spdx_aosd2.1.json';
-        const testDataArray = JSON.parse(fs.readFileSync(resultFile, 'utf8')); 
+        const testDataArray = JSON.parse(fs.readFileSync(resultFile, 'utf8'));
         expect(fs.existsSync(path)).toBe(true);
         expect(fs.existsSync(resultFile)).toBe(true);
         expect(testDataArray["schemaVersion"]).toBeDefined();
