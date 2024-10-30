@@ -1,97 +1,84 @@
-# SPDX2AOSD
+# spdx2aosd: AOSD Converter for SPDX and Scancode Licenses
 
-This is a converter for the aosd ecosystem.
-It is an cli tool with different functionalities.
-With this tool you will be able to generate an up to date json file with all spdx and scancode licenses.
-With this cli tool you can convert proprietary aosd json input files from version 2.0 to 2.1 and vice versa from 2.1 to 2.0.
-You can convert spdx2.3 json files that meet the requirements of the GroupSpecification of Audi and Volkswagen to proprietary aosd2.1 json files.
-For detailed information of the GroupSpecification for Audi and Volkswagen see also the docs folder.
+Digitalwerk has developed the **spdx2aosd** converter for the AOSD ecosystem and made it available to the open-source community. This CLI tool allows for easy and flexible management of license information in the AOSD format. For additional support in reviewing and managing open-source licenses, please visit the [Digitalwerk Curation Service](https://easycheckoss.ai/downloads.html).
 
-## Getting started
+## Features
 
-To setup and install this cli tool local on your device please follow the next 4 steps.
+- **License Data Generation:** Create a current JSON file with all SPDX and Scancode licenses.
+- **Conversion Between AOSD Versions:** Convert proprietary AOSD JSON files between versions 2.0 and 2.1.
+- **SPDX File Customization:** Convert SPDX 2.3 JSON files that meet the group requirements of Audi and Volkswagen into the proprietary AOSD 2.1 format.
 
-Open your CLI command line tool (Power Shell, Visual Code Terminal) and navigate into the folder where you want to install the tool.
+## More Information
 
-Step 1:
+For detailed information on the group requirements of Audi and Volkswagen, see the `docs` folder.
 
-Then run the following git command:
+## Getting Started
 
+To set up and install this CLI tool locally on your device, please follow these four steps:
 
-```sh
-$ git clone https://gitlab.com/digitalwerk/tools/spdx2aosd.git
+1. Open your CLI command-line tool (PowerShell, Visual Studio Code Terminal) and navigate to the folder where you want to install the tool.
 
-```
+2. Execute the following Git command:
 
-After the clone command was successful navigate into the new folder spdx2aosd.
+   ```sh
+   $ git clone https://gitlab.com/digitalwerk/tools/spdx2aosd.git
+   ```
 
-Step 2:
+   After successfully cloning, navigate into the new **spdx2aosd** folder.
 
-In the next step run the following command to create a new .env file from the existing .env.example file in the repo.
+3. Create a new `.env` file from the existing `.env.example` file in the repository:
 
-```sh
-$ cp .env.example .env
+   ```sh
+   $ cp .env.example .env
+   ```
 
-```
+4. Finally, install the required dependencies for the converter using the npm command:
 
-Step 3:
+   ```sh
+   $ npm install
+   ```
 
-Next run the npm command to install the needed dependencies for the converter.
+5. Finally, run the test suites with the following command to ensure that no tests fail:
 
-```sh
-$ npm install
+   ```sh
+   $ npm run test
+   ```
 
-```
+After completing these four steps, the CLI tool should be ready for use.
 
-Step 4:
+## Using the CLI Tool
 
-Finnaly run the test suites with the following command to check if no test is failing.
-
-```sh
-$ npm run test
-
-```
-
-After finsishing these 4 steps the cli tool converter should be ready for use.
-
-
-## How to use the cli command tool
-
-The command line tool (cli) offers a series of commands to run.
-Also you can run the unit tests to check all the scripts work correct.
-Here you find an overview of all possible commands.
+The command-line interface (CLI) provides a series of commands. You can also run the unit tests to ensure that all scripts are functioning correctly. Below is an overview of all possible commands:
 
 ```sh
-
-# get up to date license json file with spdx identifiers
-# for this script to work properly you need an internet connection
+# Get the current license JSON file with SPDX identifiers.
+# This script requires an internet connection.
 
 $ npm run licenses
 
-# convert the json file from aosd2.0 to aosd2.1 format
+# Convert the JSON file from AOSD 2.0 to AOSD 2.1 format.
 
 $ npm run up <filename>
 
-# convert the json file from aosd2.1 to aosd2.0 format
+# Convert the JSON file from AOSD 2.1 to AOSD 2.0 format.
 
 $ npm run down <filename>
 
-# convert the spdx2.3 groupspec json to aosd2.1 json
+# Convert the SPDX 2.3 group-spec JSON to AOSD 2.1 JSON.
 
 $ npm run spdx <filename>
 
-# run the unit test suites for all converters
+# Run unit tests for all converters.
 
 $ npm run test
-
 ```
 
-## SPDX2AOSD converter folder structure
+## Folder Structure of the SPDX2AOSD Converter
 
-This is the folder structure and the files you should see after succesful setup.
+This is the folder structure and the files you should see after successful setup.
 
 ```
-aosdtoaosdconverter
+spdx2aosd
 │	
 └──data
 │  │
@@ -162,124 +149,86 @@ package-lock.json
 package.json
 README.md
 tsconfig.json
-
 ```
 
-## Good to know
+## Important to Know
 
-To note when converting data from version 2.1 to version 2.0 there are some particularities.
+Note that when converting data from version 2.1 to version 2.0, there are some specific considerations to be aware of.
 
-With the 2.1 and 2.0 there is a incompatibility with the data regarding the two paramaters usage (linking) and modification.
+In AOSD 2.1, the fields `usage` and `linking` are conditionally mandatory, while they are mandatory in AOSD 2.0.
 
-In AOSD2.1 these fields are conditionally mandatory and in the AOSD2.0 mandatory.
+This means that if the values are `null` in AOSD 2.1, we cannot convert these values to anything other than `null` in AOSD 2.0. If someone attempts to import these fields with the value `null` in AOSD 2.0, an error will be triggered.
 
-This means if the values null as ... is used in AOSD2.1 we have no chance to convert this value other than null to AOSD2.0. 
-Means if someone trys to import this fileds with value null in AOSD2.0 it will throw an error.
+## Detailed Warning and Error Messages
 
-
-## Detailed warning and error messages
-
-The warning and error messages will not be displayed on the console. Only a hint will be shown like:
+Warning and error messages will not be displayed in the console. Only a hint will be shown:
 
 ```sh
-
 Sorry for that - something went wrong! Please check the error.log file in the root folder for detailed information.
-
 ```
 
-All the findings and errors will be written to a log file named error.log. This file can be found in the root of the tool
-directory.
+All findings and errors are recorded in a log file named `error.log`. This file is located in the root directory of the tool. There you will find detailed descriptions of errors or warnings.
 
-In this file you can find detailed descriptions for errors or warnings.
+### Warnings Explained
 
-
-## Warning messages explained
-
-Warnings are not always errors but will tell you to double check your json file for potential errors.
-
-That means that a warning can also be fine in a special case or scenario and you can ingnore it.
-
-With this warnings we only want to sensitize for possible pit falls.
+Warnings are not always errors but may indicate that you should review your JSON file for potential errors. A warning can also be acceptable in a specific case and ignored.
 
 ```sh
-
 Warning: incompatibility with null value for modification - component name: ... - subcomponent: ...
-
 ```
 
-Meaning: 
+Meaning:
 
-For the AOSD2.0 JSON scheme this is a mamdatory field where true or false is expected.
-In AOSD2.1 JSON scheme the value can also be null because it is optional. But null can not be convertet to true or false in this case. Means we need this information. For detailed field description please read the AOSD JSON schemes.
-Ignoring this warning will lead to error on import in AOSD!
-         
+For the AOSD 2.0 JSON schema, this is a mandatory field where `true` or `false` is expected. In the AOSD 2.1 JSON schema, the value can also be `null`, as it is optional. However, `null` cannot be converted to `true` or `false`. This information is needed. For detailed field descriptions, read the AOSD JSON schemas. Ignoring this warning will lead to an import error in AOSD!
 
 ```sh
-
 Warning: incompatibility with null value for linking - component name: ... - subcomponent: ...
-
 ```
 
-Meaning: 
+Meaning:
 
-For the AOSD2.0 JSON scheme this is a mamdatory field where 4 enum values are expected.
-In AOSD2.1 JSON scheme the value can also be null because it is optional. But null can not be convertet to one of the 4 enum values we expect. Means we need this information here. For detailed field description please read the AOSD JSON schemes. 
-Ignoring this warning will lead to error on import in AOSD!
+For the AOSD 2.0 JSON schema, this is a mandatory field where four enum values are expected. In the AOSD 2.1 JSON schema, the value can also be `null`, as it is optional. However, `null` cannot be converted to one of the four enum values that we expect. This information is needed. For detailed field descriptions, read the AOSD JSON schemas. Ignoring this warning will lead to an import error in AOSD!
 
 ```sh
-
-Warning: we have found a possible circle dependency for - component name: ... - with id: ...
-
+Warning: we have found a possible circular dependency for - component name: ... - with id: ...
 ```
 
-This warning tells you that you are using a component as direct and transitive dependency at the same time. Maybe this is correct and not an error but we want to raise your awareness to double check this.
-This will not lead to any import errors!
-
+This warning indicates that you are using a component as both a direct and a transitive dependency. This can be correct and is not an error, but we want to draw your attention to check it. This will not lead to import errors!
 
 ```sh
-
 Warning: we have found component(s) that is neither in direct dependencies nor in transitive dependencies - component id: ...
-
 ```
 
-This warning tells you that you have generated data for a software component. But the id of this software component is neither in directDependencies nor in transitiveDependencies.
-This component will be ignored by the AOSD import!
+This warning indicates that you have generated data for a software component. However, the ID of this software component is neither in `directDependencies` nor in `transitiveDependencies`. This component will be ignored during AOSD import!
 
-## Error messages explained
+## Error Messages Explained
 
+### Requirements for the spdx2aosd Converter
 
-## Requirments for the spdxconverter
+This spdx2aosd converter can only process SPDX 2.3 JSON files that meet the requirements of the group specifications from Audi and Volkswagen. The converter has been specifically developed for the group requirements. We only validate data fields described in this specification. We assume that the data in the SPDX 2.3 JSON file is already curated and correct.
 
-This spdxconverter can only handle spdx2.3 json files that meet the requirements of the GroupSpecification of Audi and Volkswagen.
-The converter was specific build for the GroupSpecification.
-We will only validate data fields that are descibed in this Specifiaction. 
-We assume the data in the spdx2.3 json file was allready curated and is correct. 
- 
-## General information for the spdxconverter
+### General Information about the spdx2aosd Converter
 
-The reason why this converter was developed is to give you the ability to convert spdx2.3 json files to the proprietary aosd2.1 json format in order to import the data into the AOSD Tool.
+The reason for developing this converter is to allow you to convert SPDX 2.3 JSON files into the proprietary AOSD 2.1 JSON format to import the data into the AOSD tool.
 
-To use the spdxconverter you should first run the licenses command to generate a valid licenses.json file with up to date spdx identifiers.
-The license command generates this license list with valid spdx identifiers and license texts from two sources.
-We are using the spdx license list and the scancode license DB.
+To use the spdx2a
 
-After the licenses.json is generated you can run the spdxconverter.
+osd converter, you should first run the `licenses` command to generate a valid `licenses.json` file with current SPDX identifiers. The license command generates this license list with valid SPDX identifiers and license texts from two sources: the SPDX license list and the Scancode license database.
 
-## Description for the spdxconverter 
+Once the `licenses.json` is generated, you can run the spdx2aosd converter.
 
-This cli command line tool works in two steps.
+### Description of the spdx2aosd Converter
 
+This CLI command-line tool works in two steps.
 
-It is recommendet to allways run step 1 the license command first to generate an license file with up to date data from spdx and scancode.
-You should only skip step 1 if you do not have an internet connection to run the update of the license list.
-In this case the initially shipped license list will be the fall back.
+It is recommended to always run step 1, the license command, first to generate a license file with current data from SPDX and Scancode. You should only skip step 1 if you have no internet connection to update the license list. In this case, the originally delivered license list will be used as a fallback.
 
-After the license list is updated or you have skipped this step you should run the converter script.
+After the license list has been updated or you have skipped this step, you should execute the conversion script.
 
 ## Roadmap
 
-1. Fix of the strict mode warning in unit tests
-2. Improvement of error messages when validating the JSON schmema
-3. Improvement of error messages in general
-4. Expansion of unit tests
-5. Expansion of plausibility checks
+1. Fix the warning in strict mode in the unit tests
+2. Improve error messages for validating the JSON schema
+3. Improve error messages in general
+4. Expand unit tests
+5. Extend plausibility checks
