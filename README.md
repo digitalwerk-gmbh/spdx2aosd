@@ -73,7 +73,7 @@ $ npm run spdx <filename>
 $ npm run test
 ```
 
-## Folder Structure of the SPDX2AOSD Converter
+## Folder Structure of the spdx2aosd Converter
 
 This is the folder structure and the files you should see after successful setup.
 
