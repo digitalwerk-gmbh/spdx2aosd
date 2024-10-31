@@ -1,6 +1,6 @@
-# spdx2aosd: AOSD Converter for SPDX and Scancode Licenses
+# spdx2aosd: SPDX to AOSD converter with support for multiple AOSD formats
 
-[Digitalwerk](https://www.digitalwerk.net) has developed the **spdx2aosd** converter for the AOSD ecosystem and made it available to the open-source community. This CLI tool allows for easy and flexible management of license information in the AOSD format. For additional support in reviewing and managing open-source licenses, please visit the [Digitalwerk Curation Service](https://easycheckoss.ai/downloads.html).
+[Digitalwerk](https://www.digitalwerk.net) has developed the **spdx2aosd** converter for the AOSD ecosystem and made it available to the open-source community. This CLI tool enables easy and flexible conversion of various JSON data formats into the specified proprietary AOSD format. For additional support in reviewing and managing open-source licenses, please visit the [Digitalwerk EasyCheckOSS Service](https://easycheckoss.ai/downloads.html).
 
 ## Features
 
