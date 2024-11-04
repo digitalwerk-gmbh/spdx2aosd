@@ -142,12 +142,22 @@ export const convertUp = async (cliArgument: string): Promise<void> => {
             counter++;
         }
 
+        // Data validation: check if component from direct Dependencies exists
+        for (let i = 0; i < inputDataArray['directDependencies'].length; i++) {
+            const compomentExists = CheckValue(inputDataArray['directDependencies'][i].toString(), idMapping, 'componentId');
+            if (compomentExists.length === 0) {
+                validationResults.push('Warning: The following componentId ' + inputDataArray['directDependencies'][i].toString() + ' is listed in directDependencies - but the component is missing!\n');
+            }
+        }
+
         // Convert strings to numbers in direct dependencies
         const temporaryId = [];
         for (let i = 0; i < newObject['directDependencies'].length; i++) {
             const id = newObject['directDependencies'][i];
-            const findId = CheckValue(id, idMapping, 'componentId');
-            temporaryId.push(findId[0]['number']);
+            const findId = CheckValue(id.toString(), idMapping, 'componentId');
+            if(findId.length > 0) {
+                temporaryId.push(findId[0]['number']);
+            }
         }
         newObject['directDependencies'] = temporaryId;
 
@@ -155,12 +165,16 @@ export const convertUp = async (cliArgument: string): Promise<void> => {
         for (let i = 0; i < newObject['components'].length; i++) {
             const id = newObject['components'][i].id;
             const findId = CheckValue(id, idMapping, 'componentId');
-            newObject['components'][i].id = findId[0]['number'];
+            if(findId.length > 0) {
+                newObject['components'][i].id = findId[0]['number'];
+            }
 
             const temporaryId: Array<number>= [];
             newObject['components'][i].transitiveDependencies.map((dep: any) => {
                 const findId = CheckValue(dep, idMapping, 'componentId');
-                temporaryId.push(findId[0]['number']);
+                if(findId.length > 0) {
+                    temporaryId.push(findId[0]['number']);
+                }
             });
             newObject['components'][i].transitiveDependencies = temporaryId;
         }
@@ -173,7 +187,7 @@ export const convertUp = async (cliArgument: string): Promise<void> => {
         fs.writeFileSync(outputFile, JSON.stringify(newObject, null, '\t'));
 
         // Validate the aosd json result 
-        const validationAosdResult = validateAosd(process.env.OUTPUT_JSON_PATH + outputFileName, process.env.AOSD2_0_JSON_SCHEME);
+        const validationAosdResult = validateAosd(process.env.OUTPUT_JSON_PATH + outputFileName, process.env.AOSD2_1_JSON_SCHEME);
         // If the scheme validation returns errors add them to log
         if (validationAosdResult.length > 0) {
             validationResults = validationResults.concat(validationAosdResult);
