@@ -1,0 +1,61 @@
+{
+	"schemaVersion": "2.1.0",
+	"externalId": "myOwnId",
+	"scanned": true,
+	"directDependencies": [
+		1,
+		2,
+		3
+	],
+	"components": [
+		{
+			"id": "1",
+			"componentName": "test_component_1",
+			"componentVersion": "7.0.3",
+			"scmUrl": "https://registry.npmjs.org/test_comonent_1/test_comonent_1.tgz",
+			"modified": true,
+			"linking": "dynamic_linking",
+			"transitiveDependencies": [
+				6
+			],
+			"subcomponents": [
+				{
+					"subcomponentName": "main",
+					"spdxId": "GFDL-1.2-or-later",
+					"copyrights": [
+						"Copyright (c) 2017 Adam Generic"
+					],
+					"authors": [],
+					"licenseText": "GFDL-1.2-or-later - Lizenztext",
+                    "licenseTextUrl": "https://testpackages/texturl/generated",
+					"selectedLicense": "",
+					"additionalLicenseInfos": ""
+				},
+                {
+					"subcomponentName": "subcomponent_2",
+					"spdxId": "Apache-2.0",
+					"copyrights": [
+						"Copyright (c) 2017 Adam Generic"
+					],
+					"authors": [],
+					"licenseText": "Apache-2.0 - Lizenztext",
+                    "licenseTextUrl": "https://testpackages/texturl/generated",
+					"selectedLicense": "",
+					"additionalLicenseInfos": ""
+				},
+                {
+					"subcomponentName": "subcomponent_3",
+					"spdxId": "MIT",
+					"copyrights": [
+						"Copyright (c) 2017 Adam Generic"
+					],
+					"authors": [],
+					"licenseText": "MIT - Lizenztext",
+                    "licenseTextUrl": "https://testpackages/texturl/generated",
+					"selectedLicense": "",
+					"additionalLicenseInfos": ""
+				}
+			]
+		}
+	]
+}

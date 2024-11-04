@@ -1,0 +1,159 @@
+{
+  "SPDXID" : "SPDXRef-DOCUMENT",
+  "spdxVersion" : "SPDX-2.3",
+  "creationInfo" : {
+    "created" : "2024-06-07T11:11:11Z",
+    "creators" : [
+      "Tool: LicenseFind-1.0",
+      "Organization: ExampleCodeInspect ()",
+      "Person: Jane Doe ()"
+    ],
+    "comment": "GroupSpec"
+  },
+  "name": "GroupSpec-Example-SPDX",
+  "dataLicense" : "CC0-1.0",
+  "packages": [
+    {
+      "SPDXID": "SPDXRef-1",
+      "name": "alpha-orange",
+      "versionInfo": "4.2.0",
+      "downloadLocation": "https://localhost/package-1",
+      "hasFiles": [
+        "SPDXRef-1-file-1",
+        "SPDXRef-1-file-2",
+        "SPDXRef-1-file-3",
+        "SPDXRef-1-file-4",
+        "SPDXRef-1-file-5",
+        "SPDXRef-1-file-6"
+      ],
+      "licenseConcluded": "BSD-3-Clause"
+    },
+    {
+      "SPDXID": "SPDXRef-2",
+      "name": "xz",
+      "versionInfo": "5.6.1",
+      "downloadLocation": "https://github.com/tukaani-project/xz",
+      "hasFiles": [
+        "SPDXRef-xz-file-1"
+      ],
+      "licenseConcluded": "BSD-3-Clause"
+    },
+    {
+      "SPDXID": "SPDXRef-3",
+      "name": "xyz",
+      "versionInfo": "5.6.2",
+      "downloadLocation": "https://github.com/tukaani-project/xyz",
+      "hasFiles": [
+      ],
+      "licenseDeclared":"BSD-3-Clause",
+      "licenseConcluded": "NOASSERTATION"
+    },
+    {
+      "SPDXID": "SPDXRef-mvn-com.typesafe.akka-akka-remote-2.13-2.6.19",
+      "name": "akka-remote",
+      "versionInfo": "2.6.19",
+      "downloadLocation": "https://repo1.maven.org/maven2/com/typesafe/akka/akka-remote_2.13/2.6.19/akka-remote_2.13-2.6.19-sources.jar",
+      "hasFiles": [
+        "SPDXRef-mvn-com.typesafe.akka-akka-remote-2.13-2.6.19-akka-remote-artery-aeron-AeronErrorLog.java",
+        "SPDXRef-mvn-com.typesafe.akka-akka-remote-2.13-2.6.19-pom.xml"
+      ],
+      "licenseDeclared": "Apache-2.0",
+      "copyrightText": "2014 - 2016 Real Logic Ltd.",
+      "homepage": "https://akka.io/",
+      "licenseConcluded": "NOASSERTION"
+    }
+  ],
+  "files": [
+    {
+      "SPDXID": "SPDXRef-1-file-1",
+      "fileName": "./src/LICENSE",
+      "licenseConcluded": "BSD-3-Clause",
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "SPDXID": "SPDXRef-1-file-2",
+      "fileName": "./pkg/abc",
+      "licenseConcluded": "AGPL-1.0-only",
+      "copyrightText": "(c) Jane Doe",
+      "attributionTexts": "This product contains software developed by Walter Frosch."
+    },
+    {
+      "SPDXID": "SPDXRef-1-file-3",
+      "fileName": "./src/LICENSE",
+      "licenseConcluded": "AGPL-1.0-only OR LicenseRef-1",
+      "copyrightText": "(c) Jane Doe",
+      "noticeText": "Apache Commons Lang\\nCopyright 2001-2011\nThe Apache SoKware Founda\"on\\n\\nThis\nproduct includes soKware developed by\\nThe\nApache SoKware Founda\"on\n(h<p://www.apache.org/).\\n\\nThis product\nincludes soKware from the Spring\nFramework,\\nunder the Apache License 2.0 (see:\nStringU\"ls.containsWhitespace())",
+      "licenseComments": "chosen: AGPL-1.0-only"
+    },
+    {
+      "SPDXID": "SPDXRef-1-file-4",
+      "fileName": "./src/LICENSE",
+      "licenseConcluded": "AGPL-1.0-only OR LicenseRef-2",
+      "copyrightText": "(c) Jane Doe",
+      "noticeText": "Apache Commons Lang\\nCopyright 2001-2011\nThe Apache SoKware Founda\"on\\n\\nThis\nproduct includes soKware developed by\\nThe\nApache SoKware Founda\"on\n(h<p://www.apache.org/).\\n\\nThis product\nincludes soKware from the Spring\nFramework,\\nunder the Apache License 2.0 (see:\nStringU\"ls.containsWhitespace())",
+      "licenseComments": "chosen: LicenseRef-2"
+    },
+    {
+      "SPDXID": "SPDXRef-1-file-5",
+      "fileName": "./src/LICENSE",
+      "licenseConcluded": "AGPL-1.0-only OR LicenseRef-3",
+      "copyrightText": "(c) Jane Doe",
+      "licenseComments": "chosen: LicenseRef-3"
+    },
+    {
+      "SPDXID": "SPDXRef-1-file-6",
+      "fileName": "./package/",
+      "licenseConcluded": "LGPL-2.1-or-later",
+      "copyrightText": "Copyright Saxonica Ltd",
+      "licenseComments": "The concluded license was taken from the package level that the file was included in."
+    },
+    {
+      "SPDXID": "SPDXRef-xz-file-1",
+      "fileName": "./LICENSE",
+      "licenseConcluded": "GPL-2.0-or-later WITH Classpath-exception-2.0",
+      "copyrightText": "(c) Rute Groß-Mann, 1969"
+    },
+    {
+      "SPDXID":  "SPDXRef-mvn-com.typesafe.akka-akka-remote-2.13-2.6.19-akka-remote-artery-aeron-AeronErrorLog.java",
+      "fileName": "akka/remote/artery/aeron/AeronErrorLog.java",
+      "comment": "extracted from SPDXRef-mvn-com.typesafe.akka-akka-remote-2.13-2.6.19",
+      "licenseConcluded": "Apache-2.0"
+    },
+    {
+      "fileName": "pom.xml",
+      "SPDXID": "SPDXRef-mvn-com.typesafe.akka-akka-remote-2.13-2.6.19-pom.xml",
+      "comment": "extracted from SPDXRef-mvn-com.typesafe.akka-akka-remote-2.13-2.6.19",
+      "licenseConcluded": "Apache-2.0"
+    }
+  ],
+  "hasExtractedLicensingInfos": [
+    {
+      "licenseId": "MIT",
+      "extractedText": "Copyright <YEAR> <COPYRIGHT HOLDER>\n\nPermission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the “Software”), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.",
+      "name": "MIT"
+    },
+    {
+      "licenseId": "LicenseRef-1",
+      "extractedText": "License text of license 'LicenseRef-1'",
+      "name": ""
+    },
+    {
+      "licenseId": "LicenseRef-2",
+      "extractedText": "License text of license 'LicenseRef-2'",
+      "name": "BSD-3-Clause"
+    },
+    {
+      "licenseId": "LicenseRef-3",
+      "extractedText": "License text of license 'LicenseRef-3'",
+      "name": "BSD-3-clause"
+    }
+  ],
+  "documentNamespace": "https://localhost/GroupSpec-Example-SPDX",
+  "relationships": [
+    {
+      "spdxElementId" : "SPDXRef-1",
+      "relatedSpdxElement" : "SPDXRef-2",
+      "relationshipType" : "DYNAMIC_LINK"
+    }
+  ]
+}
