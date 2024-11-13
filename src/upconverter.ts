@@ -1,6 +1,6 @@
 const fs = require('fs');
 require('dotenv').config();
-import { generateDataValidationMessage, generateUniqueSubcomponentName } from './helper'
+import { generateDataValidationMessage, generateUniqueSubcomponentName, loadSPDXKeys, validateDependencies, validateSPDXIds } from './helper'
 import { AosdObject, AosdComponent, AosdSubComponent, LicenseAosd } from "../interfaces/interfaces";
 import { validateAosd } from './aosdvalidator';
 let inputJsonPath: string | undefined = '';
@@ -27,7 +27,7 @@ export const convertUp = async (cliArgument: string): Promise<void> => {
             validationResults = validationResults.concat(validationResult);
         }
         validationResults.push('\n-----------------------------------------------------\nData-Validation errors:\n-----------------------------------------------------\n');
-
+        
         // Read the input aosd json file
         const jsonInputFile = fs.readFileSync(inputJsonPath, { encoding: 'utf8' });
         const inputDataArray = JSON.parse(jsonInputFile);
@@ -64,7 +64,7 @@ export const convertUp = async (cliArgument: string): Promise<void> => {
                 scmUrl: dependenciesArray[i]['scmUrl'],
                 modified: false,
                 linking: '',
-                transitiveDependencies: dependenciesArray[i]['externalDependencies'],
+                transitiveDependencies: dependenciesArray[i]?.externalDependencies || [],
                 subcomponents: [],
             };
 
@@ -86,6 +86,18 @@ export const convertUp = async (cliArgument: string): Promise<void> => {
                             }
                         }    
                     }
+                    
+                    // Validate 'spdxId' from licenses,json
+                    const validSPDXKeys = loadSPDXKeys();
+                    dependenciesArray[i]['parts'].forEach((part: { name: string; providers: any[]; }) => {
+                        const subcomponentName = part.name;  
+                      
+                        part.providers.forEach((provider) => {
+                          const spdxIds = provider.additionalLicenses.map((adl: LicenseAosd) => adl.spdxId);
+                          const spdxValidationErrors = validateSPDXIds(spdxIds, validSPDXKeys, dependenciesArray[i]['name'], subcomponentName);
+                          validationResults = validationResults.concat(spdxValidationErrors);
+                        });
+                    });
 
                     // New logic for take over part or additionalLicense name
                     let tmpSubcomponentName: string = generateUniqueSubcomponentName(dependenciesArray[i]['parts'].length, dependenciesArray[i]['parts'][j]['providers'][0]['additionalLicenses'].length, maincounter, uniqueNameCounter, dependenciesArray[i]['parts'][j]['name'], adl['name']);
@@ -142,14 +154,6 @@ export const convertUp = async (cliArgument: string): Promise<void> => {
             counter++;
         }
 
-        // Data validation: check if component from direct Dependencies exists
-        for (let i = 0; i < inputDataArray['directDependencies'].length; i++) {
-            const compomentExists = CheckValue(inputDataArray['directDependencies'][i].toString(), idMapping, 'componentId');
-            if (compomentExists.length === 0) {
-                validationResults.push('Warning: The following componentId ' + inputDataArray['directDependencies'][i].toString() + ' is listed in directDependencies - but the component is missing!\n');
-            }
-        }
-
         // Convert strings to numbers in direct dependencies
         const temporaryId = [];
         for (let i = 0; i < newObject['directDependencies'].length; i++) {
@@ -185,6 +189,19 @@ export const convertUp = async (cliArgument: string): Promise<void> => {
 
         // Write data to aosd json format
         fs.writeFileSync(outputFile, JSON.stringify(newObject, null, '\t'));
+
+        const componentsArray = inputDataArray['dependencies'];
+
+        // Validate direct dependencies
+        validationResults = validationResults.concat(
+            validateDependencies(inputDataArray['directDependencies'], componentsArray, "direct dependency")
+        );
+
+        // Validate transitive dependencies
+        const transCheckArray = componentsArray.flatMap((component: any) => component.externalDependencies || []);
+        validationResults = validationResults.concat(
+            validateDependencies(transCheckArray, componentsArray, "transitive dependency")
+        );
 
         // Validate the aosd json result 
         const validationAosdResult = validateAosd(process.env.OUTPUT_JSON_PATH + outputFileName, process.env.AOSD2_1_JSON_SCHEME);

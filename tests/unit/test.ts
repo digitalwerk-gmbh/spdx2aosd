@@ -1,9 +1,9 @@
 import * as fs from "fs";
-import { describe, expect, test } from '@jest/globals';
+import { describe, expect, it, test } from '@jest/globals';
 import { convertDown } from '../../src/downconverter';
 import { convertUp } from '../../src/upconverter';
 import { convertSpdx } from "../../src/spdxconverter";
-import { getUniqueValues, getMultibleUsedIds, getMissingComponentIds, generateDataValidationMessage, generateUniqueSubcomponentName, generateStringFromJsonObject } from '../../src/helper';
+import { getUniqueValues, getMultibleUsedIds, getMissingComponentIds, generateDataValidationMessage, generateUniqueSubcomponentName, generateStringFromJsonObject, validateDependencies, validateSPDXIds, validateSelectedLicenseForDualLicenses, validateLicenseTextUrl } from '../../src/helper';
 
 describe("Test for helper functions", () => {
     test('Test getUniqueValues exists', async () => {
@@ -74,10 +74,6 @@ describe("Test for helper functions", () => {
         const response = getMissingComponentIds(testArray1, testArray2, testArray3);
         expect(response.length).toBe(0);
     });    
-
-    test('Test generateDataValidationMessage exists', async () => {
-        expect(generateDataValidationMessage).toBeDefined();
-    });
 
     test('Test - 01 generateDataValidationMessage works as expected', async () => {
         const testArray1: Array<string> = [
@@ -193,6 +189,158 @@ describe("Test for helper functions", () => {
         const jsonObject = JSON.parse(fs.readFileSync(path, 'utf8')); 
         const response = await generateStringFromJsonObject(jsonObject);
         expect(response).toContain('"externalId": "myOwnId",');
+    });
+
+    test('Test validateDependencies exists', async () => {
+        expect(validateDependencies).toBeDefined();
+    });
+
+    test('Test validateDependencies works as expected for direct dependencies', async () => {
+        const directDependencies = [1, 2, 3];
+        const components = [
+            { id: 1, name: 'component_1' },
+            { id: 3, name: 'component_3' },
+            { id: 5, name: 'component_5' },
+        ];
+        const dependencyType = "direct dependency";
+        const response = validateDependencies(directDependencies, components, dependencyType);
+        expect(response).toContain("Warning: direct dependency with id 2 does not correspond to any component");
+        expect(response).not.toContain("Warning: direct dependency with id 1 does not correspond to any component");
+        expect(response).not.toContain("Warning: direct dependency with id 3 does not correspond to any component");
+        expect(response.length).toBe(1); 
+    });
+
+    test('Test validateDependencies works as expected for transitive dependencies', async () => {
+        const transitiveDependencies = ["6", "7"];
+        const components = [
+           { id: "1", name: 'component_1', transitiveDependencies: ["6", "8"] },
+           { id: "2", name: 'component_2', transitiveDependencies: ["9"] },
+        ];
+        const dependencyType = "transitive dependency";
+    
+        const allTransitiveDependencies = components
+        .flatMap(component => component.transitiveDependencies || [])
+        .map(dep => ({ id: dep }));
+    
+        const response = validateDependencies(transitiveDependencies, allTransitiveDependencies, dependencyType);
+        expect(response).toContain("Warning: transitive dependency with id 7 does not correspond to any component");
+        expect(response).not.toContain("Warning: transitive dependency with id 6 does not correspond to any component");
+        expect(response.length).toBe(1); 
+    });
+
+    describe('validateSPDXIds', () => {
+       const validSPDXKeys = new Set(['MIT', 'Apache-2.0', 'GPL-3.0']);
+  
+       it('should return a warning for invalid SPDX keys in spdxIds', () => {
+          const spdxIds = ['MIT', 'LicenseRef-1'];
+          const messages = validateSPDXIds(spdxIds, validSPDXKeys, 'test_component', 'test_subcomponent');
+  
+          expect(messages).toContain("Warning: invalid SPDX key(s) - 'LicenseRef-1' - component name: test_component - subcomponent: test_subcomponent");
+          expect(messages.length).toBe(1);
+       });
+  
+       it('should not return a warning if all SPDX keys are valid', () => {
+         const spdxIds = ['MIT', 'Apache-2.0'];
+         const messages = validateSPDXIds(spdxIds, validSPDXKeys, 'test_component', 'test_subcomponent');
+  
+         expect(messages.length).toBe(0);
+       });
+  
+       it('should return a warning for an invalid selectedLicense', () => {
+         const spdxIds = ['MIT'];
+         const selectedLicense = 'Mit';
+         const messages = validateSPDXIds(spdxIds, validSPDXKeys, 'test_component', 'test_subcomponent', selectedLicense);
+  
+         expect(messages).toContain("Warning: invalid SPDX key in selectedLicense 'Mit' - component name: test_component - subcomponent: test_subcomponent");
+         expect(messages.length).toBe(1);
+       });
+  
+       it('should not return a warning if selectedLicense is valid', () => {
+         const spdxIds = ['MIT'];
+         const selectedLicense = 'Apache-2.0';
+         const messages = validateSPDXIds(spdxIds, validSPDXKeys, 'test_component', 'test_subcomponent', selectedLicense);
+  
+         expect(messages.length).toBe(0);
+       });
+    });
+
+    describe('validateSelectedLicenseForDualLicenses', () => {
+      it('should be defined', () => {
+        expect(validateSelectedLicenseForDualLicenses).toBeDefined();
+      });
+  
+      it('should return a warning if spdxId contains "OR" and selectedLicense is empty', () => {
+        const componentsArray = [
+          {
+           componentName: 'component1',
+            subcomponents: [
+              { spdxId: 'MIT OR GPL-3.0', subcomponentName: 'subcomponent1', selectedLicense: '' },
+            ],
+          },
+        ];
+        const validationResults: Array<string> = [];
+        validateSelectedLicenseForDualLicenses(componentsArray, validationResults);
+  
+        expect(validationResults).toContain(
+          "Warning: dual-license detected - component name: component1 - subcomponent: subcomponent1. Please specify a selectedLicense."
+        );
+        expect(validationResults.length).toBe(1);
+      });
+  
+      it('should not return a warning if selectedLicense is populated', () => {
+        const componentsArray = [
+          {
+            componentName: 'component2',
+            subcomponents: [
+              { spdxId: 'MIT OR GPL-3.0', subcomponentName: 'subcomponent2', selectedLicense: 'MIT' },
+            ],
+          },
+        ];
+        const validationResults: Array<string> = [];
+        validateSelectedLicenseForDualLicenses(componentsArray, validationResults);
+  
+        expect(validationResults.length).toBe(0);
+      });
+    });
+
+    describe('validateLicenseTextUrl based on scanned field', () => {
+        const componentsArray = [
+          {
+            componentName: 'component1',
+            scanned: false,
+            subcomponents: [
+              { subcomponentName: 'subcomponent1', licenseTextUrl: '' },
+              { subcomponentName: 'subcomponent2', licenseTextUrl: 'http://example.com' }
+            ]
+          },
+          {
+            componentName: 'component2',
+            scanned: true,
+            subcomponents: [
+              { subcomponentName: 'subcomponent3', licenseTextUrl: '' }, 
+              { subcomponentName: 'subcomponent4', licenseTextUrl: 'http://example.com' } 
+            ]
+          }
+        ];
+      
+        it('should return a warning if licenseTextUrl is missing and scanned is false', () => {
+          const validationResults: any[] = [];
+      
+          componentsArray.forEach(component => {
+            component.subcomponents.forEach(subcomponent => {
+              if (!subcomponent.licenseTextUrl && component.scanned === false) {
+                validationResults.push(
+                  `Warning: licenseTextUrl in component ${component.componentName} - subcomponent ${subcomponent.subcomponentName} is a required field.`
+                );
+              }
+            });
+          });
+      
+          expect(validationResults).toContain(
+            "Warning: licenseTextUrl in component component1 - subcomponent subcomponent1 is a required field."
+          );
+          expect(validationResults.length).toBe(1); 
+        });
     });
 });
 
@@ -397,6 +545,8 @@ describe("AOSD2.0 to AOSD2.1 converter test", () => {
         expect(testDataArray.components[0]["subcomponents"][0]["licenseText"]).toBe("The MIT License (MIT)");
         expect(testDataArray.components[0]["subcomponents"][0]["licenseTextUrl"]).toBeDefined();
         expect(testDataArray.components[0]["subcomponents"][0]["licenseTextUrl"]).toBe("http://opensource.org/licenses/mit-license.php");
+        expect(testDataArray.components[13]["subcomponents"][0]["licenseTextUrl"]).toBeDefined();
+        expect(testDataArray.components[13]["subcomponents"][4]["licenseTextUrl"]).toBe("http://fedoraproject.org/wiki/Licensing:MIT#Old_Style_with_legal_disclaimer_2");
         expect(testDataArray.components[0]["subcomponents"][0]["selectedLicense"]).toBeDefined();
         expect(testDataArray.components[0]["subcomponents"][0]["selectedLicense"]).toBe("");
         expect(testDataArray.components[0]["subcomponents"][0]["additionalLicenseInfos"]).toBeDefined();

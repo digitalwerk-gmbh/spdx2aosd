@@ -3,7 +3,7 @@ const JSONStream = require('JSONStream');
 require('dotenv').config();
 import { validateAosd } from './aosdvalidator';
 import { LicenseDataObject, ExtractedLicense, MappedLicense, AosdObject, AosdComponent, AosdSubComponent, SpdxPackages, SpdxFiles, SpdxRelationsships, SpdxIdToInternalId, exportMapper } from "../interfaces/interfaces";
-import { generateDataValidationMessage, generateStringFromJsonObject } from './helper';
+import { generateDataValidationMessage, generateStringFromJsonObject, loadSPDXKeys, validateSelectedLicenseForDualLicenses, validateSPDXIds } from './helper';
 let inputJsonPath: string | undefined = '';
 let outputJsonPath: string | undefined = '';
 let outputFile: string = '';
@@ -168,6 +168,8 @@ export const convertSpdx = async (cliArgument: string): Promise<void> => {
             if (dependency['hasFiles'].length > 0) {
                 newObject.scanned = true;
             }
+
+            const validSPDXKeys = loadSPDXKeys();
             // Check for licenseDeclared and create a subcomponent if it exists
             if (dependency.licenseDeclared && dependency.licenseDeclared !== 'NOASSERTION'  && dependency.licenseDeclared !== 'NONE' && !dependency.hasFiles.length) {
                let licenseText = getLicenseText(dependency.licenseDeclared);
@@ -185,6 +187,7 @@ export const convertSpdx = async (cliArgument: string): Promise<void> => {
                };
                componentObject['subcomponents'].push(subcomponentObject);
             }
+            
             // Iterate over files
             dependency['hasFiles'].forEach((fileId: String, index: number) => {
                 const fileData: Array<SpdxFiles> = filesArray.filter(file => file.SPDXID === fileId);
@@ -210,7 +213,9 @@ export const convertSpdx = async (cliArgument: string): Promise<void> => {
                 });
                 const tempLicenses = spdxKey.split("#");
                 let currentComponentName = dependency['name'];
+                
                 const resolveSelectedLicense = (licenseComment: string, source: string = '') => {
+                    const currentSubcomponentName = fileData[0].fileName;
                     // Return empty string if licenseComment is empty
                     if (!licenseComment?.trim()) return "";
                     // Check if the licenseComment exists in licenses.json
@@ -221,13 +226,11 @@ export const convertSpdx = async (cliArgument: string): Promise<void> => {
                     if (extractedLicense) {
                         const isValidSpdxKey = licenseData.data.some(license => license.spdx_license_key === extractedLicense.name);
                         if (isValidSpdxKey) return extractedLicense.name;
-                        // Log error if not a valid SPDX key in extractedLicensesInfos
-                        validationResults.push(`"${extractedLicense.name}" in component with componentName: "${currentComponentName}" is not a valid SPDX license key.`);
                         return "";
                     }
                     // Log error if no valid key found in licenseComment
                     if (source === 'licenseComment') {
-                        validationResults.push(`"${licenseComment}" in component with componentName: "${currentComponentName}" is not a valid SPDX license key.`);
+                        validationResults.push(`Warning: invalid SPDX key(s) in licenseComment - "${licenseComment}" - component name: ${currentComponentName} - subcomponent: ${currentSubcomponentName}`);
                     }
                     return "";
                 };
@@ -275,12 +278,21 @@ export const convertSpdx = async (cliArgument: string): Promise<void> => {
                     additionalLicenseInfos: fileData[0].noticeText? fileData[0].noticeText : ""
                 };
                 componentObject['subcomponents'].push(subcomponentObject);
+
+                // Validate spdxId
+                const spdxValidationMessages = validateSPDXIds([tmpSpdxKey], validSPDXKeys, dependency.name, fileData[0].fileName);
+                validationResults.push(...spdxValidationMessages);
             });
             newObject['components'].push(componentObject);
             counter++;
         });
+
         // Add direct dependencies
         newObject.directDependencies = newObject.components.map(component => component.id);
+
+        // Validate selectedLicense
+        validateSelectedLicenseForDualLicenses(newObject.components, validationResults);
+
         // Rewrite ids of transitive dependencies
         const remapIds = (componentId: String) => {
             const filteredId = idMapping.filter(id => id.originalId === componentId);
