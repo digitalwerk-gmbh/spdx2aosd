@@ -15,3 +15,10 @@
 # [Fixed] fixed error in script if array is empty on filtered variable
 # [Fixed] fixed use of the correct scheme validation on upconverter for final file 
 
+# Update from version 1.0.1-beta to 1.1.1-beta
+
+# [Added] added new data validation for checking if component is mentionend in transitiveDependencies
+# [Added] added new validation to ensure `licenseTextUrl` is populated when `scanned` is set to "false"
+# [Added] added new validation to ensure `selectedLicense` is populated when `spdxId` contains a dual license
+
+# [Fixed] fixed a bug in `aosd2.0` import schema, ensuring accurate schema validation

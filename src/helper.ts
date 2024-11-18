@@ -1,4 +1,5 @@
 import { AosdObject } from "../interfaces/interfaces";
+const fs = require('fs');
 
 export const getUniqueValues = (arrayData: Array<string> | any) => (
     arrayData.filter((currentValue: any, index: any, arr: string | any[]) => (
@@ -92,3 +93,92 @@ export const generateStringFromJsonObject = async (jsonObject: AosdObject): Prom
   }
   return fileString;
 }
+
+// Validate direkt and transitive dependencies
+export const validateDependencies = (
+  dependencies: Array<number | string>,
+  componentsArray: Array<{ id: string | number }>,
+  dependencyType: string
+): Array<string> => {
+  const validationMessages: Array<string> = [];
+
+  const componentIds = new Set(componentsArray.map((component) => component.id.toString()));
+  dependencies.forEach((dependencyId) => {
+    const depIdStr = dependencyId.toString();
+    if (!componentIds.has(depIdStr)) {
+        validationMessages.push(`Warning: ${dependencyType} with id ${depIdStr} does not correspond to any component`);
+    }
+});
+  return validationMessages;
+};
+
+// Validate spdx keys
+export const loadSPDXKeys = (): Set<string> => {
+  try {
+    const data = JSON.parse(fs.readFileSync(process.env.LICENSE_FILE_PATH!, 'utf8')).data;
+    return new Set(data?.map(({ spdx_license_key } : { spdx_license_key: string }) => spdx_license_key) || []);
+  } catch {
+    throw new Error("The licenses.json file is missing or has an invalid format.");
+  }
+};
+
+export const validateSPDXIds = (
+  spdxIds: Array<string>,
+  validSPDXKeys: Set<string>,
+  componentName: string,
+  subcomponentName?: string,
+  selectedLicense?: string
+): Array<string> => {
+  const validationMessages: Array<string> = [];
+
+  spdxIds.forEach(id => {
+    const cleanedId = id.replace(/[()]/g, "").trim();
+    const licenses = cleanedId.split(/\s+(AND|OR)\s+/).filter(part => part !== "AND" && part !== "OR");
+
+   // Check each license part
+   const invalidLicenses = licenses.filter(part => !validSPDXKeys.has(part.trim()));
+
+   if (invalidLicenses.length > 0) {
+     validationMessages.push(
+       `Warning: invalid SPDX key(s) - '${invalidLicenses.join(", ")}' - component name: ${componentName} - subcomponent: ${subcomponentName}`
+     );
+   }
+ });
+  // Validate selected license
+  if (selectedLicense && !validSPDXKeys.has(selectedLicense)) {
+    validationMessages.push(
+      `Warning: invalid SPDX key in selectedLicense '${selectedLicense}' - component name: ${componentName} - subcomponent: ${subcomponentName}`
+    );
+  }
+  return validationMessages;
+};
+
+// Check if 'scanned' is false and validate if 'licenseTextUrl' exists
+export const validateLicenseTextUrl = (
+  componentsArray: Array<{ subcomponents: any[]; componentName: string }>,
+  validationResults: Array<string>
+): void => {
+  componentsArray.forEach((component) => {
+      component.subcomponents.forEach((subcomponent) => {
+          if (!subcomponent.licenseTextUrl) {
+              validationResults.push(`Warning: licenseTextUrl in component name: ${component.componentName} - subcomponent: ${subcomponent.subcomponentName} is a required field.`);
+          }
+      });
+  });
+};
+
+// Check if 'selectedLicense' is populated when 'spdxId' contains a dual license 
+export const validateSelectedLicenseForDualLicenses = (
+  componentsArray: Array<{ componentName: string; subcomponents: { spdxId: string; selectedLicense?: string; subcomponentName: string }[] }>,
+  validationResults: Array<string>
+): void => {
+  componentsArray.forEach((component) => {
+      component.subcomponents.forEach((subcomponent) => {
+          if (subcomponent.spdxId.includes("OR") && (!subcomponent.selectedLicense || subcomponent.selectedLicense.trim() === "")) {
+              validationResults.push(
+                  `Warning: dual-license detected - component name: ${component.componentName} - subcomponent: ${subcomponent.subcomponentName}. Please specify a selectedLicense.`
+              );
+          }
+      });
+  });
+};

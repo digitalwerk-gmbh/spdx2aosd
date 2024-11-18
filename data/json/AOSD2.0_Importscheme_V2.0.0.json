@@ -291,6 +291,7 @@
               }
             },
             "dependencies": {
+              "type": "object",
               "downloadUrl": {
                 "required": [
                   "checksums"

@@ -1,6 +1,6 @@
 const fs = require('fs');
 require('dotenv').config();
-import { getMultibleUsedIds, generateDataValidationMessage, getMissingComponentIds } from './helper';
+import { getMultibleUsedIds, generateDataValidationMessage, getMissingComponentIds, validateDependencies, loadSPDXKeys, validateSPDXIds, validateLicenseTextUrl, validateSelectedLicenseForDualLicenses } from './helper';
 import { AosdSubComponent, DependencyObject, LicenseAosd, Part, Provider } from '../interfaces/interfaces';
 import { validateAosd } from './aosdvalidator';
 let inputJsonPath: string | undefined = '';
@@ -31,7 +31,7 @@ export const convertDown = async (cliArgument: string): Promise<void> => {
         // Read the input aosd json file
         let jsonInputFile = fs.readFileSync(inputJsonPath, { encoding: 'utf8' });
         let inputDataArray = JSON.parse(jsonInputFile);
-
+    
         // Set id arrays for check data validation
         const directCheckArray: Array<number> = inputDataArray['directDependencies'];
         let transCheckArray: Array<number> = [];
@@ -49,6 +49,7 @@ export const convertDown = async (cliArgument: string): Promise<void> => {
         // Loop over all components and subcomponents
         for (let i = 0; i < componentsArray.length; i++) {
             for (let j = 0; j < componentsArray[i]['subcomponents'].length; j++) {
+                
                 // Convert external dependencies to strings
                 externalDependenciesArray = [];
                 for (let k = 0; k < componentsArray[i]['transitiveDependencies'].length; k++) {
@@ -172,7 +173,37 @@ export const convertDown = async (cliArgument: string): Promise<void> => {
         
         // Write data to aosd json format
         fs.writeFileSync(outputFile, JSON.stringify(newObject, null, '\t'));
-                
+
+        // Validate licenseTextUrl
+        if (inputDataArray.scanned === false) {
+           validateLicenseTextUrl(componentsArray, validationResults);
+        }
+
+        // Validate selectedLicense
+        validateSelectedLicenseForDualLicenses(componentsArray, validationResults);
+
+        // Validate 'spdxId' from licenses,json
+        const validSPDXKeys = loadSPDXKeys(); 
+        componentsArray.forEach((component: { componentName: string; subcomponents: any[]; }) => {
+            const componentName = component.componentName;
+           
+            component.subcomponents.forEach((subcomponent) => {
+               const spdxIds = [subcomponent.spdxId];
+               const spdxValidationErrors = validateSPDXIds(spdxIds, validSPDXKeys, componentName, subcomponent.subcomponentName, subcomponent.selectedLicense);
+               validationResults = validationResults.concat(spdxValidationErrors);
+            });
+        });
+
+        // Validate direct dependencies
+        validationResults = validationResults.concat(
+            validateDependencies(inputDataArray['directDependencies'], componentsArray, "direct dependency")
+        );
+         
+        // Validate transitive dependencies
+        validationResults = validationResults.concat(
+            validateDependencies(transCheckArray, componentsArray, "transitive dependency")
+        );
+  
         // Check if component is in direct and transitive dependencies
         const duplicateIds = getMultibleUsedIds(directCheckArray, transCheckArray);
         for (let i=0; i < duplicateIds.length; i++) {
