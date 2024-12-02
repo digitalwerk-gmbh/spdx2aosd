@@ -21,7 +21,7 @@ export const convertUp = async (cliArgument: string): Promise<void> => {
 
         // First validate input aosd file
         const validationResult = validateAosd(process.env.INPUT_JSON_PATH + cliArgument, process.env.AOSD2_0_JSON_SCHEME);
-        
+      
         // If the scheme validation returns errors add them to log
         if (validationResult.length > 0) {
             validationResults = validationResults.concat(validationResult);
@@ -46,7 +46,7 @@ export const convertUp = async (cliArgument: string): Promise<void> => {
         const dependenciesArray = inputDataArray['dependencies'];
 
         // Loop over all dependencies
-        for (i = 0; i < dependenciesArray.length; i++) {
+        for (i = 0; i < dependenciesArray?.length; i++) {
             let iterator = 1;
 
             // Create ID generator
@@ -72,9 +72,9 @@ export const convertUp = async (cliArgument: string): Promise<void> => {
             tmpModified = [];
             tmpLinking = [];
             let maincounter = 0;
-            for (let j = 0; j < dependenciesArray[i]['parts'].length; j++) {
+            for (let j = 0; j < dependenciesArray[i]['parts']?.length; j++) {
                 // Loop over providers
-                dependenciesArray[i]['parts'][j]['providers'][0]['additionalLicenses'].map((adl: LicenseAosd) => {
+                dependenciesArray[i]['parts'][j]['providers']?.[0]['additionalLicenses']?.map((adl: LicenseAosd) => {
                     // Create new copyright array
                     let tmpCopyright: Array<string> = [];
                     if (adl.hasOwnProperty('copyrights')) {
@@ -92,7 +92,7 @@ export const convertUp = async (cliArgument: string): Promise<void> => {
                     dependenciesArray[i]['parts'].forEach((part: { name: string; providers: any[]; }) => {
                         const subcomponentName = part.name;  
                       
-                        part.providers.forEach((provider) => {
+                        part.providers?.forEach((provider) => {
                           const spdxIds = provider.additionalLicenses.map((adl: LicenseAosd) => adl.spdxId);
                           const spdxValidationErrors = validateSPDXIds(spdxIds, validSPDXKeys, dependenciesArray[i]['name'], subcomponentName);
                           validationResults = validationResults.concat(spdxValidationErrors);
@@ -101,7 +101,7 @@ export const convertUp = async (cliArgument: string): Promise<void> => {
 
                     // New logic for take over part or additionalLicense name
                     let tmpSubcomponentName: string = generateUniqueSubcomponentName(dependenciesArray[i]['parts'].length, dependenciesArray[i]['parts'][j]['providers'][0]['additionalLicenses'].length, maincounter, uniqueNameCounter, dependenciesArray[i]['parts'][j]['name'], adl['name']);
-
+                
                     // Create subcomponent object
                     let subcomponentObject: AosdSubComponent = {
                         subcomponentName: tmpSubcomponentName,
@@ -156,7 +156,7 @@ export const convertUp = async (cliArgument: string): Promise<void> => {
 
         // Convert strings to numbers in direct dependencies
         const temporaryId = [];
-        for (let i = 0; i < newObject['directDependencies'].length; i++) {
+        for (let i = 0; i < newObject['directDependencies']?.length; i++) {
             const id = newObject['directDependencies'][i];
             const findId = CheckValue(id.toString(), idMapping, 'componentId');
             if(findId.length > 0) {
@@ -198,7 +198,7 @@ export const convertUp = async (cliArgument: string): Promise<void> => {
         );
 
         // Validate transitive dependencies
-        const transCheckArray = componentsArray.flatMap((component: any) => component.externalDependencies || []);
+        const transCheckArray = componentsArray?.flatMap((component: any) => component.externalDependencies || []);
         validationResults = validationResults.concat(
             validateDependencies(transCheckArray, componentsArray, "transitive dependency")
         );

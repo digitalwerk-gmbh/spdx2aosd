@@ -22,3 +22,11 @@
 # [Added] added new validation to ensure `selectedLicense` is populated when `spdxId` contains a dual license
 
 # [Fixed] fixed a bug in `aosd2.0` import schema, ensuring accurate schema validation
+
+# Update from version 1.1.1-beta to 1.2.0-beta
+
+# [Added] added function to validate modified and linking properties when their subcomponents contain specific SPDX keys
+# [Added] improved import schema for aosd2.10
+# [Added] improved import schema for aosd2.1 
+# [Added] improved import schema for spdx2.3 
+# [Fixed] fixed a bug in aosd2.0 import schema that caused no validation errors

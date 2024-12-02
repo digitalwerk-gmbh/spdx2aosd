@@ -1,9 +1,9 @@
 import * as fs from "fs";
-import { describe, expect, it, test } from '@jest/globals';
+import { afterEach, beforeEach, describe, expect, it, jest, test } from '@jest/globals';
 import { convertDown } from '../../src/downconverter';
 import { convertUp } from '../../src/upconverter';
 import { convertSpdx } from "../../src/spdxconverter";
-import { getUniqueValues, getMultibleUsedIds, getMissingComponentIds, generateDataValidationMessage, generateUniqueSubcomponentName, generateStringFromJsonObject, validateDependencies, validateSPDXIds, validateSelectedLicenseForDualLicenses, validateLicenseTextUrl } from '../../src/helper';
+import { getUniqueValues, getMultibleUsedIds, getMissingComponentIds, generateDataValidationMessage, generateUniqueSubcomponentName, generateStringFromJsonObject, validateDependencies, validateSPDXIds, validateSelectedLicenseForDualLicenses, validateLicenseTextUrl, validateComponentsForModificationAndLinking } from '../../src/helper';
 
 describe("Test for helper functions", () => {
     test('Test getUniqueValues exists', async () => {
@@ -341,6 +341,74 @@ describe("Test for helper functions", () => {
           );
           expect(validationResults.length).toBe(1); 
         });
+    });
+
+    describe('validate components for modification and linking based on subcomponent spdx key', () => {
+      const modification_linkingKeys = {
+        modification: ['bzip2-1.0.6', 'Font-exception-2.0','LGPL-2.1-only'],
+        linking: ['MPL-2.0-no-copyleft-exception','SSPL-1.0','Font-exception-2.0'],
+      };
+    
+      beforeEach(() => {
+        jest.spyOn(fs, 'readFileSync').mockReturnValue(JSON.stringify(modification_linkingKeys));
+      });
+    
+      afterEach(() => {
+        jest.restoreAllMocks();
+      });
+      it('should generate warnings for null modification and linking properties', () => {
+        const componentsArray = [
+          {
+            componentName: 'component1',
+            modified: null,
+            linking: null,
+            subcomponents: [
+              { spdxId: 'bzip2-1.0.6', subcomponentName: 'subcomponent1' },
+              { spdxId: 'Font-exception-2.0', subcomponentName: 'subcomponent2' },
+              { spdxId: 'SSPL-1.0', subcomponentName: 'subcomponent3' },
+            ],
+          },
+          {
+            componentName: 'component2',
+            modified: true,
+            linking: null,
+            subcomponents: [
+              { spdxId: 'LGPL-2.1-only', subcomponentName: 'subcomponent3' },
+            ],
+          },
+          {
+            componentName: 'component3',
+            modified: null,
+            linking: 'dynamic',
+            subcomponents: [
+              { spdxId: 'MPL-2.0-no-copyleft-exception', subcomponentName: 'subcomponent4' },
+            ],
+          },
+        ];
+    
+        const validationResults: Array<string> = [];
+        validateComponentsForModificationAndLinking(componentsArray, validationResults);
+    
+        expect(validationResults).toContain(
+          "Warning: Due to the presence of SPDX key 'bzip2-1.0.6' in component 'component1' - subcomponent 'subcomponent1', the 'modification' property cannot be null."
+        );
+        expect(validationResults).toContain(
+          "Warning: Due to the presence of SPDX key 'Font-exception-2.0' in component 'component1' - subcomponent 'subcomponent2', the 'modification' property cannot be null."
+        );
+        expect(validationResults).toContain(
+          "Warning: Due to the presence of SPDX key 'Font-exception-2.0' in component 'component1' - subcomponent 'subcomponent2', the 'linking' property cannot be null."
+        );
+        expect(validationResults).toContain(
+          "Warning: Due to the presence of SPDX key 'SSPL-1.0' in component 'component1' - subcomponent 'subcomponent3', the 'linking' property cannot be null."
+        );
+        expect(validationResults).not.toContain(
+          "Warning: Due to the presence of SPDX key 'LGPL-2.1-only' in component 'component2' - subcomponent 'subcomponent3', the 'modification' property cannot be null."
+        );
+        expect(validationResults).not.toContain(
+          "Warning: Due to the presence of SPDX key 'MPL-2.0-no-copyleft-exception' in component 'component3' - subcomponent 'subcomponent4', the 'linking' property cannot be null."
+        );
+        expect(validationResults.length).toBe(6);
+      });
     });
 });
 

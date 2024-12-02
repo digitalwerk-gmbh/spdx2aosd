@@ -1,6 +1,6 @@
 const fs = require('fs');
 require('dotenv').config();
-import { getMultibleUsedIds, generateDataValidationMessage, getMissingComponentIds, validateDependencies, loadSPDXKeys, validateSPDXIds, validateLicenseTextUrl, validateSelectedLicenseForDualLicenses } from './helper';
+import { getMultibleUsedIds, generateDataValidationMessage, getMissingComponentIds, validateDependencies, loadSPDXKeys, validateSPDXIds, validateLicenseTextUrl, validateSelectedLicenseForDualLicenses, validateComponentsForModificationAndLinking } from './helper';
 import { AosdSubComponent, DependencyObject, LicenseAosd, Part, Provider } from '../interfaces/interfaces';
 import { validateAosd } from './aosdvalidator';
 let inputJsonPath: string | undefined = '';
@@ -39,7 +39,7 @@ export const convertDown = async (cliArgument: string): Promise<void> => {
 
         // Convert direct dependencies to strings
         const tempArray: Array<string> = [];
-        for (let i = 0; i < inputDataArray['directDependencies'].length; i++) {
+        for (let i = 0; i < inputDataArray['directDependencies']?.length; i++) {
             tempArray.push(inputDataArray['directDependencies'][i].toString());
         }
 
@@ -47,12 +47,12 @@ export const convertDown = async (cliArgument: string): Promise<void> => {
         const componentsArray = inputDataArray['components'];
 
         // Loop over all components and subcomponents
-        for (let i = 0; i < componentsArray.length; i++) {
-            for (let j = 0; j < componentsArray[i]['subcomponents'].length; j++) {
+        for (let i = 0; i < componentsArray?.length; i++) {
+            for (let j = 0; j < componentsArray[i]['subcomponents']?.length; j++) {
                 
                 // Convert external dependencies to strings
                 externalDependenciesArray = [];
-                for (let k = 0; k < componentsArray[i]['transitiveDependencies'].length; k++) {
+                for (let k = 0; k < componentsArray[i]['transitiveDependencies']?.length; k++) {
                     externalDependenciesArray.push(componentsArray[i]['transitiveDependencies'][k].toString());
                     // Collect transitive dependencies
                     transCheckArray.push(componentsArray[i]['transitiveDependencies'][k]);
@@ -63,7 +63,7 @@ export const convertDown = async (cliArgument: string): Promise<void> => {
 
                 // Create dependency object
                 dependenciesObject = {
-                    id: componentsArray[i]['id'].toString(),
+                    id: componentsArray[i]['id']?.toString(),
                     name: componentsArray[i]['componentName'],
                     version: componentsArray[i]['componentVersion'],
                     versionRange: componentsArray[i]['componentVersion'],
@@ -90,7 +90,7 @@ export const convertDown = async (cliArgument: string): Promise<void> => {
                             text: subcomponent['licenseText'],
                             url: subcomponent['licenseTextUrl'],
                             copyrights: {
-                                holders: subcomponent['copyrights'].length > 0 ? subcomponent['copyrights'] : [],
+                                holders: subcomponent['copyrights']?.length > 0 ? subcomponent['copyrights'] : [],
                                 notice: '',
                             },
                             origin: 'packagemanagement',
@@ -99,10 +99,12 @@ export const convertDown = async (cliArgument: string): Promise<void> => {
                     
                     // Create part object
                     let partName = subcomponent['subcomponentName'];
-                    if (partName === 'main') {
-                        partName = 'default';
-                    }
+                    if (typeof partName === 'string') {
+                        if (partName === 'main') {
+                            partName = 'default';
+                        }
                     partName = partName.replace(" ","_");
+                    }
 
                     // Create additional licenses
                     let linkingType = componentsArray[i]['linking'];
@@ -122,13 +124,13 @@ export const convertDown = async (cliArgument: string): Promise<void> => {
                         external: true,
                     };
 
-                    // Check for incompatibility with modified and linking
-                    if (componentsArray[i]['modified'] === null) {
-                        validationResults.push('Warning: incompatibility with null value for modification - component name: ' + componentsArray[i]['componentName'] + ' - subcomponent: ' + subcomponent['subcomponentName']);
-                    }
-                    if (linkingType === null) {
-                        validationResults.push('Warning: incompatibility with null value for linking      - component name: ' + componentsArray[i]['componentName'] + ' - subcomponent: ' + subcomponent['subcomponentName']);
-                    }
+                    // // Check for incompatibility with modified and linking
+                    // if (componentsArray[i]['modified'] === null) {
+                    //     validationResults.push('Warning: incompatibility with null value for modification - component name: ' + componentsArray[i]['componentName'] + ' - subcomponent: ' + subcomponent['subcomponentName']);
+                    // }
+                    // if (linkingType === null) {
+                    //     validationResults.push('Warning: incompatibility with null value for linking      - component name: ' + componentsArray[i]['componentName'] + ' - subcomponent: ' + subcomponent['subcomponentName']);
+                    // }
 
                     // Add data to provider object
                     let providersObject: Provider = {
@@ -144,7 +146,7 @@ export const convertDown = async (cliArgument: string): Promise<void> => {
                         text: subcomponent['licenseText'],
                         url: subcomponent['licenseTextUrl'],
                         copyrights: {
-                            holders: subcomponent['copyrights'].length > 0 ? subcomponent['copyrights'] : [], 
+                            holders: subcomponent['copyrights']?.length > 0 ? subcomponent['copyrights'] : [], 
                             notice: '',
                         },
                         origin: 'packagemanagement',
@@ -173,6 +175,9 @@ export const convertDown = async (cliArgument: string): Promise<void> => {
         
         // Write data to aosd json format
         fs.writeFileSync(outputFile, JSON.stringify(newObject, null, '\t'));
+        
+        // Validate modification and linking
+        validateComponentsForModificationAndLinking(componentsArray, validationResults);
 
         // Validate licenseTextUrl
         if (inputDataArray.scanned === false) {
@@ -184,10 +189,10 @@ export const convertDown = async (cliArgument: string): Promise<void> => {
 
         // Validate 'spdxId' from licenses,json
         const validSPDXKeys = loadSPDXKeys(); 
-        componentsArray.forEach((component: { componentName: string; subcomponents: any[]; }) => {
+        componentsArray?.forEach((component: { componentName: string; subcomponents: any[]; }) => {
             const componentName = component.componentName;
            
-            component.subcomponents.forEach((subcomponent) => {
+            component.subcomponents?.forEach((subcomponent) => {
                const spdxIds = [subcomponent.spdxId];
                const spdxValidationErrors = validateSPDXIds(spdxIds, validSPDXKeys, componentName, subcomponent.subcomponentName, subcomponent.selectedLicense);
                validationResults = validationResults.concat(spdxValidationErrors);
@@ -206,7 +211,7 @@ export const convertDown = async (cliArgument: string): Promise<void> => {
   
         // Check if component is in direct and transitive dependencies
         const duplicateIds = getMultibleUsedIds(directCheckArray, transCheckArray);
-        for (let i=0; i < duplicateIds.length; i++) {
+        for (let i=0; i < duplicateIds?.length; i++) {
             validationResults.push('Warning: we have found a possible circle dependency for - component name: ' + componentsArray[i]['componentName'] + ' - with id: ' + componentsArray[i]['id']);
         }
 
@@ -234,3 +239,4 @@ export const convertDown = async (cliArgument: string): Promise<void> => {
         console.log("Sorry for that - something went wrong! Please check the  file in the root folder for detailed information.");
     }
 }
+
