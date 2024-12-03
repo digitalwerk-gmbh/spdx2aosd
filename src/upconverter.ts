@@ -1,6 +1,6 @@
 const fs = require('fs');
 require('dotenv').config();
-import { generateDataValidationMessage, generateUniqueSubcomponentName, loadSPDXKeys, validateDependencies, validateSPDXIds } from './helper'
+import { generateDataValidationMessage, generateUniqueSubcomponentName, loadSPDXKeys, validateComponentsForModificationAndLinking, validateDependencies, validateSPDXIds } from './helper'
 import { AosdObject, AosdComponent, AosdSubComponent, LicenseAosd } from "../interfaces/interfaces";
 import { validateAosd } from './aosdvalidator';
 let inputJsonPath: string | undefined = '';
@@ -189,6 +189,9 @@ export const convertUp = async (cliArgument: string): Promise<void> => {
 
         // Write data to aosd json format
         fs.writeFileSync(outputFile, JSON.stringify(newObject, null, '\t'));
+
+        // Validate modification and linking
+        validateComponentsForModificationAndLinking(newObject.components, validationResults); 
 
         const componentsArray = inputDataArray['dependencies'];
 

@@ -198,19 +198,32 @@ export const validateComponentsForModificationAndLinking = (
    const modificationSet = new Set(modification);
    const linkingSet = new Set(linking);
 
-    // Validate components
-    componentsArray?.forEach(({ componentName, subcomponents, modified, linking }) => {
-      subcomponents?.forEach(({ spdxId, subcomponentName }) => {
-        if (modificationSet.has(spdxId) && modified === null) {
+  // Parse SPDX keys
+  const parseSpdxIds = (spdxId: string): string[] => {
+    // Remove parentheses and split by OR/AND
+    return spdxId
+      .replace(/[\(\)]/g, '') 
+      .split(/\s+(OR|AND)\s+/)
+      .filter((key) => key !== 'OR' && key !== 'AND') 
+      .map((key) => key.trim());
+  };
+
+  // Validate components
+  componentsArray?.forEach(({ componentName, subcomponents, modified, linking }) => {
+    subcomponents?.forEach(({ spdxId, subcomponentName }) => {
+      const spdxIds = parseSpdxIds(spdxId);
+      spdxIds.forEach((id) => {
+        if (modificationSet.has(id) && modified === null) {
           validationResults.push(
-            `Warning: due to the presence of SPDX key '${spdxId}' in component '${componentName}' - subcomponent '${subcomponentName}', the 'modification' property cannot be null.`
+            `Warning: due to the presence of SPDX key '${id}' in component '${componentName}' - subcomponent '${subcomponentName}', the 'modification' property cannot be null.`
           );
         }
-        if (linkingSet.has(spdxId) && linking === null) {
+        if (linkingSet.has(id) && linking === null) {
           validationResults.push(
-            `Warning: due to the presence of SPDX key '${spdxId}' in component '${componentName}' - subcomponent '${subcomponentName}', the 'linking' property cannot be null.`
+            `Warning: due to the presence of SPDX key '${id}' in component '${componentName}' - subcomponent '${subcomponentName}', the 'linking' property cannot be null.`
           );
         }
       });
     });
+  });
 };

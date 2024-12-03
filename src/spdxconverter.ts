@@ -3,7 +3,7 @@ const JSONStream = require('JSONStream');
 require('dotenv').config();
 import { validateAosd } from './aosdvalidator';
 import { LicenseDataObject, ExtractedLicense, MappedLicense, AosdObject, AosdComponent, AosdSubComponent, SpdxPackages, SpdxFiles, SpdxRelationsships, SpdxIdToInternalId, exportMapper } from "../interfaces/interfaces";
-import { generateDataValidationMessage, generateStringFromJsonObject, loadSPDXKeys, validateSelectedLicenseForDualLicenses, validateSPDXIds } from './helper';
+import { generateDataValidationMessage, generateStringFromJsonObject, loadSPDXKeys, validateComponentsForModificationAndLinking, validateSelectedLicenseForDualLicenses, validateSPDXIds } from './helper';
 let inputJsonPath: string | undefined = '';
 let outputJsonPath: string | undefined = '';
 let outputFile: string = '';
@@ -150,7 +150,7 @@ export const convertSpdx = async (cliArgument: string): Promise<void> => {
                 componentName: dependency['name'],
                 componentVersion: dependency['versionInfo'],
                 scmUrl: dependency['downloadLocation'] !== "NOASSERTION" ? dependency['downloadLocation'] : "",
-                modified: isModified(dependency['SPDXID'], relationships) ? true : false,
+                modified: isModified(dependency['SPDXID'], relationships) ? true : null,
                 linking: getLinkingType(dependency['SPDXID'], relationships),
                 transitiveDependencies: getTransitiveDependencies(dependency['SPDXID'], relationships),
                 subcomponents: [],
@@ -289,6 +289,9 @@ export const convertSpdx = async (cliArgument: string): Promise<void> => {
 
         // Add direct dependencies
         newObject.directDependencies = newObject.components.map(component => component.id);
+
+        // Validate modification and linking
+        validateComponentsForModificationAndLinking(newObject.components, validationResults);
 
         // Validate selectedLicense
         validateSelectedLicenseForDualLicenses(newObject.components, validationResults);
