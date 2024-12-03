@@ -132,7 +132,6 @@ export const validateSPDXIds = (
   const validationMessages: Array<string> = [];
 
   spdxIds.forEach(id => {
-    if (id === "string") {
     const cleanedId = id.replace(/[()]/g, "").trim();
     const licenses = cleanedId.split(/\s+(AND|OR)\s+/).filter(part => part !== "AND" && part !== "OR");
    
@@ -144,7 +143,6 @@ export const validateSPDXIds = (
           `Warning: invalid SPDX key(s) - '${invalidLicenses.join(", ")}' - component name: ${componentName} - subcomponent: ${subcomponentName}`
         );
       }
-    }
  });
   // Validate selected license
   if (selectedLicense && !validSPDXKeys.has(selectedLicense)) {
@@ -176,7 +174,7 @@ export const validateSelectedLicenseForDualLicenses = (
 ): void => {
   componentsArray?.forEach((component) => {
       component.subcomponents?.forEach((subcomponent) => {
-          if (subcomponent.spdxId === "string" && subcomponent.spdxId.includes("OR") && (!subcomponent.selectedLicense || subcomponent.selectedLicense.trim() === "")) {
+          if (subcomponent.spdxId.includes("OR") && (!subcomponent.selectedLicense || subcomponent.selectedLicense.trim() === "")) {
               validationResults.push(
                   `Warning: dual-license detected - component name: ${component.componentName} - subcomponent: ${subcomponent.subcomponentName}. Please specify a selectedLicense.`
               );

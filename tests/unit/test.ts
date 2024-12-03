@@ -390,22 +390,22 @@ describe("Test for helper functions", () => {
         validateComponentsForModificationAndLinking(componentsArray, validationResults);
     
         expect(validationResults).toContain(
-          "Warning: Due to the presence of SPDX key 'bzip2-1.0.6' in component 'component1' - subcomponent 'subcomponent1', the 'modification' property cannot be null."
+          "Warning: due to the presence of SPDX key 'bzip2-1.0.6' in component 'component1' - subcomponent 'subcomponent1', the 'modification' property cannot be null."
         );
         expect(validationResults).toContain(
-          "Warning: Due to the presence of SPDX key 'Font-exception-2.0' in component 'component1' - subcomponent 'subcomponent2', the 'modification' property cannot be null."
+          "Warning: due to the presence of SPDX key 'Font-exception-2.0' in component 'component1' - subcomponent 'subcomponent2', the 'modification' property cannot be null."
         );
         expect(validationResults).toContain(
-          "Warning: Due to the presence of SPDX key 'Font-exception-2.0' in component 'component1' - subcomponent 'subcomponent2', the 'linking' property cannot be null."
+          "Warning: due to the presence of SPDX key 'Font-exception-2.0' in component 'component1' - subcomponent 'subcomponent2', the 'linking' property cannot be null."
         );
         expect(validationResults).toContain(
-          "Warning: Due to the presence of SPDX key 'SSPL-1.0' in component 'component1' - subcomponent 'subcomponent3', the 'linking' property cannot be null."
+          "Warning: due to the presence of SPDX key 'SSPL-1.0' in component 'component1' - subcomponent 'subcomponent3', the 'linking' property cannot be null."
         );
         expect(validationResults).not.toContain(
-          "Warning: Due to the presence of SPDX key 'LGPL-2.1-only' in component 'component2' - subcomponent 'subcomponent3', the 'modification' property cannot be null."
+          "Warning: due to the presence of SPDX key 'LGPL-2.1-only' in component 'component2' - subcomponent 'subcomponent3', the 'modification' property cannot be null."
         );
         expect(validationResults).not.toContain(
-          "Warning: Due to the presence of SPDX key 'MPL-2.0-no-copyleft-exception' in component 'component3' - subcomponent 'subcomponent4', the 'linking' property cannot be null."
+          "Warning: due to the presence of SPDX key 'MPL-2.0-no-copyleft-exception' in component 'component3' - subcomponent 'subcomponent4', the 'linking' property cannot be null."
         );
         expect(validationResults.length).toBe(6);
       });
