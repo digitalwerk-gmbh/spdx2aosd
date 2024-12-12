@@ -1,523 +1,509 @@
 {
-    "type": "object",
-    "title": "The AOSD 2.0 JSON import",
-    "description": "Defines the JSON format for automatically importing product dependencies into AOSD2.0",
-    "definitions": {
-      "license": {
-        "type": "object",
-        "title": "AOSD License information",
-        "description": "Indication of the licenses under which the software may be used. All licenses are cumulative (and) unless the multiLicensing flag is set.",
-        "required": [
-          "spdxId",
-          "text"
-        ],
-        "additionalProperties": false,
-        "errorMessage": {
-          "type": "license - type: data type must be an object!",
-          "required": {
-            "spdxId": "license - spdxId: is a required field!",
-            "text": "license - text: is a required field!"
-          }
-        },
-        "properties": {
-          "name": {
-            "description": "Full name of the license",
-            "type": "string",
-            "errorMessage": {
-                "type": "license - name: data type must be a string!"
-            }
-          },
-          "spdxId": {
-            "description": "SPDX license identifier from https://spdx.org/licenses/",
-            "type": "string",
-            "errorMessage": {
-                "type": "license - spdxId: data type must be a string!"
-            },
-            "default": "Commercial"
-          },
-          "text": {
-            "description": "License text",
-            "type": "string",
-            "errorMessage": {
-                "type": "license - text: data type must be a string!"
-            }
-          },
-          "url": {
-            "description": "URL where the license is published and can be read.",
-            "type": "string",
-            "errorMessage": {
-                "type": "license - url: data type must be a string!"
-            },
-            "default": "https://..."
-          },
-          "copyrights": {
-            "type": "object",
-            "additionalProperties": false,
-            "errorMessage": {
-                "type": "license - copyrights: data type must be an object!",
-                "additionalProperties": "license: no additional properties are allowed!"
-            },
-            "properties": {
-              "holders": {
-                "type": "array",
-                "errorMessage": {
-                  "type": "license - copyright holders: data type must be an array!"
-                }
-              },
-              "notice": {
-                "type": "string",
-                "errorMessage": {
-                  "type": "license - copyright notice: data type must be a string!"
-                }
-              }
-            }
-          },
-          "origin": {
-            "description": "Identifying the origin of the license information.",
-            "type": "string",
-            "enum": [
-              "packagemanagement",
-              "scm",
-              "licensefile"
-            ],
-            "errorMessage": {
-              "type": "license - origin: data type must be a string!",
-              "enum": "license - origin: data must be on of the allowed values packagemanagement, scm, licensefile!"
-            }
-          }
+  "type": "object",
+  "title": "The AOSD 2.0 JSON import",
+  "description": "Defines the JSON format for automatically importing product dependencies into AOSD2.0",
+  "definitions": {
+    "license": {
+      "type": "object",
+      "title": "AOSD License information",
+      "description": "Indication of the licenses under which the software may be used. All licenses are cumulative (and) unless the multiLicensing flag is set.",
+      "required": [
+        "spdxId",
+        "text"
+      ],
+      "additionalProperties": false,
+      "errorMessage": {
+        "type": "license - type: data type must be an object!",
+        "required": {
+          "spdxId": "license - dependency ${2/name} - spdxId: is a required field!",
+          "text": "license - dependency ${2/name} - text: is a required field!"
         }
       },
-      "part": {
-        "type": "object",
-        "additionalProperties": false,
-        "required": [
-          "name",
-          "providers"
-        ],
-        "errorMessage": {
-          "type": "part: data type must be an object!",
-          "additionalProperties": "part: no additional properties are allowed!",
-          "required": {
-            "name": "part - name: is a required field!",
-            "providers": "part - providers: is a required field!"
-          }
-        },
-        "description": "A part represents a library that is available in the version and can be used separately by third parties. This is not a dependency of the product.",
-        "properties": {
-          "name": {
-            "type": "string",
-            "errorMessage": {
-              "type": "part - name: data type must be a string!"
-            }
-          },
-          "description": {
-            "type": "string",
-            "errorMessage": {
-              "type": "part - description: data type must be a string!"
-            }
-          },
-          "features": {
-            "type": "array",
-            "description": "WARNING: Features are not yet implemented!",
-            "errorMessage": {
-              "type": "part - features: data type must be a array!"
-            },
-            "items": {
-              "type": "string",
-              "errorMessage": {
-                "type": "part - features item: data type must be a string!"
-              }
-            }
-          },
-          "providers": {
-            "type": "array",
-            "errorMessage": {
-              "type": "part - providers: data type must be a array!"
-            },
-            "items": {
-              "$ref": "#/definitions/provider",
-              "errorMessage": {
-                "type": "provider - items: data type must be an array!"
-              }
-            }
-          },
-          "external": {
-            "type": "boolean",
-            "description": "True, if the part is the work of a third party",
-            "errorMessage": {
-              "type": "part - external: data type must be a boolean!"
-            }
-          }
-        }
-      },
-      "internalDependency": {
-        "type": "object",
-        "required": [
-          "from",
-          "to"
-        ],
-        "additionalProperties": false,
-        "errorMessage": {
-          "type": "part - internalDependency: data type must be an object!",
-          "additionalProperties": "part - internalDependency: no additional properties are allowed!",
-          "required": {
-            "from": "part - internalDependency from: is a required field!",
-            "providers": "part - internalDependency to: is a required field!"
-          }
-        },
-        "properties": {
-          "from": {
-            "description": "Name of the software part that requires the dependency",
-            "type": "string",
-            "errorMessage": {
-              "type": "part - internalDependency from: data type must be a string!"
-            }
-          },
-          "to": {
-            "description": "Name of the software part, which is required as dependency",
-            "type": "string",
-            "errorMessage": {
-              "type": "part - internalDependency to: data type must be a string!"
-            }
-          }
-        }
-      },
-      "externalDependency": {
-        "type": "object",
-        "required": [
-          "id",
-          "name",
-          "version",
-          "licenses",
-          "parts",
-          "deployPackage"
-        ],
-        "additionalProperties": false,
-        "errorMessage": {
-          "type": "part - externalDependency: data type must be an object!",
-          "additionalProperties": "part - externalDependency: no additional properties are allowed!",
-          "required": {
-            "id": "part - externalDependency id: is a required field!",
-            "name": "part - externalDependency name: is a required field!",
-            "version": "part - externalDependency version: is a required field!",
-            "licenses": "part - externalDependency licenses: is a required field!",
-            "parts": "part - externalDependency parts: is a required field!",
-            "deployPackage": "part - externalDependency deployPackage: is a required field!"
-          }
-        },
-        "properties": {
-          "id": {
-            "description": "Unique identifier of the dependency",
-            "type": "string",
-            "errorMessage": {
-              "type": "part - id: data type must be a string!"
-            }
-          },
-          "name": {
-            "description": "Product name of the dependency",
-            "type": "string",
-            "errorMessage": {
-              "type": "part - description: data type must be a string!"
-            }
-          },
-          "scmUrl": {
-            "description": "Source code repository of the dependency",
-            "type": "string",
-            "default": "https://...",
-            "errorMessage": {
-              "type": "part - scmUrl: data type must be a string!"
-            }
-          },
-          "description": {
-            "description": "Short description.",
-            "type": "string",
-            "errorMessage": {
-              "type": "part - description: data type must be a string!"
-            }
-          },
-          "version": {
-            "description": "The exact version number",
-            "default": "1.0.0",
-            "type": "string",
-            "errorMessage": {
-              "type": "part - version: data type must be a string!"
-            }
-          },
-          "versionRange": {
-            "description": "The possible version range of the dependency",
-            "default": "^1.0.0",
-            "type": "string",
-            "errorMessage": {
-              "type": "part - versionRange: data type must be a string!"
-            }
-          },
-          "licenses": {
-            "type": "array",
-            "description": "Indication of the licenses under which the software may be used. All licenses are cumulative (and).",
-            "errorMessage": {
-              "type": "licenses: data type must be an array!"
-            },
-            "items": {
-              "description": "Indication of the licenses under which the software may be used. All licenses are cumulative (and).",
-              "$ref": "#/definitions/license",
-              "errorMessage": {
-                "type": "licenses - item: data type must be an array!"
-              }
-            }
-          },
-          "parts": {
-            "type": "array",
-            "description": "The part description is optional for dividing the version into smaller pieacse. e.g. for additional license or usage information if necessary",
-            "items": {
-              "description": "A part represents a library that is available in the version and can be used separately by third parties. This is not a dependency of the product",
-              "$ref": "#/definitions/part",
-              "errorMessage": {
-                "type": "parts - item: data type must be an array!"
-              }
-            }
-          },
-          "deployPackage": {
-            "type": "object",
-            "additionalProperties": false,
-            "description": "A deploy package represents a binary package e.g. for a target platform.",
-            "required": [
-              "name"
-            ],
-            "errorMessage": {
-              "type": "deployPackage: data type must be an object!",
-              "additionalProperties": "deployPackage: no additional properties are allowed!",
-              "required": {
-                "name": "deployPackage - name: is a required field!"
-              }
-            },
-            "dependencies": {
-              "type": "object",
-              "downloadUrl": {
-                "required": [
-                  "checksums"
-                ],
-                "errorMessage": {
-                  "required": {
-                    "checksums": "dependencies - downloadUrl checksums: is a required field!"
-                  }
-                }
-              }
-            },
-            "properties": {
-              "name": {
-                "description": "Name or identifier of the variant",
-                "type": "string",
-                "errorMessage": {
-                  "type": "deployPackage - name: data type must be a string!"
-                }
-              },
-              "downloadUrl": {
-                "description": "Information about the download location of the variant (binary)",
-                "type": "string",
-                "errorMessage": {
-                  "type": "deployPackage - downloadUrl: data type must be a string!"
-                }
-              },
-              "checksums": {
-                "type": "object",
-                "description": "The variant (binary) of the product can be verified using the given (file-)checksum.",
-                "additionalProperties": false,
-                "oneOf": [
-                  {
-                    "required": [
-                      "sha256"
-                    ]
-                  },
-                  {
-                    "required": [
-                      "integrity"
-                    ]
-                  }
-                ],
-                "errorMessage": {
-                  "type": "deployPackage - checksums: data type must be an object!",
-                  "additionalProperties": "deployPackage - checksums: no additional properties are allowed!",
-                  "required": {
-                    "sha256": "deployPackage - checksums sha256: A checksum sha256 or integrity is required!",
-                    "integrity": "deployPackage - checksums integrity: A checksum sha256 or integrity is required!"
-                  }
-                },
-                "properties": {
-                  "md5": {
-                    "type": "string",
-                    "errorMessage": {
-                      "type": "deployPackage - checksums md5: data type must be a string!"
-                    }
-                  },
-                  "sha1": {
-                    "type": "string",
-                    "errorMessage": {
-                      "type": "deployPackage - checksums sha1: data type must be a string!"
-                    }
-                  },
-                  "sha256": {
-                    "type": "string",
-                    "errorMessage": {
-                      "type": "deployPackage - checksums sha256: data type must be a string!"
-                    }
-                  },
-                  "integrity": {
-                    "type": "string",
-                    "errorMessage": {
-                      "type": "deployPackage - checksums integrity: data type must be a string!"
-                    }
-                  }
-                }
-              },
-              "disclaimer": {
-                "description": "Information on the custom disclaimer of the software",
-                "type": "string",
-                "errorMessage": {
-                  "type": "deployPackage - disclaimer: data type must be a string!"
-                }
-              }
-            }
-          },
-          "internalDependencies": {
-            "type": "array",
-            "description": "Provide the ability to model dependencies between two parts of the software. The precondition is that both parts have been described in the JSON",
-            "items": {
-              "$ref": "#/definitions/internalDependency"
-            },
-            "errorMessage": {
-              "type": "internalDependencies: data type must be an array!"
-            }
-          },
-          "externalDependencies": {
-            "type": "array",
-            "description": "Reference to the ID of the dependencies which are required by this one.",
-            "errorMessage": {
-              "type": "externalDependencies: data type must be an array!"
-            },
-            "items": {
-              "type": "string",
-              "errorMessage": {
-                "type": "externalDependencies - items: data type must be a string!"
-              }
-            }
-          }
-        }
-      },
-      "feature": {
-        "type": "object",
-        "title": "AOSD Feature information",
-        "required": [
-          "id"
-        ],
-        "additionalProperties": false,
-        "errorMessage": {
-          "type": "feature: data type must be an object!",
-          "additionalProperties": "feature: no additional properties are allowed!",
-          "required": {
-            "id": "feature - id: is a required field!"
-          }
-        },
-        "properties": {
-          "id": {
-            "type": "string",
-            "errorMessage": {
-              "type": "feature id: data type must be a string!"
-            }
-          },
-          "shortDescription": {
-            "type": "string",
-            "errorMessage": {
-              "type": "feature shortDescription: data type must be a string!"
-            }
-          }
-        }
-      },
-      "provider": {
-        "description": "If the version has been divided into individual parts, then these can be made available for third-party use by providing the usage features and license information if necessary (e.g. dual licensing)",
-        "required": [
-          "additionalLicenses",
-          "modified",
-          "usage"
-        ],
-        "additionalProperties": false,
-        "errorMessage": {
-          "additionalProperties": "provider: no additional properties are allowed!",
-          "required": {
-            "additionalLicenses": "provider - additionalLicenses: is a required field!",
-            "modified": "provider - modified: is a required field!",
-            "usage": "provider - usage: is a required field!"
-          }
-        },
-        "properties": {
-          "additionalLicenses": {
-            "type": "array",
-            "items": {
-              "$ref": "#/definitions/license"
-            },
-            "errorMessage": {
-              "type": "provider additionalLicenses: data type must be an array!"
-            }
-          },
-          "modified": {
-            "type": "boolean",
-            "default": false,
-            "errorMessage": {
-              "type": "provider - modified: data type must be a boolean!"
-            }
-          },
-          "usage": {
-            "type": "string",
-            "enum": [
-              "dynamic_linking",
-              "static_linking",
-              "sys_call_dyn_link",
-              "sys_call_process"
-            ],
-            "default": "dynamic_linking",
-            "errorMessage": {
-              "type": "provider - usage: data type must be a string!",
-              "enum": "provider - usage: must be equal to one of the allowed values dynamic_linking, static_linking, sys_call_dyn_link or sys_call_process!"
-            }
-          }
-        }
-      }
-    },
-    "required": [
-      "directDependencies",
-      "dependencies"
-    ],
-    "errorMessage": {
-      "required": {
-        "directDependencies": "directDependencies: is a required field!",
-        "dependencies": "dependencies: is a required field!"
-      }
-    },
-    "properties": {
-      "directDependencies": {
-        "description": "Ids of dependencies directly related to the project",
-        "type": "array",
-        "errorMessage": {
-          "type": "directDependencies: data type must be an array!"
-        },
-        "items": {
+      "properties": {
+        "name": {
+          "description": "Full name of the license",
           "type": "string",
           "errorMessage": {
-            "type": "directDependencies - items: data type must be a string!"
+              "type": "license - dependency ${3/name} - name: data type must be a string!"
+          }
+        },
+        "spdxId": {
+          "description": "SPDX license identifier from https://spdx.org/licenses/",
+          "type": "string",
+          "errorMessage": {
+              "type": "license - dependency ${3/name} - spdxId: data type must be a string!"
+          },
+          "default": "Commercial"
+        },
+        "text": {
+          "description": "License text",
+          "type": "string",
+          "errorMessage": {
+              "type": "license - dependency ${3/name} - text: data type must be a string!"
+          }
+        },
+        "url": {
+          "description": "URL where the license is published and can be read.",
+          "type": "string",
+          "errorMessage": {
+              "type": "license - dependency ${3/name} - url: data type must be a string!"
+          },
+          "default": "https://..."
+        },
+        "copyrights": {
+          "type": "object",
+          "additionalProperties": false,
+          "errorMessage": {
+              "type": "license - copyrights: data type must be an object!",
+              "additionalProperties": "license: no additional properties are allowed!"
+          },
+          "properties": {
+            "holders": {
+              "type": "array",
+              "errorMessage": {
+                "type": "license - dependency ${4/name} - copyright holders: data type must be an array!"
+              }
+            },
+            "notice": {
+              "type": "string",
+              "errorMessage": {
+                "type": "license - dependency ${4/name} - copyright notice: data type must be a string!"
+              }
+            }
+          }
+        },
+        "origin": {
+          "description": "Identifying the origin of the license information.",
+          "type": "string",
+          "enum": [
+            "packagemanagement",
+            "scm",
+            "licensefile"
+          ],
+          "errorMessage": {
+            "type": "license - dependency ${3/name} - origin: data type must be a string!",
+            "enum": "license - dependency ${3/name} - origin: data must be on of the allowed values packagemanagement, scm, licensefile!"
           }
         }
+      }
+    },
+    "part": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "providers"
+      ],
+      "errorMessage": {
+        "type": "part: data type must be an object!",
+        "additionalProperties": "part: no additional properties are allowed!",
+        "required": {
+          "name": "part ${0/name} - name: is a required field!",
+          "providers": "part ${0/name} - providers: is a required field!"
+        }
       },
-      "dependencies": {
-        "description": "Description of the products to be evaluated by AOSD",
-        "type": "array",
-        "errorMessage": {
-          "type": "directDependencies: data type must be an array!"
-        },
-        "items": {
-          "$ref": "#/definitions/externalDependency",
+      "description": "A part represents a library that is available in the version and can be used separately by third parties. This is not a dependency of the product.",
+      "properties": {
+        "name": {
+          "type": "string",
           "errorMessage": {
-            "type": "dependencies - items: data type must be an object!"
+            "type": "part ${1/name} - name: data type must be a string!"
+          }
+        },
+        "description": {
+          "type": "string",
+          "errorMessage": {
+            "type": "part - ${1/name} - description: data type must be a string!"
+          }
+        },
+        "features": {
+          "type": "array",
+          "description": "WARNING: Features are not yet implemented!",
+          "errorMessage": {
+            "type": "part - features: data type must be a array!"
+          },
+          "items": {
+            "type": "string",
+            "errorMessage": {
+              "type": "part - ${2/name} - features item: data type must be a string!"
+            }
+          }
+        },
+        "providers": {
+          "type": "array",
+          "errorMessage": {
+            "type": "part - ${1/name} - providers: data type must be a array!"
+          },
+          "items": {
+            "$ref": "#/definitions/provider",
+            "errorMessage": {
+              "type": "provider - ${2/name} - items: data type must be an array!"
+            }
+          }
+        },
+        "external": {
+          "type": "boolean",
+          "description": "True, if the part is the work of a third party",
+          "errorMessage": {
+            "type": "part - ${1/name} - external: data type must be a boolean!"
+          }
+        }
+      }
+    },
+    "internalDependency": {
+      "type": "object",
+      "required": [
+        "from",
+        "to"
+      ],
+      "additionalProperties": false,
+      "errorMessage": {
+        "type": "part - internalDependency: data type must be an object!",
+        "additionalProperties": "part - internalDependency: no additional properties are allowed!",
+        "required": {
+          "from": "part - internalDependency from: is a required field!",
+          "providers": "part - internalDependency to: is a required field!"
+        }
+      },
+      "properties": {
+        "from": {
+          "description": "Name of the software part that requires the dependency",
+          "type": "string",
+          "errorMessage": {
+            "type": "part - internalDependency from: data type must be a string!"
+          }
+        },
+        "to": {
+          "description": "Name of the software part, which is required as dependency",
+          "type": "string",
+          "errorMessage": {
+            "type": "part - internalDependency to: data type must be a string!"
+          }
+        }
+      }
+    },
+    "externalDependency": {
+      "type": "object",
+      "required": [
+        "id",
+        "name",
+        "version",
+        "licenses",
+        "parts",
+        "deployPackage"
+      ],
+      "additionalProperties": false,
+      "errorMessage": {
+        "type": "part - externalDependency: data type must be an object!",
+        "additionalProperties": "part - externalDependency: no additional properties are allowed!",
+        "required": {
+          "id": "part - dependency ${0/name} - externalDependency id: is a required field!",
+          "name": "part dependency id ${0/id} - externalDependency name: is a required field!",
+          "version": "part - dependency ${0/name} - externalDependency version: is a required field!",
+          "licenses": "part - dependency ${0/name} - externalDependency licenses: is a required field!",
+          "parts": "part - dependency ${0/name} - externalDependency parts: is a required field!",
+          "deployPackage": "part - dependency ${0/name} - externalDependency deployPackage: is a required field!"
+        }
+      },
+      "properties": {
+        "id": {
+          "description": "Unique identifier of the dependency",
+          "type": "string",
+          "errorMessage": {
+            "type": "part ${1/name} - id: data type must be a string!"
+          }
+        },
+        "name": {
+          "description": "Product name of the dependency",
+          "type": "string",
+          "errorMessage": {
+            "type": "part ${1/id} - name: data type must be a string!"
+          }
+        },
+        "scmUrl": {
+          "description": "Source code repository of the dependency",
+          "type": "string",
+          "default": "https://...",
+          "errorMessage": {
+            "type": "part - ${1/name} - scmUrl: data type must be a string!"
+          }
+        },
+        "description": {
+          "description": "Short description.",
+          "type": "string",
+          "errorMessage": {
+            "type": "part - ${1/name} - description: data type must be a string!"
+          }
+        },
+        "version": {
+          "description": "The exact version number",
+          "default": "1.0.0",
+          "type": "string",
+          "errorMessage": {
+            "type": "part - ${1/name} - version: data type must be a string!"
+          }
+        },
+        "versionRange": {
+          "description": "The possible version range of the dependency",
+          "default": "^1.0.0",
+          "type": "string",
+          "errorMessage": {
+            "type": "part - ${1/name} - versionRange: data type must be a string!"
+          }
+        },
+        "licenses": {
+          "type": "array",
+          "description": "Indication of the licenses under which the software may be used. All licenses are cumulative (and).",
+          "errorMessage": {
+            "type": "licenses - ${1/name}: data type must be an array!"
+          },
+          "items": {
+            "description": "Indication of the licenses under which the software may be used. All licenses are cumulative (and).",
+            "$ref": "#/definitions/license",
+            "errorMessage": {
+              "type": "licenses - items: data type must be an array!"
+            }
+          }
+        },
+        "parts": {
+          "type": "array",
+          "description": "The part description is optional for dividing the version into smaller pieacse. e.g. for additional license or usage information if necessary",
+          "items": {
+            "description": "A part represents a library that is available in the version and can be used separately by third parties. This is not a dependency of the product",
+            "$ref": "#/definitions/part",
+            "errorMessage": {
+              "type": "parts - items: data type must be an array!"
+            }
+          }
+        },
+        "deployPackage": {
+          "type": "object",
+          "additionalProperties": false,
+          "description": "A deploy package represents a binary package e.g. for a target platform.",
+          "required": ["name", "checksums"],
+          "errorMessage": { 
+            "type": "deployPackage: data type must be an object!",
+            "additionalProperties": "deployPackage: no additional properties are allowed!",
+            "required": {
+              "name": "deployPackage - dependency ${1/name} - name: is a required field!",
+              "checksums": "deployPackage - dependency ${1/name} - checksums: is a required field!"
+            }
+          },
+          "properties": {
+            "name": {
+              "type": "string",
+              "description": "Name or identifier of the variant",
+              "errorMessage": {
+                "type": "deployPackage - dependency ${2/name} - name: data type must be a string!"
+              }
+            },
+            "downloadUrl": {
+              "type": "string",
+              "description": "Information about the download location of the variant (binary)",
+              "errorMessage": {
+                "type": "deployPackage - dependency ${2/name} - downloadUrl: data type must be a string!"
+              }
+            },
+            "checksums": {
+              "type": "object",
+              "description": "The variant (binary) of the product can be verified using the given (file-)checksum.",
+              "additionalProperties": false,
+              "oneOf": [
+                {
+                  "required": ["sha256"]
+                },
+                {
+                  "required": ["integrity"]
+                }
+              ],
+              "errorMessage": {
+                "type": "deployPackage - dependency ${2/name} - checksums: data type must be an object!",
+                "additionalProperties": "deployPackage - dependency ${2/name} - checksums: no additional properties are allowed!",
+                "oneOf": "deployPackage - dependency ${2/name} - checksums:  A checksum sha256 or integrity is required!"
+              },
+              "properties": {
+                "md5": {
+                 "type": "string",
+                 "errorMessage": {
+                    "type": "deployPackage - dependency ${3/name} - checksums md5: data type must be a string!"
+                 }
+                },
+                "sha1": {
+                  "type": "string",
+                  "errorMessage": {
+                    "type": "deployPackage - dependency ${3/name} - checksums sha1: data type must be a string!"
+                  }
+                },
+                "sha256": {
+                  "type": "string",
+                  "errorMessage": {
+                    "type": "deployPackage - dependency ${3/name} - checksums sha256: data type must be a string!"
+                  }
+                },
+                "integrity": {
+                  "type": "string",
+                  "errorMessage": {
+                    "type": "deployPackage - dependency ${3/name} - checksums integrity: data type must be a string!"
+                  }
+                },
+                "sha512": {
+                  "type": "string",
+                  "errorMessage": {
+                    "type": "deployPackage - dependency ${3/name} - checksums sha512: data type must be a string!"
+                  }
+                }             
+              }
+            },
+            "disclaimer": {
+              "description": "Information on the custom disclaimer of the software",
+              "type": "string",
+              "errorMessage": {
+                "type": "deployPackage - dependency ${2/name} - disclaimer: data type must be a string!"
+              }
+            }
+          }
+        },
+        "internalDependencies": {
+          "type": "array",
+          "description": "Provide the ability to model dependencies between two parts of the software. The precondition is that both parts have been described in the JSON",
+          "items": {
+            "$ref": "#/definitions/internalDependency"
+          },
+          "errorMessage": {
+            "type": "internalDependencies: data type must be an array!"
+          }
+        },
+        "externalDependencies": {
+          "type": "array",
+          "description": "Reference to the ID of the dependencies which are required by this one.",
+          "errorMessage": {
+            "type": "externalDependencies: data type must be an array!"
+          },
+          "items": {
+            "type": "string",
+            "errorMessage": {
+              "type": "externalDependencies - items: data type must be a string!"
+            }
+          }
+        }
+      }
+    },
+    "feature": {
+      "type": "object",
+      "title": "AOSD Feature information",
+      "required": [
+        "id"
+      ],
+      "additionalProperties": false,
+      "errorMessage": {
+        "type": "feature: data type must be an object!",
+        "additionalProperties": "feature: no additional properties are allowed!",
+        "required": {
+          "id": "feature - id: is a required field!"
+        }
+      },
+      "properties": {
+        "id": {
+          "type": "string",
+          "errorMessage": {
+            "type": "feature - id: data type must be a string!"
+          }
+        },
+         "shortDescription": {
+          "type": "string",
+          "errorMessage": {
+            "type": "feature - shortDescription: data type must be a string!"
+          }
+        }
+      }
+    },
+    "provider": {
+      "type": "object", 
+      "description": "If the version has been divided into individual parts, then these can be made available for third-party use by providing the usage features and license information if necessary (e.g. dual licensing)",
+      "required": [
+        "additionalLicenses",
+        "modified",
+        "usage"
+      ],
+      "additionalProperties": false,
+      "errorMessage": {
+        "additionalProperties": "provider: no additional properties are allowed!",
+        "required": {
+          "additionalLicenses": "provider - additionalLicenses: is a required field!",
+          "modified": "provider - modified: is a required field!",
+          "usage": "provider - usage: is a required field!"
+        }
+      },
+      "properties": {
+        "additionalLicenses": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/license"
+          },
+          "errorMessage": {
+            "type": "provider - additionalLicenses: data type must be an array!"
+          }
+        },
+        "modified": {
+          "type": "boolean",
+          "default": false,
+          "errorMessage": {
+            "type": "provider - modified: data type must be a boolean!"
+          }
+        },
+        "usage": {
+          "type": "string",
+          "enum": [
+            "dynamic_linking",
+            "static_linking",
+            "sys_call_dyn_link",
+            "sys_call_process"
+          ],
+          "default": "dynamic_linking",
+          "errorMessage": {
+            "type": "provider - usage: data type must be a string!",
+            "enum": "provider - usage: must be equal to one of the allowed values dynamic_linking, static_linking, sys_call_dyn_link or sys_call_process!"
           }
         }
       }
     }
+  },
+  "required": [
+    "directDependencies",
+    "dependencies"
+  ],
+  "errorMessage": {
+    "required": {
+      "directDependencies": "directDependencies: is a required field!",
+      "dependencies": "dependencies: is a required field!"
+    }
+  },
+  "properties": {
+    "directDependencies": {
+      "description": "Ids of dependencies directly related to the project",
+      "type": "array",
+      "errorMessage": {
+        "type": "directDependencies: data type must be an array!"
+      },
+      "items": {
+        "type": "string",
+        "errorMessage": {
+          "type": "directDependencies - items: data type must be a string!"
+        }
+      }
+    },
+    "dependencies": {
+      "description": "Description of the products to be evaluated by AOSD",
+      "type": "array",
+      "errorMessage": {
+        "type": "directDependencies: data type must be an array!"
+      },
+      "items": {
+        "$ref": "#/definitions/externalDependency",
+        "errorMessage": {
+          "type": "dependencies - items: data type must be an object!"
+        }
+      }
+    }
   }
+}

@@ -8,13 +8,13 @@ export const getUniqueValues = (arrayData: Array<string> | any) => (
 )
 
 export const getMultibleUsedIds = (dArray: Array<number> | any, tArray: Array<number> | any): Array<number> => {
-  const intersect: Array<number> = dArray.filter((element: number) => tArray.includes(element));
+  const intersect: Array<number> = dArray?.filter((element: number) => tArray.includes(element));
   return intersect;
 }
 
 export const getMissingComponentIds = (dArray: Array<number> | any, tArray: Array<number> | any, cArray: Array<number> | any ): Array<number> => {
-  const directAndTrans = dArray.concat(tArray);
-  const missingComponents:  Array<number> = cArray.filter((element: number) => !directAndTrans.includes(element));
+  const directAndTrans = dArray?.concat(tArray);
+  const missingComponents:  Array<number> = cArray.filter((element: number) => !directAndTrans?.includes(element));
   return missingComponents;
 }
 
@@ -102,8 +102,8 @@ export const validateDependencies = (
 ): Array<string> => {
   const validationMessages: Array<string> = [];
 
-  const componentIds = new Set(componentsArray.map((component) => component.id.toString()));
-  dependencies.forEach((dependencyId) => {
+  const componentIds = new Set(componentsArray?.map((component) => (component?.id != null ? component.id.toString() : "")));
+  dependencies?.forEach((dependencyId) => {
     const depIdStr = dependencyId.toString();
     if (!componentIds.has(depIdStr)) {
         validationMessages.push(`Warning: ${dependencyType} with id ${depIdStr} does not correspond to any component`);
@@ -134,15 +134,15 @@ export const validateSPDXIds = (
   spdxIds.forEach(id => {
     const cleanedId = id.replace(/[()]/g, "").trim();
     const licenses = cleanedId.split(/\s+(AND|OR)\s+/).filter(part => part !== "AND" && part !== "OR");
+   
+      // Check each license part
+      const invalidLicenses = licenses.filter(part => !validSPDXKeys.has(part.trim()));
 
-   // Check each license part
-   const invalidLicenses = licenses.filter(part => !validSPDXKeys.has(part.trim()));
-
-   if (invalidLicenses.length > 0) {
-     validationMessages.push(
-       `Warning: invalid SPDX key(s) - '${invalidLicenses.join(", ")}' - component name: ${componentName} - subcomponent: ${subcomponentName}`
-     );
-   }
+      if (invalidLicenses.length > 0) {
+        validationMessages.push(
+          `Warning: invalid SPDX key(s) - '${invalidLicenses.join(", ")}' - component name: ${componentName} - subcomponent: ${subcomponentName}`
+        );
+      }
  });
   // Validate selected license
   if (selectedLicense && !validSPDXKeys.has(selectedLicense)) {
@@ -172,13 +172,58 @@ export const validateSelectedLicenseForDualLicenses = (
   componentsArray: Array<{ componentName: string; subcomponents: { spdxId: string; selectedLicense?: string; subcomponentName: string }[] }>,
   validationResults: Array<string>
 ): void => {
-  componentsArray.forEach((component) => {
-      component.subcomponents.forEach((subcomponent) => {
+  componentsArray?.forEach((component) => {
+      component.subcomponents?.forEach((subcomponent) => {
           if (subcomponent.spdxId.includes("OR") && (!subcomponent.selectedLicense || subcomponent.selectedLicense.trim() === "")) {
               validationResults.push(
                   `Warning: dual-license detected - component name: ${component.componentName} - subcomponent: ${subcomponent.subcomponentName}. Please specify a selectedLicense.`
               );
           }
       });
+  });
+};
+
+// Validate modification and linking
+export const validateComponentsForModificationAndLinking = (
+  componentsArray: Array<{
+    componentName: string;
+    subcomponents: Array<{ spdxId: string; subcomponentName: string }>;
+    modified: boolean | null;
+    linking: string | null;
+  }>,
+  validationResults: Array<string>
+) => {
+   // Load SPDX keys for modification and linking
+   const { modification, linking } = JSON.parse(fs.readFileSync(process.env.MODIFICATION_LINKING_FILE_PATH, 'utf8'));
+   const modificationSet = new Set(modification);
+   const linkingSet = new Set(linking);
+
+  // Parse SPDX keys
+  const parseSpdxIds = (spdxId: string): string[] => {
+    // Remove parentheses and split by OR/AND
+    return spdxId
+      .replace(/[\(\)]/g, '') 
+      .split(/\s+(OR|AND)\s+/)
+      .filter((key) => key !== 'OR' && key !== 'AND') 
+      .map((key) => key.trim());
+  };
+
+  // Validate components
+  componentsArray?.forEach(({ componentName, subcomponents, modified, linking }) => {
+    subcomponents?.forEach(({ spdxId, subcomponentName }) => {
+      const spdxIds = parseSpdxIds(spdxId);
+      spdxIds.forEach((id) => {
+        if (modificationSet.has(id) && modified === null) {
+          validationResults.push(
+            `Warning: due to the presence of SPDX key '${id}' in component '${componentName}' - subcomponent '${subcomponentName}', the 'modification' property cannot be null.`
+          );
+        }
+        if (linkingSet.has(id) && linking === null) {
+          validationResults.push(
+            `Warning: due to the presence of SPDX key '${id}' in component '${componentName}' - subcomponent '${subcomponentName}', the 'linking' property cannot be null.`
+          );
+        }
+      });
+    });
   });
 };

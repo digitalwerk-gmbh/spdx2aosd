@@ -147,6 +147,9 @@
     "externalDocumentRefs" : {
       "description" : "Identify any external SPDX documents referenced within this SPDX document.",
       "type" : "array",
+      "errorMessage": {
+        "type": "externalDocumentRefs: data type must be an array!"
+      },
       "items" : {
         "type" : "object",
         "properties" : {
@@ -156,16 +159,31 @@
               "algorithm" : {
                 "description" : "Identifies the algorithm used to produce the subject Checksum. Currently, SHA-1 is the only supported algorithm. It is anticipated that other algorithms will be supported at a later time.",
                 "type" : "string",
-                "enum" : [ "SHA1", "BLAKE3", "SHA3-384", "SHA256", "SHA384", "BLAKE2b-512", "BLAKE2b-256", "SHA3-512", "MD2", "ADLER32", "MD4", "SHA3-256", "BLAKE2b-384", "SHA512", "MD6", "MD5", "SHA224" ]
+                "enum" : [ "SHA1", "BLAKE3", "SHA3-384", "SHA256", "SHA384", "BLAKE2b-512", "BLAKE2b-256", "SHA3-512", "MD2", "ADLER32", "MD4", "SHA3-256", "BLAKE2b-384", "SHA512", "MD6", "MD5", "SHA224" ],
+                "errorMessage": {
+                  "type": "externalDocumentRefs - checksum - algorithm: data type must be a string!",
+                   "enum": "externalDocumentRefs - checksum - algorithm: data must be on of the allowed values SHA1, BLAKE3, SHA3-384, SHA256, SHA384, BLAKE2b-512, BLAKE2b-256, SHA3-512, MD2, ADLER32, MD4, SHA3-256, BLAKE2b-384, SHA512, MD6, MD5, SHA224!"
+                }
               },
               "checksumValue" : {
                 "description" : "The checksumValue property provides a lower case hexidecimal encoded digest value produced using a specific algorithm.",
-                "type" : "string"
+                "type" : "string",
+                "errorMessage": {
+                  "type": "externalDocumentRefs - checksum - checksumValue: data type must be a string!"
+                }
               }
             },
             "required" : [ "algorithm", "checksumValue" ],
             "additionalProperties" : false,
-            "description" : "A Checksum is value that allows the contents of a file to be authenticated. Even small changes to the content of the file will change its checksum. This class allows the results of a variety of checksum and cryptographic message digest algorithms to be represented."
+            "description" : "A Checksum is value that allows the contents of a file to be authenticated. Even small changes to the content of the file will change its checksum. This class allows the results of a variety of checksum and cryptographic message digest algorithms to be represented.",
+            "errorMessage": {
+              "type": "externalDocumentRefs - checksum - items: data type must be an object!",
+              "additionalProperties": "externalDocumentRefs - checksum - items: no additional properties are allowed!",
+              "required": {
+                "algorithm": "externalDocumentRefs - checksum - algorithm: is a required field!",
+                "checksumValue": "externalDocumentRefs - checksum - checksumValue: is a required field!"
+              }
+            }
           },
           "externalDocumentId" : {
             "description" : "externalDocumentId is a string containing letters, numbers, ., - and/or + which uniquely identifies an external document within this document.",
@@ -178,290 +196,525 @@
         },
         "required" : [ "checksum", "externalDocumentId", "spdxDocument" ],
         "additionalProperties" : false,
-        "description" : "Information about an external SPDX document reference including the checksum. This allows for verification of the external references."
+        "description" : "Information about an external SPDX document reference including the checksum. This allows for verification of the external references.",
+        "errorMessage": {
+          "type": "externalDocumentRefs - items: data type must be an object!",
+          "additionalProperties": "externalDocumentRefs - items: no additional properties are allowed!",
+          "required": {
+            "checksum": "externalDocumentRefs - checksum: is a required field!",
+            "externalDocumentId": "externalDocumentRefs - externalDocumentId: is a required field!",
+            "spdxDocument": "externalDocumentRefs - spdxDocument: is a required field!"
+          }
+        }
       }
     },
     "hasExtractedLicensingInfos" : {
       "description" : "Indicates that a particular ExtractedLicensingInfo was defined in the subject SpdxDocument.",
       "type" : "array",
+      "errorMessage": {
+        "type": "hasExtractedLicensingInfos: data type must be an array!"
+      },
       "items" : {
         "type" : "object",
         "properties" : {
           "comment" : {
-            "type" : "string"
+            "type" : "string",
+            "errorMessage": {
+              "type": "hasExtractedLicensingInfos - licenseId ${1/licenseId}: - comment: data type must be a string!"
+            }
           },
           "crossRefs" : {
             "description" : "Cross Reference Detail for a license SeeAlso URL",
             "type" : "array",
+            "errorMessage": {
+              "type": "crossRefs - licenseId ${1/licenseId}: data type must be an array!"
+            },
             "items" : {
               "type" : "object",
               "properties" : {
                 "isLive" : {
                   "description" : "Indicate a URL is still a live accessible location on the public internet",
-                  "type" : "boolean"
+                  "type" : "boolean",
+                  "errorMessage": {
+                    "type": "crossRefs - licenseId ${3/licenseId} - isLive: data type must be a boolean!"
+                  }
                 },
                 "isValid" : {
                   "description" : "True if the URL is a valid well formed URL",
-                  "type" : "boolean"
+                  "type" : "boolean",
+                  "errorMessage": {
+                    "type": "crossRefs - licenseId ${3/licenseId} - isValid: data type must be a boolean!"
+                  }
                 },
                 "isWayBackLink" : {
                   "description" : "True if the License SeeAlso URL points to a Wayback archive",
-                  "type" : "boolean"
+                  "type" : "boolean",
+                  "errorMessage": {
+                    "type": "crossRefs - licenseId ${3/licenseId} - isWayBackLink: data type must be a boolean!"
+                  }
                 },
                 "match" : {
                   "description" : "Status of a License List SeeAlso URL reference if it refers to a website that matches the license text.",
-                  "type" : "string"
+                  "type" : "string",
+                  "errorMessage": {
+                    "type": "crossRefs - licenseId ${3/licenseId} - match: data type must be a string!"
+                  }
                 },
                 "order" : {
                   "description" : "The ordinal order of this element within a list",
-                  "type" : "integer"
+                  "type" : "integer",
+                  "errorMessage": {
+                    "type": "crossRefs - licenseId ${3/licenseId} - order: data type must be an integer!"
+                  }
                 },
                 "timestamp" : {
                   "description" : "Timestamp",
-                  "type" : "string"
+                  "type" : "string",
+                  "errorMessage": {
+                    "type": "crossRefs - licenseId ${3/licenseId} - timestamp: data type must be a string!"
+                  }
                 },
                 "url" : {
                   "description" : "URL Reference",
-                  "type" : "string"
+                  "type" : "string",
+                  "errorMessage": {
+                    "type": "crossRefs - licenseId ${3/licenseId} - url: data type must be a string!"
+                  }
                 }
               },
               "required" : [ "url" ],
               "additionalProperties" : false,
-              "description" : "Cross reference details for the a URL reference"
+              "description" : "Cross reference details for the a URL reference",
+              "errorMessage": {
+                "type": "crossRef - items: data type must be an object!",
+                "additionalProperties": "crossRef: no additional properties are allowed!",
+                "required": {
+                  "url": "crossRef - licenseId ${1/licenseId} - url: is a required field!"
+                }
+              }
             }
           },
           "extractedText" : {
             "description" : "Provide a copy of the actual text of the license reference extracted from the package, file or snippet that is associated with the License Identifier to aid in future analysis.",
-            "type" : "string"
+            "type" : "string",
+            "errorMessage": {
+              "type": "hasExtractedLicensingInfos - licenseId ${1/licenseId} - extractedText must be a string!"
+            }
           },
           "licenseId" : {
             "description" : "A human readable short form license identifier for a license. The license ID is either on the standard license list or the form \"LicenseRef-[idString]\" where [idString] is a unique string containing letters, numbers, \".\" or \"-\".  When used within a license expression, the license ID can optionally include a reference to an external document in the form \"DocumentRef-[docrefIdString]:LicenseRef-[idString]\" where docRefIdString is an ID for an external document reference.",
-            "type" : "string"
+            "type" : "string",
+            "errorMessage": {
+              "type": "hasExtractedLicensingInfos - licenseId ${1/licenseId} - licenseId must be a string!"
+            }
           },
           "name" : {
             "description" : "Identify name of this SpdxElement.",
-            "type" : "string"
+            "type" : "string",
+            "errorMessage": {
+              "type": "hasExtractedLicensingInfos - licenseId ${1/licenseId} - name must be a string!"
+            }
           },
           "seeAlsos" : {
             "type" : "array",
+            "errorMessage": {
+              "type": "hasExtractedLicensingInfos - licenseId ${1/licenseId} - seeAlsos must be an array!"
+            },
             "items" : {
-              "type" : "string"
+              "type" : "string",
+              "errorMessage": {
+                "type": "hasExtractedLicensingInfos - licenseId ${2/licenseId} - seeAlsos-item must be a string!"
+              }
             }
           }
         },
         "required" : [ "extractedText", "licenseId" ],
         "additionalProperties" : false,
-        "description" : "An ExtractedLicensingInfo represents a license or licensing notice that was found in a package, file or snippet. Any license text that is recognized as a license may be represented as a License rather than an ExtractedLicensingInfo."
+        "description" : "An ExtractedLicensingInfo represents a license or licensing notice that was found in a package, file or snippet. Any license text that is recognized as a license may be represented as a License rather than an ExtractedLicensingInfo.",
+        "errorMessage": {
+          "type": "hasExtractedLicensingInfos - items: data type must be an object!",
+          "additionalProperties": "hasExtractedLicensingInfos - items: no additional properties are allowed!",
+          "required": {
+            "licenseId": "hasExtractedLicensingInfos - licenseId: is a required field!",
+            "extractedText": "hasExtractedLicensingInfos licenseId ${0/licenseId} - extractedText: is a required field!"
+          }
+        }
       }
     },
     "name" : {
       "description" : "Identify name of this SpdxElement.",
-      "type" : "string"
+      "type" : "string",
+      "errorMessage": {
+        "type": "name: data type must be a string!"
+      }
     },
     "revieweds" : {
       "description" : "Reviewed",
       "deprecated": true,
       "type" : "array",
+      "errorMessage": {
+        "type": "revieweds: data type must be an array!"
+      },
       "items" : {
         "type" : "object",
         "properties" : {
           "comment" : {
-            "type" : "string"
+            "type" : "string",
+            "errorMessage": {
+              "type": "revieweds - comment: data type must be a string!"
+            }
           },
           "reviewDate" : {
             "description" : "The date and time at which the SpdxDocument was reviewed. This value must be in UTC and have 'Z' as its timezone indicator.",
-            "type" : "string"
+            "type" : "string",
+            "errorMessage": {
+              "type": "revieweds - reviewDate: data type must be a string!"
+            }
           },
           "reviewer" : {
             "description" : "The name and, optionally, contact information of the person who performed the review. Values of this property must conform to the agent and tool syntax.  The reviewer property is deprecated in favor of Annotation with an annotationType review.",
-            "type" : "string"
+            "type" : "string",
+            "errorMessage": {
+              "type": "revieweds - reviewer: data type must be a string!"
+            }
           }
         },
         "required" : [ "reviewDate" ],
         "additionalProperties" : false,
-        "description" : "This class has been deprecated in favor of an Annotation with an Annotation type of review."
+        "description" : "This class has been deprecated in favor of an Annotation with an Annotation type of review.",
+        "errorMessage": {
+          "type": "revieweds -items: data type must be an object!",
+          "additionalProperties": "revieweds -items: no additional properties are allowed!",
+          "required": {
+            "reviewDate": "revieweds - reviewDate: is a required field!"
+          }
+        }
       }
     },
     "spdxVersion" : {
       "description" : "Provide a reference number that can be used to understand how to parse and interpret the rest of the file. It will enable both future changes to the specification and to support backward compatibility. The version number consists of a major and minor version indicator. The major field will be incremented when incompatible changes between versions are made (one or more sections are created, modified or deleted). The minor field will be incremented when backwards compatible changes are made.",
-      "type" : "string"
+      "type" : "string",
+      "errorMessage": {
+        "type": "spdxVersion: data type must be a string!"
+      }
     },
     "documentNamespace" : {
       "type" : "string",
-      "description" : "The URI provides an unambiguous mechanism for other SPDX documents to reference SPDX elements within this SPDX document."
+      "description" : "The URI provides an unambiguous mechanism for other SPDX documents to reference SPDX elements within this SPDX document.",
+      "errorMessage": {
+        "type": "documentNamespace: data type must be a string!"
+      }
     },
     "documentDescribes" : {
       "description" : "DEPRECATED: use relationships instead of this field. Packages, files and/or Snippets described by this SPDX document",
       "deprecated": true,
       "$comment": "This field has been deprecated as it is a duplicate of using the SPDXRef-DOCUMENT DESCRIBES relationship",
       "type" : "array",
+      "errorMessage": {
+        "type": "documentDescribes: data type must be an array"
+      },
       "items" : {
         "type" : "string",
-        "description" : "SPDX ID for each Package, File, or Snippet."
+        "description" : "SPDX ID for each Package, File, or Snippet.",
+        "errorMessage": {
+          "type": "documentDescribes - items: data type must be a string!"
+        }
       }
     },
     "packages" : {
       "description" : "Packages referenced in the SPDX document",
       "type" : "array",
+      "errorMessage": {
+        "type": "packages: data type must be an array"
+      },
       "items" : {
         "type" : "object",
         "properties" : {
           "SPDXID" : {
             "type" : "string",
-            "description" : "Uniquely identify any element in an SPDX document which may be referenced by other elements."
+            "description" : "Uniquely identify any element in an SPDX document which may be referenced by other elements.",
+            "errorMessage": {
+              "type": "packages - package name ${1/name} - SPDXID: data type must be a string!"
+            }
           },
           "annotations" : {
             "description" : "Provide additional information about an SpdxElement.",
             "type" : "array",
+            "errorMessage": {
+              "type": "annotations - package name ${1/name}: data type must be an array!"
+            },
             "items" : {
               "type" : "object",
               "properties" : {
                 "annotationDate" : {
                   "description" : "Identify when the comment was made. This is to be specified according to the combined date and time in the UTC format, as specified in the ISO 8601 standard.",
-                  "type" : "string"
+                  "type" : "string",
+                  "errorMessage": {
+                    "type": "annotations - package name ${3/name} - annotationDate: data type must be a string!"
+                  }
                 },
                 "annotationType" : {
                   "description" : "Type of the annotation.",
                   "type" : "string",
-                  "enum" : [ "OTHER", "REVIEW" ]
+                  "enum" : [ "OTHER", "REVIEW" ],
+                  "errorMessage": {
+                    "type": "annotations - package name ${3/name} - annotationType: data type must be a string!",
+                    "enum": "annotations - package name ${3/name} - annotationType: data must be one of the allowed values OTHER, REVIEW!"
+                  }
                 },
                 "annotator" : {
                   "description" : "This field identifies the person, organization, or tool that has commented on a file, package, snippet, or the entire document.",
-                  "type" : "string"
+                  "type" : "string",
+                  "errorMessage": {
+                    "type": "annotations - package name ${3/name} - annotator: data type must be a string!"
+                  }
                 },
                 "comment" : {
-                  "type" : "string"
+                  "type" : "string",
+                  "errorMessage": {
+                    "type": "annotations - package name ${3/name} - comment: data type must be a string!"
+                  }
                 }
               },
               "required" : [ "annotationDate", "annotationType", "annotator", "comment" ],
               "additionalProperties" : false,
-              "description" : "An Annotation is a comment on an SpdxItem by an agent."
+              "description" : "An Annotation is a comment on an SpdxItem by an agent.",
+              "errorMessage": {
+                "type": "annotations -items: data type must be an object!",
+                "additionalProperties": "annotations - package name ${2/name} - items: no additional properties are allowed!",
+                "required": {
+                  "annotationDate": "annotations - package name ${2/name} - annotationDate: is a required field!",
+                  "annotationType": "annotations - package name ${2/name} - annotationType: is a required field!",
+                  "annotator": "annotations - package name ${2/name} - annotator: is a required field!",
+                  "comment": "annotations - package name ${2/name} - comment: is a required field!"
+                }
+              }
             }
           },
           "attributionTexts" : {
             "description" : "This field provides a place for the SPDX data creator to record acknowledgements that may be required to be communicated in some contexts. This is not meant to include the actual complete license text (see licenseConculded and licenseDeclared), and may or may not include copyright notices (see also copyrightText). The SPDX data creator may use this field to record other acknowledgements, such as particular clauses from license texts, which may be necessary or desirable to reproduce.",
             "type" : "array",
+            "errorMessage": {
+                "type": "attributionTexts - package name ${1/name}: data type must be an array!"
+            },
             "items" : {
               "description" : "This field provides a place for the SPDX data creator to record acknowledgements that may be required to be communicated in some contexts. This is not meant to include the actual complete license text (see licenseConculded and licenseDeclared), and may or may not include copyright notices (see also copyrightText). The SPDX data creator may use this field to record other acknowledgements, such as particular clauses from license texts, which may be necessary or desirable to reproduce.",
-              "type" : "string"
+              "type" : "string",
+              "errorMessage": {
+                "type": "attributionTexts - package name ${2/name} - items: data type must be a string!"
+              }
             }
           },
           "builtDate" : {
             "description" : "This field provides a place for recording the actual date the package was built.",
-            "type" : "string"
+            "type" : "string",
+            "errorMessage": {
+              "type": "builtDate - package name ${1/name}: data type must be a string!"
+            }
           },
           "checksums" : {
             "description" : "The checksum property provides a mechanism that can be used to verify that the contents of a File or Package have not changed.",
             "type" : "array",
+            "errorMessage": {
+              "type": "checksums - package name ${1/name}: data type must be an array!"
+            },
             "items" : {
               "type" : "object",
               "properties" : {
                 "algorithm" : {
                   "description" : "Identifies the algorithm used to produce the subject Checksum. Currently, SHA-1 is the only supported algorithm. It is anticipated that other algorithms will be supported at a later time.",
                   "type" : "string",
-                  "enum" : [ "SHA1", "BLAKE3", "SHA3-384", "SHA256", "SHA384", "BLAKE2b-512", "BLAKE2b-256", "SHA3-512", "MD2", "ADLER32", "MD4", "SHA3-256", "BLAKE2b-384", "SHA512", "MD6", "MD5", "SHA224" ]
+                  "enum" : [ "SHA1", "BLAKE3", "SHA3-384", "SHA256", "SHA384", "BLAKE2b-512", "BLAKE2b-256", "SHA3-512", "MD2", "ADLER32", "MD4", "SHA3-256", "BLAKE2b-384", "SHA512", "MD6", "MD5", "SHA224" ],
+                  "errorMessage": {
+                    "type": "checksums - package name ${3/name} - algorithm: data type must be a string!",
+                    "enum": "checksums - package name ${3/name} - algorithm: data must be on of the allowed values SHA1, BLAKE3, SHA3-384, SHA256, SHA384, BLAKE2b-512, BLAKE2b-256, SHA3-512, MD2, ADLER32, MD4, SHA3-256, BLAKE2b-384, SHA512, MD6, MD5, SHA224!"
+                  }
                 },
                 "checksumValue" : {
                   "description" : "The checksumValue property provides a lower case hexidecimal encoded digest value produced using a specific algorithm.",
-                  "type" : "string"
+                  "type" : "string",
+                  "errorMessage": {
+                    "type": "checksums - package name ${3/name} - checksumValue: data type must be a string!"
+                  }
                 }
               },
               "required" : [ "algorithm", "checksumValue" ],
               "additionalProperties" : false,
-              "description" : "A Checksum is value that allows the contents of a file to be authenticated. Even small changes to the content of the file will change its checksum. This class allows the results of a variety of checksum and cryptographic message digest algorithms to be represented."
+              "description" : "A Checksum is value that allows the contents of a file to be authenticated. Even small changes to the content of the file will change its checksum. This class allows the results of a variety of checksum and cryptographic message digest algorithms to be represented.",
+              "errorMessage": {
+                "type": "checksums - items: data type must be an object!",
+                "additionalProperties": "checksums - package name ${2/name} - items: no additional properties are allowed!",
+                "required": {
+                  "algorithm": "checksums - package name ${2/name} - algorithm: is a required field!",
+                  "checksumValue": "checksums - package name ${2/name} - checksumValue: is a required field!"
+                }
+              }
             }
           },
           "comment" : {
-            "type" : "string"
+            "type" : "string",
+            "errorMessage": {
+              "type": "checksums - package name ${1/name} - comment: data type must be a string!"
+            }
           },
           "copyrightText" : {
             "description" : "The text of copyright declarations recited in the package, file or snippet.\n\nIf the copyrightText field is not present, it implies an equivalent meaning to NOASSERTION.",
-            "type" : "string"
+            "type" : "string",
+            "errorMessage": {
+              "type": "checksums - package name ${1/name} - copyrightText: data type must be a string!"
+            }
           },
           "description" : {
             "description" : "Provides a detailed description of the package.",
-            "type" : "string"
+            "type" : "string",
+            "errorMessage": {
+              "type": "checksums - package name ${1/name} - description: data type must be a string!"
+            }
           },
           "downloadLocation" : {
             "description" : "The URI at which this package is available for download. Private (i.e., not publicly reachable) URIs are acceptable as values of this property. The values http://spdx.org/rdf/terms#none and http://spdx.org/rdf/terms#noassertion may be used to specify that the package is not downloadable or that no attempt was made to determine its download location, respectively.",
-            "type" : "string"
+            "type" : "string",
+            "errorMessage": {
+              "type": "checksums - package name ${1/name} - cownloadLocation: data type must be a string!"
+            }
           },
           "externalRefs" : {
             "description" : "An External Reference allows a Package to reference an external source of additional information, metadata, enumerations, asset identifiers, or downloadable content believed to be relevant to the Package.",
             "type" : "array",
+            "errorMessage": {
+              "type": "externalRefs - package name ${1/name}: data type must be an array!"
+            },
             "items" : {
               "type" : "object",
               "properties" : {
                 "comment" : {
-                  "type" : "string"
+                  "type" : "string",
+                  "errorMessage": {
+                    "type": "externalRefs - package name ${3/name} - comment: data type must be a string!"
+                  }
                 },
                 "referenceCategory" : {
                   "description" : "Category for the external reference",
                   "type" : "string",
-                  "enum" : [ "OTHER", "PERSISTENT-ID", "PERSISTENT_ID", "SECURITY", "PACKAGE-MANAGER", "PACKAGE_MANAGER" ]
+                  "enum" : [ "OTHER", "PERSISTENT-ID", "PERSISTENT_ID", "SECURITY", "PACKAGE-MANAGER", "PACKAGE_MANAGER" ],
+                  "errorMessage": {
+                    "type": "externalRefs - package name ${3/name} - referenceCategory: data type must be a string!",
+                    "enum": "externalRefs - package name ${3/name} - referenceCategory: data must be on of the allowed values OTHER, PERSISTENT-ID, PERSISTENT_ID, SECURITY, PACKAGE-MANAGER, PACKAGE_MANAGER!"
+                  }
                 },
                 "referenceLocator" : {
                   "description" : "The unique string with no spaces necessary to access the package-specific information, metadata, or content within the target location. The format of the locator is subject to constraints defined by the <type>.",
-                  "type" : "string"
+                  "type" : "string",
+                  "errorMessage": {
+                    "type": "externalRefs - package name ${3/name} - referenceLocator: data type must be a string!"
+                  }
                 },
                 "referenceType" : {
                   "description" : "Type of the external reference. These are defined in an appendix in the SPDX specification.",
-                  "type" : "string"
+                  "type" : "string",
+                  "errorMessage": {
+                    "type": "externalRefs - package name ${3/name} - referenceType: data type must be a string!"
+                  }
                 }
               },
               "required" : [ "referenceCategory", "referenceLocator", "referenceType" ],
               "additionalProperties" : false,
-              "description" : "An External Reference allows a Package to reference an external source of additional information, metadata, enumerations, asset identifiers, or downloadable content believed to be relevant to the Package."
+              "description" : "An External Reference allows a Package to reference an external source of additional information, metadata, enumerations, asset identifiers, or downloadable content believed to be relevant to the Package.",
+              "errorMessage": {
+                "type": "externalRefs - items: data type must be an object!",
+                "additionalProperties": "externalRefs - package name ${2/name} - items: no additional properties are allowed!",
+                "required": {
+                  "referenceCategory": "externalRefs - package name ${2/name} - referenceCategory: is a required field!",
+                  "referenceLocator": "externalRefs - package name ${2/name} - referenceLocator: is a required field!",
+                  "referenceType": "externalRefs - package name ${2/name} - referenceType: is a required field!"
+                }
+              }
             }
           },
           "filesAnalyzed" : {
             "description" : "Indicates whether the file content of this package has been available for or subjected to analysis when creating the SPDX document. If false indicates packages that represent metadata or URI references to a project, product, artifact, distribution or a component. If set to false, the package must not contain any files.",
-            "type" : "boolean"
+            "type" : "boolean",
+            "errorMessage": {
+              "type": "filesAnalyzed - package name ${1/name}: data type must be a boolean!"
+            }
           },
           "hasFiles" : {
             "description" : "DEPRECATED: use relationships instead of this field. Indicates that a particular file belongs to a package.",
             "deprecated": true,
             "$comment": "This field has been deprecated as it is a duplicate of using CONTAINS relationships from a package to files",
             "type" : "array",
+            "errorMessage": {
+              "type": "fasFiles - package name ${1/name}: data type must be an array!"
+            },
             "items" : {
               "description" : "SPDX ID for File.  Indicates that a particular file belongs to a package.",
-              "type" : "string"
+              "type" : "string",
+              "errorMessage": {
+                "type": "fasFiles - package name ${2/name} - items: data type must be a string!"
+              }
             }
           },
           "homepage" : {
-            "type" : "string"
+            "type" : "string",
+            "errorMessage": {
+              "type": "homepage - package name ${1/name}: data type must be a string!"
+            }
           },
           "licenseComments" : {
             "description" : "The licenseComments property allows the preparer of the SPDX document to describe why the licensing in spdx:licenseConcluded was chosen.",
-            "type" : "string"
+            "type" : "string",
+            "errorMessage": {
+              "type": "licenseComment - package name ${1/name}: data type must be a string!"
+            }
           },
           "licenseConcluded" : {
             "description" : "License expression for licenseConcluded. See SPDX Annex D for the license expression syntax.  The licensing that the preparer of this SPDX document has concluded, based on the evidence, actually applies to the SPDX Item.\n\nIf the licenseConcluded field is not present for an SPDX Item, it implies an equivalent meaning to NOASSERTION.",
-            "type" : "string"
+            "type" : "string",
+            "errorMessage": {
+              "type": "licenseConcluded - package name ${1/name}: data type must be a string!"
+            }
           },
           "licenseDeclared" : {
             "description" : "License expression for licenseDeclared. See SPDX Annex D for the license expression syntax.  The licensing that the creators of the software in the package, or the packager, have declared. Declarations by the original software creator should be preferred, if they exist.",
-            "type" : "string"
+            "type" : "string",
+            "errorMessage": {
+              "type": "licenseDeclared - package name ${1/name}: data type must be a string!"
+            }
           },
           "licenseInfoFromFiles" : {
             "description" : "The licensing information that was discovered directly within the package. There will be an instance of this property for each distinct value of alllicenseInfoInFile properties of all files contained in the package.\n\nIf the licenseInfoFromFiles field is not present for a package and filesAnalyzed property for that same package is true or omitted, it implies an equivalent meaning to NOASSERTION.",
             "type" : "array",
+            "errorMessage": {
+              "type": "licenseInfoFromFiles - package name ${1/name}: data type must be an array!"
+            },
             "items" : {
               "description" : "License expression for licenseInfoFromFiles. See SPDX Annex D for the license expression syntax.  The licensing information that was discovered directly within the package. There will be an instance of this property for each distinct value of alllicenseInfoInFile properties of all files contained in the package.\n\nIf the licenseInfoFromFiles field is not present for a package and filesAnalyzed property for that same package is true or omitted, it implies an equivalent meaning to NOASSERTION.",
-              "type" : "string"
+              "type" : "string",
+              "errorMessage": {
+                "type": "licenseInfoFromFiles - package name ${2/name} - items: data type must be a string!"
+              }
             }
           },
           "name" : {
             "description" : "Identify name of this SpdxElement.",
-            "type" : "string"
+            "type" : "string",
+            "errorMessage": {
+              "type": "name - package with SPDXId ${1/SPDXID}: data type must be a string!"
+            }
           },
           "originator" : {
             "description" : "The name and, optionally, contact information of the person or organization that originally created the package. Values of this property must conform to the agent and tool syntax.",
-            "type" : "string"
+            "type" : "string",
+            "errorMessage": {
+              "type": "originator - package name ${1/name}: data type must be a string!"
+            }
           },
           "packageFileName" : {
             "description" : "The base name of the package file name. For example, zlib-1.2.5.tar.gz.",
-            "type" : "string"
+            "type" : "string",
+            "errorMessage": {
+              "type": "packageFileName - package name ${1/name}: data type must be a string!"
+            }
           },
           "packageVerificationCode" : {
             "type" : "object",
@@ -469,194 +722,357 @@
               "packageVerificationCodeExcludedFiles" : {
                 "description" : "A file that was excluded when calculating the package verification code. This is usually a file containing SPDX data regarding the package. If a package contains more than one SPDX file all SPDX files must be excluded from the package verification code. If this is not done it would be impossible to correctly calculate the verification codes in both files.",
                 "type" : "array",
+                "errorMessage": {
+                  "type": "packageVerificationCodeExcludedFiles - package name ${2/name}: data type must be an array!"
+                },
                 "items" : {
                   "description" : "A file that was excluded when calculating the package verification code. This is usually a file containing SPDX data regarding the package. If a package contains more than one SPDX file all SPDX files must be excluded from the package verification code. If this is not done it would be impossible to correctly calculate the verification codes in both files.",
-                  "type" : "string"
+                  "type" : "string",
+                  "errorMessage": {
+                    "type": "packageVerificationCodeExcludedFiles - package name ${3/name} - items: data type must be a string!"
+                  }
                 }
               },
               "packageVerificationCodeValue" : {
                 "description" : "The actual package verification code as a hex encoded value.",
-                "type" : "string"
+                "type" : "string",
+                "errorMessage": {
+                  "type": "packageVerificationCodeValue - package name ${2/name}: data type must be a string!"
+                }
               }
             },
             "required" : [ "packageVerificationCodeValue" ],
             "additionalProperties" : false,
-            "description" : "A manifest based verification code (the algorithm is defined in section 4.7 of the full specification) of the SPDX Item. This allows consumers of this data and/or database to determine if an SPDX item they have in hand is identical to the SPDX item from which the data was produced. This algorithm works even if the SPDX document is included in the SPDX item."
+            "description" : "A manifest based verification code (the algorithm is defined in section 4.7 of the full specification) of the SPDX Item. This allows consumers of this data and/or database to determine if an SPDX item they have in hand is identical to the SPDX item from which the data was produced. This algorithm works even if the SPDX document is included in the SPDX item.",
+            "errorMessage": { 
+              "type": "packageVerificationCode - package name ${1/name}: data type must be an object!",
+              "additionalProperties": "packageVerificationCode - package name ${1/name}: no additional properties are allowed!",
+              "required": {
+                "packageVerificationCodeValue": "packageVerificationCode - package name ${1/name} - packageVerificationCodeValue: is a required field!"
+              }
+            }
           },
           "primaryPackagePurpose" : {
             "description" : "This field provides information about the primary purpose of the identified package. Package Purpose is intrinsic to how the package is being used rather than the content of the package.",
             "type" : "string",
-            "enum" : [ "OTHER", "INSTALL", "ARCHIVE", "FIRMWARE", "APPLICATION", "FRAMEWORK", "LIBRARY", "CONTAINER", "SOURCE", "DEVICE", "OPERATING_SYSTEM", "FILE" ]
+            "enum" : [ "OTHER", "INSTALL", "ARCHIVE", "FIRMWARE", "APPLICATION", "FRAMEWORK", "LIBRARY", "CONTAINER", "SOURCE", "DEVICE", "OPERATING_SYSTEM", "FILE" ],
+            "errorMessage": {
+              "type": "primaryPackagePurpose - package name ${1/name}: data type must be a string!",
+              "enum": "primaryPackagePurpose - package name ${1/name}: data must be on of the allowed values OTHER, INSTALL, ARCHIVE, FIRMWARE, APPLICATION, FRAMEWORK, LIBRARY, CONTAINER, SOURCE, DEVICE, OPERATING_SYSTEM, FILE!"
+            }
           },
           "releaseDate" : {
             "description" : "This field provides a place for recording the date the package was released.",
-            "type" : "string"
+            "type" : "string",
+            "errorMessage": {
+              "type": "releaseDate - package name ${1/name}: data type must be a string!"
+            }
           },
           "sourceInfo" : {
             "description" : "Allows the producer(s) of the SPDX document to describe how the package was acquired and/or changed from the original source.",
-            "type" : "string"
+            "type" : "string",
+            "errorMessage": {
+              "type": "sourceInfo - package name ${1/name}: data type must be a string!"
+            }
           },
           "summary" : {
             "description" : "Provides a short description of the package.",
-            "type" : "string"
+            "type" : "string",
+            "errorMessage": {
+              "type": "summary - package name ${1/name}: data type must be a string!"
+            }
           },
           "supplier" : {
             "description" : "The name and, optionally, contact information of the person or organization who was the immediate supplier of this package to the recipient. The supplier may be different than originator when the software has been repackaged. Values of this property must conform to the agent and tool syntax.",
-            "type" : "string"
+            "type" : "string",
+            "errorMessage": {
+              "type": "supplier - package name ${1/name}: data type must be a string!"
+            }
           },
           "validUntilDate" : {
             "description" : "This field provides a place for recording the end of the support period for a package from the supplier.",
-            "type" : "string"
+            "type" : "string",
+            "errorMessage": {
+              "type": "validUntilDate - package name ${1/name}: data type must be a string!"
+            }
           },
           "versionInfo" : {
             "description" : "Provides an indication of the version of the package that is described by this SpdxDocument.",
-            "type" : "string"
+            "type" : "string",
+            "errorMessage": {
+              "type": "versionInfo - package name ${1/name}: data type must be a string!"
+            }
           }
         },
         "required" : [ "SPDXID", "downloadLocation", "name" ],
-        "additionalProperties" : false
+        "additionalProperties" : false,
+        "errorMessage": {
+          "type": "packages -items: data type must be an object!",
+          "additionalProperties": "packages - name ${0/name} - items: no additional properties are allowed!",
+          "required": {
+            "SPDXID": "packages - name ${0/name} - SPDXID: is a required field!",
+            "downloadLocation": "packages - SPDXId ${0/SPDXID} - downloadLocation: is a required field!",
+            "name": "packages - SPDXId ${0/SPDXID} - name: is a required field!"
+          }
+        }
       }
     },
     "files" : {
       "description" : "Files referenced in the SPDX document",
       "type" : "array",
+      "errorMessage": {
+        "type": "files: data type must be an array!"
+      },
       "items" : {
         "type" : "object",
         "properties" : {
           "SPDXID" : {
             "type" : "string",
-            "description" : "Uniquely identify any element in an SPDX document which may be referenced by other elements."
+            "description" : "Uniquely identify any element in an SPDX document which may be referenced by other elements.",
+            "errorMessage": {
+              "type": "files - file name ${1/fileName} - SPDXID: data type must be a string!"
+            }
           },
           "annotations" : {
             "description" : "Provide additional information about an SpdxElement.",
             "type" : "array",
+            "errorMessage": {
+              "type": "files - SPDXId ${1/SPDXID} - annotations: data type must be an array!"
+            },
             "items" : {
               "type" : "object",
               "properties" : {
                 "annotationDate" : {
                   "description" : "Identify when the comment was made. This is to be specified according to the combined date and time in the UTC format, as specified in the ISO 8601 standard.",
-                  "type" : "string"
+                  "type" : "string",
+                  "errorMessage": {
+                    "type": "files - SPDXId ${3/SPDXID} - annotationDate: data type must be a string!"
+                  }
                 },
                 "annotationType" : {
                   "description" : "Type of the annotation.",
                   "type" : "string",
-                  "enum" : [ "OTHER", "REVIEW" ]
+                  "enum" : [ "OTHER", "REVIEW" ],
+                  "errorMessage": {
+                    "type": "files - SPDXId ${3/SPDXID} - annotationType: data type must be a string!",
+                     "enum": "files - SPDXId ${3/SPDXID} - annotationType: data must be on of the allowed values OTHER, REVIEW!"
+                  }
                 },
                 "annotator" : {
                   "description" : "This field identifies the person, organization, or tool that has commented on a file, package, snippet, or the entire document.",
-                  "type" : "string"
+                  "type" : "string",
+                  "errorMessage": {
+                    "type": "files - SPDXId ${3/SPDXID} - annotator: data type must be a string!"
+                  }
                 },
                 "comment" : {
-                  "type" : "string"
+                  "type" : "string",
+                  "errorMessage": {
+                    "type": "files - SPDXId ${3/SPDXID} - comment: data type must be a string!"
+                  }
                 }
               },
               "required" : [ "annotationDate", "annotationType", "annotator", "comment" ],
               "additionalProperties" : false,
-              "description" : "An Annotation is a comment on an SpdxItem by an agent."
+              "description" : "An Annotation is a comment on an SpdxItem by an agent.",
+              "errorMessage": {
+                "type": "files - SPDXId ${2/SPDXID} annotation - items: data type must be an object!",
+                "additionalProperties": "files - SPDXId ${2/SPDXID} annotation - items: no additional properties are allowed!",
+                "required": {
+                  "annotationDate": "files - SPDXId ${2/SPDXID} - annotation - annotationDate: is a required field!",
+                  "annotationType": "files - SPDXId ${2/SPDXID} - annotation - annotationType: is a required field!",
+                  "annotator": "files - SPDXId ${2/SPDXID} - annotation - annotator: is a required field!",
+                  "comment": "files - SPDXId ${2/SPDXID} - annotation - comment: is a required field!"
+                }
+              }
             }
           },
           "artifactOfs" : {
             "description" : "Indicates the project in which the SpdxElement originated. Tools must preserve doap:homepage and doap:name properties and the URI (if one is known) of doap:Project resources that are values of this property. All other properties of doap:Projects are not directly supported by SPDX and may be dropped when translating to or from some SPDX formats.",
             "type" : "array",
+            "errorMessage": {
+              "type": "files - SPDXId ${1/SPDXID} - artifactOfs: data type must be an array!"
+            },
             "items" : {
-              "type" : "object"
+              "type" : "object",
+              "errorMessage": {
+                "type": "files - SPDXId ${2/SPDXID} - artifactOfs - items: data type must be an object!"
+              }
             }
           },
           "attributionTexts" : {
             "description" : "This field provides a place for the SPDX data creator to record acknowledgements that may be required to be communicated in some contexts. This is not meant to include the actual complete license text (see licenseConculded and licenseDeclared), and may or may not include copyright notices (see also copyrightText). The SPDX data creator may use this field to record other acknowledgements, such as particular clauses from license texts, which may be necessary or desirable to reproduce.",
             "type" : "array",
+            "errorMessage": {
+              "type": "files - SPDXId ${1/SPDXID} - attributionTexts: data type must be an array!"
+            },
             "items" : {
               "description" : "This field provides a place for the SPDX data creator to record acknowledgements that may be required to be communicated in some contexts. This is not meant to include the actual complete license text (see licenseConculded and licenseDeclared), and may or may not include copyright notices (see also copyrightText). The SPDX data creator may use this field to record other acknowledgements, such as particular clauses from license texts, which may be necessary or desirable to reproduce.",
-              "type" : "string"
+              "type" : "string",
+              "errorMessage": {
+                "type": "files - SPDXId ${2/SPDXID} - attributionsTexts - items: data type must be a string!"
+              }
             }
           },
           "checksums" : {
             "description" : "The checksum property provides a mechanism that can be used to verify that the contents of a File or Package have not changed.",
             "minItems" : 1,
             "type" : "array",
+            "errorMessage": {
+              "type": "files - SPDXId ${1/SPDXID} - checksums: data type must be an array!"
+            },
             "items" : {
               "type" : "object",
               "properties" : {
                 "algorithm" : {
                   "description" : "Identifies the algorithm used to produce the subject Checksum. Currently, SHA-1 is the only supported algorithm. It is anticipated that other algorithms will be supported at a later time.",
                   "type" : "string",
-                  "enum" : [ "SHA1", "BLAKE3", "SHA3-384", "SHA256", "SHA384", "BLAKE2b-512", "BLAKE2b-256", "SHA3-512", "MD2", "ADLER32", "MD4", "SHA3-256", "BLAKE2b-384", "SHA512", "MD6", "MD5", "SHA224" ]
+                  "enum" : [ "SHA1", "BLAKE3", "SHA3-384", "SHA256", "SHA384", "BLAKE2b-512", "BLAKE2b-256", "SHA3-512", "MD2", "ADLER32", "MD4", "SHA3-256", "BLAKE2b-384", "SHA512", "MD6", "MD5", "SHA224" ],
+                  "errorMessage": {
+                    "type": "files - SPDXId ${3/SPDXID} - checksums - algorithm: data type must be a string!",
+                    "enum": "files - SPDXId ${3/SPDXID} - checksums - algorithm: data must be on of the allowed values SHA1, BLAKE3, SHA3-384, SHA256, SHA384, BLAKE2b-512, BLAKE2b-256, SHA3-512, MD2, ADLER32, MD4, SHA3-256, BLAKE2b-384, SHA512, MD6, MD5, SHA224!"
+                  }
                 },
                 "checksumValue" : {
                   "description" : "The checksumValue property provides a lower case hexidecimal encoded digest value produced using a specific algorithm.",
-                  "type" : "string"
+                  "type" : "string",
+                  "errorMessage": {
+                    "type": "files - SPDXId ${3/SPDXID} - checksums - checksumsValue: data type must be a string!"
+                  }
                 }
               },
               "required" : [ "algorithm", "checksumValue" ],
               "additionalProperties" : false,
-              "description" : "A Checksum is value that allows the contents of a file to be authenticated. Even small changes to the content of the file will change its checksum. This class allows the results of a variety of checksum and cryptographic message digest algorithms to be represented."
+              "description" : "A Checksum is value that allows the contents of a file to be authenticated. Even small changes to the content of the file will change its checksum. This class allows the results of a variety of checksum and cryptographic message digest algorithms to be represented.",
+              "errorMessage": {
+                "type": "files - SPDXId ${2/SPDXID} - items: data type must be an object!",
+                "additionalProperties": "files - SPDXId ${2/SPDXID} - items: no additional properties are allowed!",
+                "required": {
+                  "algorithm": "files - SPDXId ${2/SPDXID} - algorithm: is a required field!",
+                  "checksumValue": "files - SPDXId ${2/SPDXID} - checksumValue: is a required field!"
+                }
+              }
             }
           },
           "comment" : {
-            "type" : "string"
+            "type" : "string",
+            "errorMessage": {
+              "type": "files - SPDXId ${1/SPDXID} - comment: data type must be a string!"
+            }
           },
           "copyrightText" : {
             "description" : "The text of copyright declarations recited in the package, file or snippet.\n\nIf the copyrightText field is not present, it implies an equivalent meaning to NOASSERTION.",
-            "type" : "string"
+            "type" : "string",
+            "errorMessage": {
+              "type": "files - SPDXId ${1/SPDXID} - copyrightText: data type must be a string!"
+            }
           },
           "fileContributors" : {
             "description" : "This field provides a place for the SPDX file creator to record file contributors. Contributors could include names of copyright holders and/or authors who may not be copyright holders yet contributed to the file content.",
             "type" : "array",
+            "errorMessage": {
+              "type": "files - SPDXId ${1/SPDXID} - fileContributors: data type must be an array!"
+            },
             "items" : {
               "description" : "This field provides a place for the SPDX file creator to record file contributors. Contributors could include names of copyright holders and/or authors who may not be copyright holders yet contributed to the file content.",
-              "type" : "string"
+              "type" : "string",
+              "errorMessage": {
+                "type": "files - SPDXId ${2/SPDXID} - fileContributors - items: data type must be a string!"
+              }
             }
           },
           "fileDependencies" : {
             "description" : "This field is deprecated since SPDX 2.0 in favor of using Section 7 which provides more granularity about relationships.",
             "deprecated": true,
             "type" : "array",
+            "errorMessage": {
+              "type": "files - SPDXId ${1/SPDXID} - fileDependencies: data type must be an array!"
+            },
             "items" : {
               "description" : "SPDX ID for File.  This field is deprecated since SPDX 2.0 in favor of using Section 7 which provides more granularity about relationships.",
-              "type" : "string"
+              "type" : "string",
+              "errorMessage": {
+                "type": "files - SPDXId ${2/SPDXID} - fileDependencies - items: data type must be a string!"
+              }
             }
           },
           "fileName" : {
             "description" : "The name of the file relative to the root of the package.",
-            "type" : "string"
+            "type" : "string",
+            "errorMessage": {
+              "type": "files - SPDXId ${1/SPDXID} - fileName: data type must be a string!"
+            }
           },
           "fileTypes" : {
             "description" : "The type of the file.",
             "type" : "array",
+            "errorMessage": {
+              "type": "files - SPDXId ${1/SPDXID} - fileTypes: data type must be an array!"
+            },
             "items" : {
               "description" : "The type of the file.",
               "type" : "string",
-              "enum" : [ "OTHER", "DOCUMENTATION", "IMAGE", "VIDEO", "ARCHIVE", "SPDX", "APPLICATION", "SOURCE", "BINARY", "TEXT", "AUDIO" ]
+              "enum" : [ "OTHER", "DOCUMENTATION", "IMAGE", "VIDEO", "ARCHIVE", "SPDX", "APPLICATION", "SOURCE", "BINARY", "TEXT", "AUDIO" ],
+              "errorMessage": {
+                "type": "files - SPDXId ${2/SPDXID} - fileTypes - items: data type must be a string!",
+                "enum": "files - SPDXId ${2/SPDXID} - fileTypes - items: data must be on of the allowed values OTHER, DOCUMENTATION, IMAGE, VIDEO, ARCHIVE, SPDX, APPLICATION, SOURCE, BINARY, TEXT, AUDIO!"
+              }
             }
           },
           "licenseComments" : {
             "description" : "The licenseComments property allows the preparer of the SPDX document to describe why the licensing in spdx:licenseConcluded was chosen.",
-            "type" : "string"
+            "type" : "string",
+            "errorMessage": {
+              "type": "files - SPDXId ${1/SPDXID} - licenseComments: data type must be a string!"
+            }
           },
           "licenseConcluded" : {
             "description" : "License expression for licenseConcluded. See SPDX Annex D for the license expression syntax.  The licensing that the preparer of this SPDX document has concluded, based on the evidence, actually applies to the SPDX Item.\n\nIf the licenseConcluded field is not present for an SPDX Item, it implies an equivalent meaning to NOASSERTION.",
-            "type" : "string"
+            "type" : "string",
+            "errorMessage": {
+              "type": "files - SPDXId ${1/SPDXID} - licenseConcluded: data type must be a string!"
+            }
           },
           "licenseInfoInFiles" : {
             "description" : "Licensing information that was discovered directly in the subject file. This is also considered a declared license for the file.\n\nIf the licenseInfoInFile field is not present for a file, it implies an equivalent meaning to NOASSERTION.",
             "type" : "array",
+            "errorMessage": {
+              "type": "files - SPDXId ${1/SPDXID} - licenseInfoInFiles: data type must be an array!"
+            },
             "items" : {
               "description" : "License expression for licenseInfoInFile. See SPDX Annex D for the license expression syntax.  Licensing information that was discovered directly in the subject file. This is also considered a declared license for the file.\n\nIf the licenseInfoInFile field is not present for a file, it implies an equivalent meaning to NOASSERTION.",
-              "type" : "string"
+              "type" : "string",
+              "errorMessage": {
+                "type": "files - SPDXId ${2/SPDXID} - licenseInfoInFiles - items: data type must be a string!"
+              }
             }
           },
           "noticeText" : {
             "description" : "This field provides a place for the SPDX file creator to record potential legal notices found in the file. This may or may not include copyright statements.",
-            "type" : "string"
+            "type" : "string",
+            "errorMessage": {
+              "type": "files - SPDXId ${1/SPDXID} - noticeText: data type must be a string!"
+            }
           }
         },
         "required" : [ "SPDXID", "fileName" ],
-        "additionalProperties" : false
+        "additionalProperties" : false,
+        "errorMessage": {
+          "type": "files -items: data type must be an object!",
+          "additionalProperties": "files - items: no additional properties are allowed!",
+          "required": {
+            "SPDXID": "files - file name ${0/fileName} - SPDXID: is a required field!",
+            "fileName": "files - SPDXId ${0/SPDXID} - fileName: is a required field!"
+          }
+        }
       }
     },
     "snippets" : {
       "description" : "Snippets referenced in the SPDX document",
       "type" : "array",
+      "errorMessage": {
+        "type": "snippets: data type must be an array!"
+      },
       "items" : {
         "type" : "object",
         "properties" : {
@@ -667,70 +1083,126 @@
           "annotations" : {
             "description" : "Provide additional information about an SpdxElement.",
             "type" : "array",
+            "errorMessage": {
+              "type": "snippets - SPDXId ${1/SPDXID} - annotations: data type must be an array!"
+            },
             "items" : {
               "type" : "object",
               "properties" : {
                 "annotationDate" : {
                   "description" : "Identify when the comment was made. This is to be specified according to the combined date and time in the UTC format, as specified in the ISO 8601 standard.",
-                  "type" : "string"
+                  "type" : "string",
+                  "errorMessage": {
+                    "type": "snippets - SPDXId ${3/SPDXID} - annotationDate: data type must be a string!"
+                  }
                 },
                 "annotationType" : {
                   "description" : "Type of the annotation.",
                   "type" : "string",
-                  "enum" : [ "OTHER", "REVIEW" ]
+                  "enum" : [ "OTHER", "REVIEW" ],
+                  "errorMessage": {
+                    "type": "snippets - SPDXId ${3/SPDXID} - annotationType: data type must be a string!",
+                    "enum": "snippets - SPDXId ${3/SPDXID} - annotationType: data must be on of the allowed values OTHER, REVIEW!"
+                  }
                 },
                 "annotator" : {
                   "description" : "This field identifies the person, organization, or tool that has commented on a file, package, snippet, or the entire document.",
-                  "type" : "string"
+                  "type" : "string",
+                  "errorMessage": {
+                    "type": "snippets - SPDXId ${3/SPDXID} - annotator: data type must be a string!"
+                  }
                 },
                 "comment" : {
-                  "type" : "string"
+                  "type" : "string",
+                  "errorMessage": {
+                    "type": "snippets - SPDXId ${3/SPDXID} - comment: data type must be a string!"
+                  }
                 }
               },
               "required" : [ "annotationDate", "annotationType", "annotator", "comment" ],
               "additionalProperties" : false,
-              "description" : "An Annotation is a comment on an SpdxItem by an agent."
+              "description" : "An Annotation is a comment on an SpdxItem by an agent.",
+              "errorMessage": {
+                "type": "snippets - SPDXId ${2/SPDXID} annotation - items: data type must be an object!",
+                "additionalProperties": "snippets - SPDXId ${2/SPDXID} annotation - items: no additional properties are allowed!",
+                "required": {
+                  "annotationDate": "snippets - SPDXId ${2/SPDXID} - annotation - annotationDate: is a required field!",
+                  "annotationType": "snippets - SPDXId ${2/SPDXID} - annotation - annotationType: is a required field!",
+                  "annotator": "snippets - SPDXId ${2/SPDXID} - annotation - annotator: is a required field!",
+                  "comment": "snippets - SPDXId ${2/SPDXID} - annotation - comment: is a required field!"
+                }
+              }
             }
           },
           "attributionTexts" : {
             "description" : "This field provides a place for the SPDX data creator to record acknowledgements that may be required to be communicated in some contexts. This is not meant to include the actual complete license text (see licenseConculded and licenseDeclared), and may or may not include copyright notices (see also copyrightText). The SPDX data creator may use this field to record other acknowledgements, such as particular clauses from license texts, which may be necessary or desirable to reproduce.",
             "type" : "array",
+            "errorMessage": {
+              "type": "snippets - SPDXId ${1/SPDXID} - attributionTexts: data type must be an array!"
+            },
             "items" : {
               "description" : "This field provides a place for the SPDX data creator to record acknowledgements that may be required to be communicated in some contexts. This is not meant to include the actual complete license text (see licenseConculded and licenseDeclared), and may or may not include copyright notices (see also copyrightText). The SPDX data creator may use this field to record other acknowledgements, such as particular clauses from license texts, which may be necessary or desirable to reproduce.",
-              "type" : "string"
+              "type" : "string",
+              "errorMessage": {
+                "type": "snippets - SPDXId ${2/SPDXID} - attributionTexts - items: data type must be a string!"
+              }
             }
           },
           "comment" : {
-            "type" : "string"
+            "type" : "string",
+            "errorMessage": {
+              "type": "snippets - SPDXId ${1/SPDXID} - comment: data type must be a string!"
+            }
           },
           "copyrightText" : {
             "description" : "The text of copyright declarations recited in the package, file or snippet.\n\nIf the copyrightText field is not present, it implies an equivalent meaning to NOASSERTION.",
-            "type" : "string"
+            "type" : "string",
+            "errorMessage": {
+              "type": "snippets - SPDXId ${1/SPDXID} - copyrightText: data type must be a string!"
+            }
           },
           "licenseComments" : {
             "description" : "The licenseComments property allows the preparer of the SPDX document to describe why the licensing in spdx:licenseConcluded was chosen.",
-            "type" : "string"
+            "type" : "string",
+            "errorMessage": {
+              "type": "snippets - SPDXId ${1/SPDXID} - licenseComments: data type must be a string!"
+            }
           },
           "licenseConcluded" : {
             "description" : "License expression for licenseConcluded. See SPDX Annex D for the license expression syntax.  The licensing that the preparer of this SPDX document has concluded, based on the evidence, actually applies to the SPDX Item.\n\nIf the licenseConcluded field is not present for an SPDX Item, it implies an equivalent meaning to NOASSERTION.",
-            "type" : "string"
+            "type" : "string",
+            "errorMessage": {
+              "type": "snippets - SPDXId ${1/SPDXID} - licenseConcluded: data type must be a string!"
+            }
           },
           "licenseInfoInSnippets" : {
             "description" : "Licensing information that was discovered directly in the subject snippet. This is also considered a declared license for the snippet.\n\nIf the licenseInfoInSnippet field is not present for a snippet, it implies an equivalent meaning to NOASSERTION.",
             "type" : "array",
+            "errorMessage": {
+              "type": "snippets - SPDXId ${1/SPDXID} - licenseInfoInSnippets: data type must be an array!"
+            },
             "items" : {
               "description" : "License expression for licenseInfoInSnippet. See SPDX Annex D for the license expression syntax.  Licensing information that was discovered directly in the subject snippet. This is also considered a declared license for the snippet.\n\nIf the licenseInfoInSnippet field is not present for a snippet, it implies an equivalent meaning to NOASSERTION.",
-              "type" : "string"
+              "type" : "string",
+              "errorMessage": {
+                "type": "snippets - SPDXId ${2/SPDXID} - licenseInfoInSnippets - items: data type must be a string!"
+              }
             }
           },
           "name" : {
             "description" : "Identify name of this SpdxElement.",
-            "type" : "string"
+            "type" : "string",
+            "errorMessage": {
+              "type": "snippets - SPDXId ${1/SPDXID} - name: data type must be a string!"
+            }
           },
           "ranges" : {
             "description" : "This field defines the byte range in the original host file (in X.2) that the snippet information applies to",
             "minItems" : 1,
             "type" : "array",
+            "errorMessage": {
+              "type": "snippets - SPDXId ${1/SPDXID} - ranges: data type must be an array!"
+            },
             "items" : {
               "type" : "object",
               "properties" : {
@@ -739,78 +1211,156 @@
                   "properties" : {
                     "reference" : {
                       "description" : "SPDX ID for File",
-                      "type" : "string"
+                      "type" : "string",
+                      "errorMessage": {
+                        "type": "snippets - SPDXId ${4/SPDXID} - ranges - endPointer - reference: data type must be a string!"
+                      }
                     },
                     "offset" : {
                       "type" : "integer",
-                      "description" : "Byte offset in the file"
+                      "description" : "Byte offset in the file",
+                      "errorMessage": {
+                        "type": "snippets - SPDXId ${4/SPDXID} - ranges - endPointer - offset: data type must be an integer!"
+                      }
                     },
                     "lineNumber" : {
                       "type" : "integer",
-                      "description" : "line number offset in the file"
+                      "description" : "line number offset in the file",
+                      "errorMessage": {
+                        "type": "snippets - SPDXId ${4/SPDXID} - ranges - endPointer - lineNumber: data type must be an integer!"
+                      }
                     }
                   },
                   "required" : [ "reference" ],
-                  "additionalProperties" : false
+                  "additionalProperties" : false,
+                  "errorMessage": {
+                    "type": "snippets - SPDXId ${3/SPDXID} - ranges - endPointer: data type must be an object!",
+                    "additionalProperties": "snippets - SPDXId ${3/SPDXID} ranges - endPointer: no additional properties are allowed!",
+                    "required": {
+                      "reference": "snippets - SPDXId ${3/SPDXID} - ranges - endPointer - reference: is a required field!"
+                    }
+                  }
                 },
                 "startPointer" : {
                   "type" : "object",
                   "properties" : {
                     "reference" : {
                       "description" : "SPDX ID for File",
-                      "type" : "string"
+                      "type" : "string",
+                      "errorMessage": {
+                        "type": "snippets - SPDXId ${4/SPDXID} - ranges - startPointer - reference: data type must be a string!"
+                      }
                     },
                     "offset" : {
                       "type" : "integer",
-                      "description" : "Byte offset in the file"
+                      "description" : "Byte offset in the file",
+                      "errorMessage": {
+                        "type": "snippets - SPDXId ${4/SPDXID} - ranges - startPointer - offset: data type must be an integer!"
+                      }
                     },
                     "lineNumber" : {
                       "type" : "integer",
-                      "description" : "line number offset in the file"
+                      "description" : "line number offset in the file",
+                      "errorMessage": {
+                        "type": "snippets - SPDXId ${4/SPDXID} - ranges - startPointer - lineNumber: data type must be an integer!"
+                      }
                     }
                   },
                   "required" : [ "reference" ],
-                  "additionalProperties" : false
+                  "additionalProperties" : false,
+                  "errorMessage": {
+                    "type": "snippets - SPDXId ${3/SPDXID} - ranges - startPointer: data type must be an object!",
+                    "additionalProperties": "snippets - SPDXId ${3/SPDXID} ranges - startPointer: no additional properties are allowed!",
+                    "required": {
+                      "reference": "snippets - SPDXId ${3/SPDXID} - ranges - startPointer - reference: is a required field!"
+                    }
+                  }
                 }
               },
               "required" : [ "endPointer", "startPointer" ],
-              "additionalProperties" : false
+              "additionalProperties" : false,
+              "errorMessage": {
+                "type": "snippets - SPDXId ${2/SPDXID} ranges - items: data type must be an object!",
+                "additionalProperties": "snippets - SPDXId ${2/SPDXID} ranges - items: no additional properties are allowed!",
+                "required": {
+                  "endPointer": "snippets - SPDXId ${2/SPDXID} - ranges - endPointer: is a required field!",
+                  "startPointer": "snippets - SPDXId ${2/SPDXID} - ranges - startPointer: is a required field!"
+                }
+              }
             }
           },
           "snippetFromFile" : {
             "description" : "SPDX ID for File.  File containing the SPDX element (e.g. the file contaning a snippet).",
-            "type" : "string"
+            "type" : "string",
+            "errorMessage": {
+              "type": "snippets - SPDXId ${1/SPDXID} - snippetFromFile: data type must be a string!"
+            }
           }
         },
         "required" : [ "SPDXID", "name", "ranges", "snippetFromFile" ],
-        "additionalProperties" : false
+        "additionalProperties" : false,
+        "errorMessage": {
+          "type": "snippets - items: data type must be an object!",
+          "additionalProperties": "snippets - items: no additional properties are allowed!",
+          "required": {
+            "SPDXID": "snippets - SPDXID: is a required field!",
+            "name": "snippets - SPDXId ${0/SPDXID} - name: is a required field!",
+            "ranges": "snippets - SPDXId ${0/SPDXID} - ranges: is a required field!",
+            "snippetFromFile": "snippets - SPDXId ${0/SPDXID} - snippetFromFile: is a required field!"
+          }
+        }
       }
     },
     "relationships" : {
       "description" : "Relationships referenced in the SPDX document",
       "type" : "array",
+      "errorMessage": {
+        "type": "relationships: data type must be an array!"
+      },
       "items" : {
         "type" : "object",
         "properties" : {
           "spdxElementId" : {
             "type" : "string",
-            "description" : "Id to which the SPDX element is related"
+            "description" : "Id to which the SPDX element is related",
+            "errorMessage": {
+              "type": "relationships - SPDXElementId: data type must be a string!"
+            }
           },
           "comment" : {
-            "type" : "string"
+            "type" : "string",
+            "errorMessage": {
+              "type": "relationships - SPDXElementId ${1/spdxElementId} - comment: data type must be a string!"
+            }
           },
           "relatedSpdxElement" : {
             "description" : "SPDX ID for SpdxElement.  A related SpdxElement.",
-            "type" : "string"
+            "type" : "string",
+            "errorMessage": {
+              "type": "relationships - SPDXElementId ${1/spdxElementId} - relatedSpdxElement: data type must be a string!"
+            }
           },
           "relationshipType" : {
             "description" : "Describes the type of relationship between two SPDX elements.",
             "type" : "string",
-            "enum" : [ "VARIANT_OF", "COPY_OF", "PATCH_FOR", "TEST_DEPENDENCY_OF", "CONTAINED_BY", "DATA_FILE_OF", "OPTIONAL_COMPONENT_OF", "ANCESTOR_OF", "GENERATES", "CONTAINS", "OPTIONAL_DEPENDENCY_OF", "FILE_ADDED", "REQUIREMENT_DESCRIPTION_FOR", "DEV_DEPENDENCY_OF", "DEPENDENCY_OF", "BUILD_DEPENDENCY_OF", "DESCRIBES", "PREREQUISITE_FOR", "HAS_PREREQUISITE", "PROVIDED_DEPENDENCY_OF", "DYNAMIC_LINK", "DESCRIBED_BY", "METAFILE_OF", "DEPENDENCY_MANIFEST_OF", "PATCH_APPLIED", "RUNTIME_DEPENDENCY_OF", "TEST_OF", "TEST_TOOL_OF", "DEPENDS_ON", "SPECIFICATION_FOR", "FILE_MODIFIED", "DISTRIBUTION_ARTIFACT", "AMENDS", "DOCUMENTATION_OF", "GENERATED_FROM", "STATIC_LINK", "OTHER", "BUILD_TOOL_OF", "TEST_CASE_OF", "PACKAGE_OF", "DESCENDANT_OF", "FILE_DELETED", "EXPANDED_FROM_ARCHIVE", "DEV_TOOL_OF", "EXAMPLE_OF" ]
+            "enum" : [ "VARIANT_OF", "COPY_OF", "PATCH_FOR", "TEST_DEPENDENCY_OF", "CONTAINED_BY", "DATA_FILE_OF", "OPTIONAL_COMPONENT_OF", "ANCESTOR_OF", "GENERATES", "CONTAINS", "OPTIONAL_DEPENDENCY_OF", "FILE_ADDED", "REQUIREMENT_DESCRIPTION_FOR", "DEV_DEPENDENCY_OF", "DEPENDENCY_OF", "BUILD_DEPENDENCY_OF", "DESCRIBES", "PREREQUISITE_FOR", "HAS_PREREQUISITE", "PROVIDED_DEPENDENCY_OF", "DYNAMIC_LINK", "DESCRIBED_BY", "METAFILE_OF", "DEPENDENCY_MANIFEST_OF", "PATCH_APPLIED", "RUNTIME_DEPENDENCY_OF", "TEST_OF", "TEST_TOOL_OF", "DEPENDS_ON", "SPECIFICATION_FOR", "FILE_MODIFIED", "DISTRIBUTION_ARTIFACT", "AMENDS", "DOCUMENTATION_OF", "GENERATED_FROM", "STATIC_LINK", "OTHER", "BUILD_TOOL_OF", "TEST_CASE_OF", "PACKAGE_OF", "DESCENDANT_OF", "FILE_DELETED", "EXPANDED_FROM_ARCHIVE", "DEV_TOOL_OF", "EXAMPLE_OF" ],
+            "errorMessage": {
+              "type": "relationships - SPDXElementId ${1/spdxElementId} - relationshipType: data type must be a string!",
+              "enum": "relationships - SPDXElementId ${1/spdxElementId} - relationshipType: data must be on of the allowed values VARIANT_OF, COPY_OF, PATCH_FOR, TEST_DEPENDENCY_OF, CONTAINED_BY, DATA_FILE_OF, OPTIONAL_COMPONENT_OF, ANCESTOR_OF, GENERATES, CONTAINS, OPTIONAL_DEPENDENCY_OF, FILE_ADDED, REQUIREMENT_DESCRIPTION_FOR, DEV_DEPENDENCY_OF, DEPENDENCY_OF, BUILD_DEPENDENCY_OF, DESCRIBES, PREREQUISITE_FOR, HAS_PREREQUISITE, PROVIDED_DEPENDENCY_OF, DYNAMIC_LINK, DESCRIBED_BY, METAFILE_OF, DEPENDENCY_MANIFEST_OF, PATCH_APPLIED, RUNTIME_DEPENDENCY_OF, TEST_OF, TEST_TOOL_OF, DEPENDS_ON, SPECIFICATION_FOR, FILE_MODIFIED, DISTRIBUTION_ARTIFACT, AMENDS, DOCUMENTATION_OF, GENERATED_FROM, STATIC_LINK, OTHER, BUILD_TOOL_OF, TEST_CASE_OF, PACKAGE_OF, DESCENDANT_OF, FILE_DELETED, EXPANDED_FROM_ARCHIVE, DEV_TOOL_OF, EXAMPLE_OF!"
+            }
           }
         },
         "required" : [ "spdxElementId", "relatedSpdxElement", "relationshipType" ],
-        "additionalProperties" : false
+        "additionalProperties" : false,
+        "errorMessage": {
+          "type": "relationships - items: data type must be an object!",
+          "additionalProperties": "relationships - items: no additional properties are allowed!",
+          "required": {
+            "spdxElementId": "relationships - spdxElementId: is a required field!",
+            "relatedSpdxElement": "relationships - spdxElementId ${0/spdxElementId} - relatedSpdxElement: is a required field!",
+            "relationshipTyp": "relationships - spdxElementId ${0/spdxElementId} - relationshipTyp: is a required field!"
+          }
+        }
       }
     }
   }
