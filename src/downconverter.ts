@@ -123,15 +123,7 @@ export const convertDown = async (cliArgument: string): Promise<void> => {
                         providers: [],
                         external: true,
                     };
-
-                    // // Check for incompatibility with modified and linking
-                    // if (componentsArray[i]['modified'] === null) {
-                    //     validationResults.push('Warning: incompatibility with null value for modification - component name: ' + componentsArray[i]['componentName'] + ' - subcomponent: ' + subcomponent['subcomponentName']);
-                    // }
-                    // if (linkingType === null) {
-                    //     validationResults.push('Warning: incompatibility with null value for linking      - component name: ' + componentsArray[i]['componentName'] + ' - subcomponent: ' + subcomponent['subcomponentName']);
-                    // }
-
+                    
                     // Add data to provider object
                     let providersObject: Provider = {
                         additionalLicenses: [],
