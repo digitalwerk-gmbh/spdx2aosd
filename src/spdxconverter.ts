@@ -150,7 +150,7 @@ export const convertSpdx = async (cliArgument: string): Promise<void> => {
                 componentName: dependency['name'],
                 componentVersion: dependency['versionInfo'],
                 scmUrl: dependency['downloadLocation'] !== "NOASSERTION" ? dependency['downloadLocation'] : "",
-                modified: isModified(dependency['SPDXID'], relationships) ? true : null,
+                modified: isModified(dependency['SPDXID'], relationships) ? true : false,
                 linking: getLinkingType(dependency['SPDXID'], relationships),
                 transitiveDependencies: getTransitiveDependencies(dependency['SPDXID'], relationships),
                 subcomponents: [],
