@@ -162,7 +162,7 @@ export const convertDown = async (cliArgument: string): Promise<void> => {
         };
         
         // Prepare output file
-        const outputFileName: string = cliArgument.replace(".json", "") + "_aosd2.0" + ".json";
+        const outputFileName: string = cliArgument.replace('.json', '') + '_aosd2.0' + '.json';
         outputFile = outputJsonPath + outputFileName;
         
         // Write data to aosd json format
@@ -193,12 +193,12 @@ export const convertDown = async (cliArgument: string): Promise<void> => {
 
         // Validate direct dependencies
         validationResults = validationResults.concat(
-            validateDependencies(inputDataArray['directDependencies'], componentsArray, "direct dependency")
+            validateDependencies(inputDataArray['directDependencies'], componentsArray, 'direct dependency')
         );
          
         // Validate transitive dependencies
         validationResults = validationResults.concat(
-            validateDependencies(transCheckArray, componentsArray, "transitive dependency")
+            validateDependencies(transCheckArray, componentsArray, 'transitive dependency')
         );
   
         // Check if component is in direct and transitive dependencies
@@ -225,10 +225,10 @@ export const convertDown = async (cliArgument: string): Promise<void> => {
         const result = fs.writeFileSync(process.env.LOG_FILE_PATH, validationMessage, { encoding: 'utf8' });
 
         // Display success message
-        console.log("We are done! - Thank's for using our aosd2.1 to aosd2.0 converter!");
+        console.log('We are done! - Thank\'s for using our aosd2.1 to aosd2.0 converter!');
     } catch(error) {
         console.log(error);
-        console.log("Sorry for that - something went wrong! Please check the  file in the root folder for detailed information.");
+        console.log('Sorry for that - something went wrong! Please check the  file in the root folder for detailed information.');
     }
 }
 

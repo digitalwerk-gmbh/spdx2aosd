@@ -68,6 +68,10 @@ $ npm run down <filename>
 
 $ npm run spdx <filename>
 
+# Accumulate data in a AOSD2.1 JSON file.
+
+$ npm run accumulate <filename>
+
 # Run unit tests for all converters.
 
 $ npm run test
@@ -109,6 +113,7 @@ spdx2aosd
 └──node_modules
 │	
 └──src
+│  accumulate.ts
 │  aosdvalidator.ts
 │  downconverter.ts
 │  helper.ts
@@ -158,6 +163,9 @@ Note that when converting data from version 2.1 to version 2.0, there are some s
 In AOSD 2.1, the fields `usage` and `linking` are conditionally mandatory, while they are mandatory in AOSD 2.0.
 
 This means that if the values are `null` in AOSD 2.1, we cannot convert these values to anything other than `null` in AOSD 2.0. If someone attempts to import these fields with the value `null` in AOSD 2.0, an error will be triggered.
+
+If you use the cumulative data feature, we recommend checking the results again thoroughly to ensure that you don't lose any data. This feature is currently provided as experimental.
+If you use the experimental cumulative data feature the removed subcomponets will be listet in the error.log file. This might help if you double check the data.
 
 ## Detailed Warning and Error Messages
 

@@ -30,3 +30,9 @@
 # [Added] improved import schema for aosd2.1 
 # [Added] improved import schema for spdx2.3 
 # [Fixed] fixed a bug in aosd2.0 import schema that caused no validation errors
+
+# Update from version 1.2.0-beta to 1.3.0-beta
+
+# [Added] added function to accumulate aosd2.1 json files (accumulate equal subcomponents inside a component)
+# [Fixed] fixed Vulnerabilities
+# [Changed] environment variable changed from VERSION to SCRIPT

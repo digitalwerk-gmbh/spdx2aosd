@@ -2,7 +2,8 @@ require('dotenv').config();
 const fs = require('fs');
 import { convertDown } from './src/downconverter';
 import { convertUp } from './src/upconverter';
-import { convertSpdx } from "./src/spdxconverter";
+import { convertSpdx } from './src/spdxconverter';
+import { accumulate } from './src/accumulate';
 let cliArgument: string = process.argv[2];
 
 // Check if we got argument for the input file name
@@ -17,14 +18,17 @@ if(cliArgument ===  undefined) {
 
     // Write data to aosd json format
     try {
-        if (process.env.VERSION === 'down') {
+        if (process.env.SCRIPT === 'down') {
             const response = convertDown(cliArgument);
         }
-        else if (process.env.VERSION === 'up') {
+        else if (process.env.SCRIPT === 'up') {
             const response = convertUp(cliArgument);      
         }
-        else if (process.env.VERSION === 'spdx') {
+        else if (process.env.SCRIPT === 'spdx') {
             const response = convertSpdx(cliArgument);    
+        }
+        else if (process.env.SCRIPT === 'accumulate') {
+            const response = accumulate(cliArgument);    
         }
     } catch(error) {
         // writeErrorLog({ message: checkErrorMessage(error) })

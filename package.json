@@ -1,15 +1,16 @@
 {
   "name": "spdx2aosd",
-  "version": "1.2.0-beta",
+  "version": "1.3.0-beta",
   "author": "Digitalwerk GmbH",
   "description": "cli tool for converting different formats into the aosd json format. GroupSpec (AUDI, VW) spdx2.3 to aosd2.1 JSON converter written in typescript.",
   "license": "MPL-2.0",
   "copyright": "Copyright 2024 (c) Digitalwerk GmbH",
   "main": "main.ts",
   "scripts": {
-    "up": "cross-env RUN_MODE=production VERSION=up ts-node main.ts",
-    "down": "cross-env RUN_MODE=production VERSION=down ts-node main.ts",
-    "spdx": "cross-env RUN_MODE=production VERSION=spdx ts-node main.ts",
+    "up": "cross-env RUN_MODE=production SCRIPT=up ts-node main.ts",
+    "down": "cross-env RUN_MODE=production SCRIPT=down ts-node main.ts",
+    "spdx": "cross-env RUN_MODE=production SCRIPT=spdx ts-node main.ts",
+    "accumulate": "cross-env RUN_MODE=production SCRIPT=accumulate ts-node main.ts",
     "licenses": "cross-env RUN_MODE=production ts-node ./src/licenses.ts",
     "test": "cross-env RUN_MODE=test INPUT_JSON_PATH=./tests/data/input/ OUTPUT_JSON_PATH=./tests/data/output/ jest"
   },

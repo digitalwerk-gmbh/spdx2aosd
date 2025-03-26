@@ -1,4 +1,4 @@
-import { AosdObject } from "../interfaces/interfaces";
+import { AosdObject } from '../interfaces/interfaces';
 const fs = require('fs');
 
 export const getUniqueValues = (arrayData: Array<string> | any) => (
@@ -40,7 +40,7 @@ export const checkValue = async (value: any, arrayData: any[], objectkey: string
           break;
       }
     } catch (error) {
-        console.log("Sorry for that - something went wrong! Please check the error.log file in the root folder for detailed information.");
+        console.log('Sorry for that - something went wrong! Please check the error.log file in the root folder for detailed information.');
         return Array;
     }
     return Array;
@@ -69,26 +69,26 @@ export const generateUniqueSubcomponentName = (partsCount: number, adlCount: num
 }
 
 export const generateStringFromJsonObject = async (jsonObject: AosdObject): Promise<string> => {
-  let fileString = "";
+  let fileString = '';
   try {
-      fileString = fileString + "{\n";
-      fileString = fileString + "\"schemaVersion\": " + "\"" + jsonObject.schemaVersion + "\",\n";
-      fileString = fileString + "\"externalId\": " + "\"" + jsonObject.externalId + "\",\n";
-      fileString = fileString + "\"scanned\": "  + jsonObject.scanned + ",\n";
-      fileString = fileString + "\"directDependencies\": [\n" + jsonObject.directDependencies + "\n],\n";
-      fileString = fileString + "\"components\": [\n";
+      fileString = fileString + '{\n';
+      fileString = fileString + '"schemaVersion": ' + '"' + jsonObject.schemaVersion + '",\n';
+      fileString = fileString + '"externalId": ' + '"' + jsonObject.externalId + '",\n';
+      fileString = fileString + '"scanned": '  + jsonObject.scanned + ',\n';
+      fileString = fileString + '"directDependencies": [\n' + jsonObject.directDependencies + '\n],\n';
+      fileString = fileString + '"components\": [\n';
       for (let i=0; i<jsonObject.components.length; i++) {
         fileString = fileString + JSON.stringify(jsonObject.components[i], null, '\t');
         if (i < jsonObject.components.length - 1) {
-          fileString = fileString + ",\n";
+          fileString = fileString + ',\n';
         } else {
-          fileString = fileString + "\n";
+          fileString = fileString + '\n';
         }
       }
-      fileString = fileString + "]\n";
-      fileString = fileString + "}\n";
+      fileString = fileString + ']\n';
+      fileString = fileString + '}\n';
   } catch (error) {
-      console.log("Sorry for that - something went wrong! Please check the error.log file in the root folder for detailed information.");
+      console.log('Sorry for that - something went wrong! Please check the error.log file in the root folder for detailed information.');
       return fileString;
   }
   return fileString;
@@ -118,7 +118,7 @@ export const loadSPDXKeys = (): Set<string> => {
     const data = JSON.parse(fs.readFileSync(process.env.LICENSE_FILE_PATH!, 'utf8')).data;
     return new Set(data?.map(({ spdx_license_key } : { spdx_license_key: string }) => spdx_license_key) || []);
   } catch {
-    throw new Error("The licenses.json file is missing or has an invalid format.");
+    throw new Error('The licenses.json file is missing or has an invalid format.');
   }
 };
 
