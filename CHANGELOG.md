@@ -36,3 +36,4 @@
 # [Added] added function to accumulate aosd2.1 json files (accumulate equal subcomponents inside a component)
 # [Fixed] fixed Vulnerabilities
 # [Changed] environment variable changed from VERSION to SCRIPT
+# [Changed] refactoring formating only
