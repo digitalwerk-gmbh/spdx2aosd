@@ -43,6 +43,7 @@ export const accumulate = async (cliArgument: string): Promise<void> => {
             // Initialise Array for every new component
             seenIds = [];
             newSubcomponentsArray = [];
+            let subcomponentCounter = 1;
             for (let j = 0; j < componentsArray[i]['subcomponents'].length; j++) {
                 // Check for double content
                 tmpId = componentsArray[i]['subcomponents'][j]['spdxId'] + componentsArray[i]['subcomponents'][j]['subcomponentName'];
@@ -63,7 +64,7 @@ export const accumulate = async (cliArgument: string): Promise<void> => {
                         seenIds.push(tmpId);
                     }
                     let newSubcomponent = {
-                        subcomponentName: componentsArray[i]['subcomponents'][j]['subcomponentName'], 
+                        subcomponentName: j === 0 ? 'main' : componentsArray[i]['subcomponents'][j]['subcomponentName'] + '_' + subcomponentCounter, 
                         spdxId: componentsArray[i]['subcomponents'][j]['spdxId'], 
                         copyrights: [...new Set(tmpCopyrights)],
                         authors: [...new Set(tmpAuthors)],
@@ -74,6 +75,7 @@ export const accumulate = async (cliArgument: string): Promise<void> => {
                     };
                     newSubcomponentsArray.push(newSubcomponent);
                 }
+                subcomponentCounter++;
             }
 
             // Create component object
@@ -123,8 +125,7 @@ export const accumulate = async (cliArgument: string): Promise<void> => {
         logData += removedSubcomponents;
         const result = fs.writeFileSync(process.env.LOG_FILE_PATH, logData, { encoding: 'utf8' });
         // Display success message
-        console.log('We are done! - Thank\'s for using aosd2.1 accumulation script!');
-
+        console.log('We are done! - Thank\'s for using aosd2.1 accumulation script!\nATTENTION!: This feature is currently provided as experimental.\nWe recommend checking the results again thoroughly to ensure that you don not lose any data.\n');
 
     } catch(error: any) {
         fs.writeFileSync(process.env.LOG_FILE_PATH, error.toString(), { encoding: 'utf8' });

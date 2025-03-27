@@ -800,7 +800,7 @@ describe("Accumulate Tests", () => {
     expect(testDataArray.components[0]["subcomponents"][0]["additionalLicenseInfos"]).toBeDefined();
     expect(testDataArray.components[0]["subcomponents"][0]["additionalLicenseInfos"]).toBe("");
     expect(testDataArray.components[0]["subcomponents"][1]["subcomponentName"]).toBeDefined();
-    expect(testDataArray.components[0]["subcomponents"][1]["subcomponentName"]).toBe("test_component_1/subcomponent_4");
+    expect(testDataArray.components[0]["subcomponents"][1]["subcomponentName"]).toBe("test_component_1/subcomponent_4_4");
     expect(testDataArray.components[0]["subcomponents"][1]["spdxId"]).toBeDefined();
     expect(testDataArray.components[0]["subcomponents"][1]["spdxId"]).toBe("GFDL-1.2-or-later");
     expect(testDataArray.components[0]["subcomponents"][1]["copyrights"]).toBeDefined();
@@ -817,7 +817,7 @@ describe("Accumulate Tests", () => {
     expect(testDataArray.components[0]["subcomponents"][1]["additionalLicenseInfos"]).toBeDefined();
     expect(testDataArray.components[0]["subcomponents"][1]["additionalLicenseInfos"]).toBe("");
     expect(testDataArray.components[0]["subcomponents"][2]["subcomponentName"]).toBeDefined();
-    expect(testDataArray.components[0]["subcomponents"][2]["subcomponentName"]).toBe("test_component_1/subcomponent_5");
+    expect(testDataArray.components[0]["subcomponents"][2]["subcomponentName"]).toBe("test_component_1/subcomponent_5_5");
     expect(testDataArray.components[0]["subcomponents"][2]["spdxId"]).toBeDefined();
     expect(testDataArray.components[0]["subcomponents"][2]["spdxId"]).toBe("MIT");
     expect(testDataArray.components[0]["subcomponents"][2]["copyrights"]).toBeDefined();
@@ -835,7 +835,7 @@ describe("Accumulate Tests", () => {
     expect(testDataArray.components[0]["subcomponents"][2]["additionalLicenseInfos"]).toBeDefined();
     expect(testDataArray.components[0]["subcomponents"][2]["additionalLicenseInfos"]).toBe("");
     expect(testDataArray.components[0]["subcomponents"][3]["subcomponentName"]).toBeDefined();
-    expect(testDataArray.components[0]["subcomponents"][3]["subcomponentName"]).toBe("test_component_1/subcomponent_7");
+    expect(testDataArray.components[0]["subcomponents"][3]["subcomponentName"]).toBe("test_component_1/subcomponent_7_7");
     expect(testDataArray.components[0]["subcomponents"][3]["spdxId"]).toBeDefined();
     expect(testDataArray.components[0]["subcomponents"][3]["spdxId"]).toBe("Apache-2.0");
     expect(testDataArray.components[0]["subcomponents"][3]["copyrights"]).toBeDefined();
@@ -886,7 +886,7 @@ describe("Accumulate Tests", () => {
     expect(testDataArray.components[1]["subcomponents"][0]["additionalLicenseInfos"]).toBeDefined();
     expect(testDataArray.components[1]["subcomponents"][0]["additionalLicenseInfos"]).toBe("");
     expect(testDataArray.components[1]["subcomponents"][1]["subcomponentName"]).toBeDefined();
-    expect(testDataArray.components[1]["subcomponents"][1]["subcomponentName"]).toBe("test_component_2/subcomponent_4");
+    expect(testDataArray.components[1]["subcomponents"][1]["subcomponentName"]).toBe("test_component_2/subcomponent_4_4");
     expect(testDataArray.components[1]["subcomponents"][1]["spdxId"]).toBeDefined();
     expect(testDataArray.components[1]["subcomponents"][1]["spdxId"]).toBe("GFDL-1.2-or-later");
     expect(testDataArray.components[1]["subcomponents"][1]["copyrights"]).toBeDefined();
@@ -903,7 +903,7 @@ describe("Accumulate Tests", () => {
     expect(testDataArray.components[1]["subcomponents"][1]["additionalLicenseInfos"]).toBeDefined();
     expect(testDataArray.components[1]["subcomponents"][1]["additionalLicenseInfos"]).toBe("");
     expect(testDataArray.components[1]["subcomponents"][2]["subcomponentName"]).toBeDefined();
-    expect(testDataArray.components[1]["subcomponents"][2]["subcomponentName"]).toBe("test_component_2/subcomponent_5");
+    expect(testDataArray.components[1]["subcomponents"][2]["subcomponentName"]).toBe("test_component_2/subcomponent_5_5");
     expect(testDataArray.components[1]["subcomponents"][2]["spdxId"]).toBeDefined();
     expect(testDataArray.components[1]["subcomponents"][2]["spdxId"]).toBe("MIT");
     expect(testDataArray.components[1]["subcomponents"][2]["copyrights"]).toBeDefined();
@@ -921,7 +921,7 @@ describe("Accumulate Tests", () => {
     expect(testDataArray.components[1]["subcomponents"][2]["additionalLicenseInfos"]).toBeDefined();
     expect(testDataArray.components[1]["subcomponents"][2]["additionalLicenseInfos"]).toBe("");
     expect(testDataArray.components[1]["subcomponents"][3]["subcomponentName"]).toBeDefined();
-    expect(testDataArray.components[1]["subcomponents"][3]["subcomponentName"]).toBe("test_component_2/subcomponent_7");
+    expect(testDataArray.components[1]["subcomponents"][3]["subcomponentName"]).toBe("test_component_2/subcomponent_7_7");
     expect(testDataArray.components[1]["subcomponents"][3]["spdxId"]).toBeDefined();
     expect(testDataArray.components[1]["subcomponents"][3]["spdxId"]).toBe("Apache-2.0");
     expect(testDataArray.components[1]["subcomponents"][3]["copyrights"]).toBeDefined();
@@ -971,7 +971,7 @@ describe("Accumulate Tests", () => {
     expect(testDataArray.components[2]["subcomponents"][0]["additionalLicenseInfos"]).toBeDefined();
     expect(testDataArray.components[2]["subcomponents"][0]["additionalLicenseInfos"]).toBe("");
     expect(testDataArray.components[2]["subcomponents"][1]["subcomponentName"]).toBeDefined();
-    expect(testDataArray.components[2]["subcomponents"][1]["subcomponentName"]).toBe("test_component_3/subcomponent_4");
+    expect(testDataArray.components[2]["subcomponents"][1]["subcomponentName"]).toBe("test_component_3/subcomponent_4_4");
     expect(testDataArray.components[2]["subcomponents"][1]["spdxId"]).toBeDefined();
     expect(testDataArray.components[2]["subcomponents"][1]["spdxId"]).toBe("GFDL-1.2-or-later");
     expect(testDataArray.components[2]["subcomponents"][1]["copyrights"]).toBeDefined();
@@ -1024,7 +1024,7 @@ describe("Accumulate Tests", () => {
     expect(testDataArray.components[3]["subcomponents"][0]["additionalLicenseInfos"]).toBeDefined();
     expect(testDataArray.components[3]["subcomponents"][0]["additionalLicenseInfos"]).toBe("");
     expect(testDataArray.components[3]["subcomponents"][1]["subcomponentName"]).toBeDefined();
-    expect(testDataArray.components[3]["subcomponents"][1]["subcomponentName"]).toBe("test_component_4/subcomponent_3");
+    expect(testDataArray.components[3]["subcomponents"][1]["subcomponentName"]).toBe("main_3");
     expect(testDataArray.components[3]["subcomponents"][1]["spdxId"]).toBeDefined();
     expect(testDataArray.components[3]["subcomponents"][1]["spdxId"]).toBe("LicenseRef-scancode-unknown");
     expect(testDataArray.components[3]["subcomponents"][1]["copyrights"]).toBeDefined();
