@@ -16,22 +16,27 @@ if(cliArgument ===  undefined) {
     // Create empty error.log
     fs.writeFileSync(process.env.LOG_FILE_PATH, '');
 
-    // Write data to aosd json format
-    try {
-        if (process.env.SCRIPT === 'down') {
-            const response = convertDown(cliArgument);
+    // Check if given file exist in the input folder
+    if (!fs.existsSync(process.env.INPUT_JSON_PATH + cliArgument)) {
+        console.log('Sorry for that - something went wrong! The file ' +cliArgument+ ' does not exits in the data input folder!')
+    } else {
+        // Write data to aosd json format
+        try {
+            if (process.env.SCRIPT === 'down') {
+                const response = convertDown(cliArgument);
+            }
+            else if (process.env.SCRIPT === 'up') {
+                const response = convertUp(cliArgument);      
+            }
+            else if (process.env.SCRIPT === 'spdx') {
+                const response = convertSpdx(cliArgument);    
+            }
+            else if (process.env.SCRIPT === 'accumulate') {
+                const response = accumulate(cliArgument);    
+            }
+        } catch(error) {
+            // writeErrorLog({ message: checkErrorMessage(error) })
+            console.log('Sorry for that - something went wrong! Please check the error.log file in the root folder for detailed information.');
         }
-        else if (process.env.SCRIPT === 'up') {
-            const response = convertUp(cliArgument);      
-        }
-        else if (process.env.SCRIPT === 'spdx') {
-            const response = convertSpdx(cliArgument);    
-        }
-        else if (process.env.SCRIPT === 'accumulate') {
-            const response = accumulate(cliArgument);    
-        }
-    } catch(error) {
-        // writeErrorLog({ message: checkErrorMessage(error) })
-        console.log("Sorry for that - something went wrong! Please check the error.log file in the root folder for detailed information.")
     }
 }
