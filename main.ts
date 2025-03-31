@@ -4,21 +4,25 @@ import { convertDown } from './src/downconverter';
 import { convertUp } from './src/upconverter';
 import { convertSpdx } from './src/spdxconverter';
 import { accumulate } from './src/accumulate';
-let cliArgument: string = process.argv[2].toString();
+let cliArgument: string = process.argv[2];
 
 // Check if we got argument for the input file name
-if(cliArgument ===  undefined) {
+if(cliArgument ===  undefined ) {
     console.log('You must run this script with the following parameters:\n');
     console.log('npm run ' + process.env.VERSION +' <filename>\n\n');
     console.log('Where filename is the name of the input file.');
     console.log('<filename> is mandatory!');      
 } else {
     // Create empty error.log
-    fs.writeFileSync(process.env.LOG_FILE_PATH, '');
+    if (process.env.LOG_FILE_PATH !== undefined) {
+        fs.writeFileSync(process.env.LOG_FILE_PATH, '');
+    } else {
+        console.log('Sorry for that - something went wrong! The envoirenment paramater LOG_FILE_PATH in your .env file is maybe undefined!');
+    }
 
     // Check if given file exist in the input folder
     if (!fs.existsSync(process.env.INPUT_JSON_PATH + cliArgument)) {
-        console.log('Sorry for that - something went wrong! The file ' +cliArgument+ ' does not exits in the data input folder!')
+        console.log('Sorry for that - something went wrong! The file ' +cliArgument+ ' does not exits in the data input folder!');
     } else {
         // Write data to aosd json format
         try {
