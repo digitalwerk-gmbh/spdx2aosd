@@ -4,7 +4,7 @@ import { convertDown } from './src/downconverter';
 import { convertUp } from './src/upconverter';
 import { convertSpdx } from './src/spdxconverter';
 import { accumulate } from './src/accumulate';
-let cliArgument: string = process.argv[2];
+let cliArgument: string = process.argv[2].toString();
 
 // Check if we got argument for the input file name
 if(cliArgument ===  undefined) {
