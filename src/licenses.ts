@@ -1,7 +1,7 @@
 const fs = require('fs');
 const axios = require('axios');
 require('dotenv').config();
-import { SpdxException, SpdxLicense, DejaLicense, LicenseJson, Options, LicenseProperties, LicenseDataObject } from "../interfaces/interfaces";
+import { SpdxException, SpdxLicense, DejaLicense, LicenseJson, Options, LicenseProperties, LicenseDataObject } from '../interfaces/interfaces';
 import crypto from 'crypto';
 // npm run licenses
 

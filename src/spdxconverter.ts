@@ -2,7 +2,7 @@ const fs = require('fs');
 const JSONStream = require('JSONStream');
 require('dotenv').config();
 import { validateAosd } from './aosdvalidator';
-import { LicenseDataObject, ExtractedLicense, MappedLicense, AosdObject, AosdComponent, AosdSubComponent, SpdxPackages, SpdxFiles, SpdxRelationsships, SpdxIdToInternalId, exportMapper } from "../interfaces/interfaces";
+import { LicenseDataObject, ExtractedLicense, MappedLicense, AosdObject, AosdComponent, AosdSubComponent, SpdxPackages, SpdxFiles, SpdxRelationsships, SpdxIdToInternalId, exportMapper } from '../interfaces/interfaces';
 import { generateDataValidationMessage, generateStringFromJsonObject, loadSPDXKeys, validateComponentsForModificationAndLinking, validateSelectedLicenseForDualLicenses, validateSPDXIds } from './helper';
 let inputJsonPath: string | undefined = '';
 let outputJsonPath: string | undefined = '';
@@ -20,7 +20,7 @@ export const convertSpdx = async (cliArgument: string): Promise<void> => {
             const checkData = fs.readFileSync(process.env.LICENSE_FILE_PATH);
             licenseData = JSON.parse(checkData);
         } else {
-            throw new Error("The licenses.json file is missing! - Please generate the licenses file before running this script!");
+            throw new Error('The licenses.json file is missing! - Please generate the licenses file before running this script!');
         }
         // Set file paths
         inputJsonPath = process.env.INPUT_JSON_PATH + cliArgument;
