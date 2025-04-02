@@ -1,0 +1,310 @@
+{
+	"schemaVersion": "2.1.0",
+	"externalId": "myOwnId",
+	"scanned": false,
+	"directDependencies": [
+		1,
+        2,
+        3
+	],
+	"components": [
+		{
+			"id": 1,
+			"componentName": "test_component_1",
+			"componentVersion": "1.0.0",
+			"scmUrl": "https://registry.npmjs.org/test_component_1/test_component_1.tgz",
+			"modified": true,
+			"linking": "dynamic_linking",
+			"transitiveDependencies": [
+				4
+			],
+			"subcomponents": [
+				{
+					"subcomponentName": "main",
+					"spdxId": "GFDL-1.2-or-later",
+					"copyrights": [
+						"Copyright (c) 2017 Adam Generic"
+					],
+					"authors": [],
+					"licenseText": "GFDL-1.2 text for testing",
+					"licenseTextUrl": "https://testpackages/texturl/generated",
+					"selectedLicense": "",
+					"additionalLicenseInfos": ""
+				},
+                {
+					"subcomponentName": "test_component_1/subcomponent_2",
+					"spdxId": "GFDL-1.2-or-later",
+					"copyrights": [
+						"Copyright (c) 2018 Adam Generic"
+					],
+					"authors": [],
+					"licenseText": "GFDL-1.2 text for testing",
+					"licenseTextUrl": "https://testpackages/texturl/generated",
+					"selectedLicense": "",
+					"additionalLicenseInfos": ""
+				},
+                {
+					"subcomponentName": "test_component_1/subcomponent_3",
+					"spdxId": "GFDL-1.2-or-later",
+					"copyrights": [
+						"Copyright (c) 2019 Adam Generic"
+					],
+					"authors": [],
+					"licenseText": "GFDL-1.2 text for testing",
+					"licenseTextUrl": "https://testpackages/texturl/generated",
+					"selectedLicense": "",
+					"additionalLicenseInfos": ""
+				},
+                {
+					"subcomponentName": "test_component_1/subcomponent_4",
+					"spdxId": "GFDL-1.2-or-later",
+					"copyrights": [
+						"Copyright (c) 2020 Adam Generic"
+					],
+					"authors": [],
+					"licenseText": "GFDL-1.2 text for testing but different",
+					"licenseTextUrl": "https://testpackages/texturl/generated",
+					"selectedLicense": "",
+					"additionalLicenseInfos": ""
+				},
+                {
+					"subcomponentName": "test_component_1/subcomponent_5",
+					"spdxId": "MIT",
+					"copyrights": [
+						"Copyright (c) 2020 Adam Green"
+					],
+					"authors": [],
+					"licenseText": "MIT text for testing",
+					"licenseTextUrl": "https://testpackages/texturl/generated",
+					"selectedLicense": "",
+					"additionalLicenseInfos": ""
+				},
+                {
+					"subcomponentName": "test_component_1/subcomponent_6",
+					"spdxId": "MIT",
+					"copyrights": [
+						"Copyright (c) 2021 Adam Green"
+					],
+					"authors": [],
+					"licenseText": "MIT text for testing",
+					"licenseTextUrl": "https://testpackages/texturl/generated",
+					"selectedLicense": "",
+					"additionalLicenseInfos": ""
+				},
+                {
+					"subcomponentName": "test_component_1/subcomponent_7",
+					"spdxId": "Apache-2.0",
+					"copyrights": [
+						"Copyright (c) 2025 Mark Twain"
+					],
+					"authors": [],
+					"licenseText": "Apache-2.0 text for testing",
+					"licenseTextUrl": "https://testpackages/texturl/generated",
+					"selectedLicense": "",
+					"additionalLicenseInfos": ""
+				}
+			]
+		},
+        {
+			"id": 2,
+			"componentName": "test_component_2",
+			"componentVersion": "2.0.0",
+			"scmUrl": "https://registry.npmjs.org/test_component_2/test_component_2.tgz",
+			"modified": true,
+			"linking": "dynamic_linking",
+			"transitiveDependencies": [],
+			"subcomponents": [
+				{
+					"subcomponentName": "main",
+					"spdxId": "GFDL-1.2-or-later",
+					"copyrights": [
+						"Copyright (c) 2017 Adam Generic"
+					],
+					"authors": [],
+					"licenseText": "GFDL-1.2 text for testing",
+					"licenseTextUrl": "https://testpackages/texturl/generated",
+					"selectedLicense": "",
+					"additionalLicenseInfos": ""
+				},
+                {
+					"subcomponentName": "test_component_2/subcomponent_2",
+					"spdxId": "GFDL-1.2-or-later",
+					"copyrights": [
+						"Copyright (c) 2018 Adam Generic"
+					],
+					"authors": [],
+					"licenseText": "GFDL-1.2 text for testing",
+					"licenseTextUrl": "https://testpackages/texturl/generated",
+					"selectedLicense": "",
+					"additionalLicenseInfos": ""
+				},
+                {
+					"subcomponentName": "test_component_2/subcomponent_3",
+					"spdxId": "GFDL-1.2-or-later",
+					"copyrights": [
+						"Copyright (c) 2019 Adam Generic"
+					],
+					"authors": [],
+					"licenseText": "GFDL-1.2 text for testing",
+					"licenseTextUrl": "https://testpackages/texturl/generated",
+					"selectedLicense": "",
+					"additionalLicenseInfos": ""
+				},
+                {
+					"subcomponentName": "test_component_2/subcomponent_4",
+					"spdxId": "GFDL-1.2-or-later",
+					"copyrights": [
+						"Copyright (c) 2020 Adam Generic"
+					],
+					"authors": [],
+					"licenseText": "GFDL-1.2 text for testing but different",
+					"licenseTextUrl": "https://testpackages/texturl/generated",
+					"selectedLicense": "",
+					"additionalLicenseInfos": ""
+				},
+                {
+					"subcomponentName": "test_component_2/subcomponent_5",
+					"spdxId": "MIT",
+					"copyrights": [
+						"Copyright (c) 2020 Adam Green"
+					],
+					"authors": [],
+					"licenseText": "MIT text for testing",
+					"licenseTextUrl": "https://testpackages/texturl/generated",
+					"selectedLicense": "",
+					"additionalLicenseInfos": ""
+				},
+                {
+					"subcomponentName": "test_component_2/subcomponent_6",
+					"spdxId": "MIT",
+					"copyrights": [
+						"Copyright (c) 2021 Adam Green"
+					],
+					"authors": [],
+					"licenseText": "MIT text for testing",
+					"licenseTextUrl": "https://testpackages/texturl/generated",
+					"selectedLicense": "",
+					"additionalLicenseInfos": ""
+				},
+                {
+					"subcomponentName": "test_component_2/subcomponent_7",
+					"spdxId": "Apache-2.0",
+					"copyrights": [
+						"Copyright (c) 2025 Mark Twain"
+					],
+					"authors": [],
+					"licenseText": "Apache-2.0 text for testing",
+					"licenseTextUrl": "https://testpackages/texturl/generated",
+					"selectedLicense": "",
+					"additionalLicenseInfos": ""
+				}
+			]
+		},
+        {
+			"id": 3,
+			"componentName": "test_component_3",
+			"componentVersion": "3.0.0",
+			"scmUrl": "https://registry.npmjs.org/test_component_3/test_component_3.tgz",
+			"modified": true,
+			"linking": "dynamic_linking",
+			"transitiveDependencies": [],
+			"subcomponents": [
+				{
+					"subcomponentName": "main",
+					"spdxId": "GFDL-1.2-or-later",
+					"copyrights": [],
+					"authors": ["Adam Generic"],
+					"licenseText": "GFDL-1.2 text for testing",
+					"licenseTextUrl": "https://testpackages/texturl/generated",
+					"selectedLicense": "",
+					"additionalLicenseInfos": ""
+				},
+                {
+					"subcomponentName": "test_component_3/subcomponent_2",
+					"spdxId": "GFDL-1.2-or-later",
+					"copyrights": [],
+					"authors": ["Adam Generic"],
+					"licenseText": "GFDL-1.2 text for testing",
+					"licenseTextUrl": "https://testpackages/texturl/generated",
+					"selectedLicense": "",
+					"additionalLicenseInfos": ""
+				},
+                {
+					"subcomponentName": "test_component_3/subcomponent_3",
+					"spdxId": "GFDL-1.2-or-later",
+					"copyrights": ["Copyright (c) 2021 Adam Generic"],
+					"authors": [],
+					"licenseText": "GFDL-1.2 text for testing",
+					"licenseTextUrl": "https://testpackages/texturl/generated",
+					"selectedLicense": "",
+					"additionalLicenseInfos": ""
+				},
+                {
+					"subcomponentName": "test_component_3/subcomponent_4",
+					"spdxId": "GFDL-1.2-or-later",
+					"copyrights": [
+						"Copyright (c) 2020 Adam Generic"
+					],
+					"authors": [],
+					"licenseText": "GFDL-1.2 text for testing but different",
+					"licenseTextUrl": "https://testpackages/texturl/generated",
+					"selectedLicense": "",
+					"additionalLicenseInfos": ""
+				}
+			]
+		},
+        {
+			"id": 4,
+			"componentName": "test_component_4",
+			"componentVersion": "4.0.0",
+			"scmUrl": "https://registry.npmjs.org/test_component_4/test_component_4.tgz",
+			"modified": false,
+			"linking": "static_linking",
+			"transitiveDependencies": [],
+			"subcomponents": [
+				{
+					"subcomponentName": "mainnnn",
+					"spdxId": "LicenseRef-scancode-unknown",
+					"copyrights": [
+						"Copyright (c) 2017 Max Winter", "Copyright (c) 2018 Roland Herbst"
+					],
+					"authors": [
+						"Max Winter"
+					],
+					"licenseText": "LicenseRef-scancode-unknown text for test",
+					"licenseTextUrl": "https://testpackages/texturl/generated",
+					"selectedLicense": "",
+					"additionalLicenseInfos": ""
+				},
+				{
+					"subcomponentName": "test_component_4/subcomponent_2",
+					"spdxId": "LicenseRef-scancode-unknown",
+					"copyrights": [
+						"Copyright (c) 2017 Helene Sommer"
+					],
+					"authors": [
+						"Helene Sommer"
+					],
+					"licenseText": "LicenseRef-scancode-unknown text for test",
+					"licenseTextUrl": "https://testpackages/texturl/generated",
+					"selectedLicense": "",
+					"additionalLicenseInfos": ""
+				},
+				{
+					"subcomponentName": "main",
+					"spdxId": "LicenseRef-scancode-unknown",
+					"copyrights": [
+						"Copyright (c) 2019 Helene Sommer"
+					],
+					"authors": [
+						"Helene Sommer"
+					],
+					"licenseText": "LicenseRef-scancode-unknown text for test but different",
+					"licenseTextUrl": "https://testpackages/texturl/generated",
+					"selectedLicense": "",
+					"additionalLicenseInfos": ""
+				}
+			]
+		}
+    ]
+}    
