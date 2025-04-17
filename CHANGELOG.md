@@ -37,3 +37,6 @@
 # [Fixed] fixed Vulnerabilities
 # [Changed] environment variable changed from VERSION to SCRIPT
 # [Changed] refactoring formating only
+
+# Update from version 1.3.0-beta to 1.4.0-beta
+# [Changed] The SPDX license information now comes from licenseConcluded instead of licenseDeclared (corresponds to the SPDX specification recommendation).
