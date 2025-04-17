@@ -170,14 +170,14 @@ export const convertSpdx = async (cliArgument: string): Promise<void> => {
             }
 
             const validSPDXKeys = loadSPDXKeys();
-            // Check for licenseDeclared and create a subcomponent if it exists
-            if (dependency.licenseDeclared && dependency.licenseDeclared !== 'NOASSERTION'  && dependency.licenseDeclared !== 'NONE' && !dependency.hasFiles.length) {
-               let licenseText = getLicenseText(dependency.licenseDeclared);
+            // Check for licenseConcluded and create a subcomponent if it exists
+            if (dependency.licenseConcluded && dependency.licenseConcluded !== 'NOASSERTION'  && dependency.licenseConcluded !== 'NONE' && !dependency.hasFiles.length) {
+               let licenseText = getLicenseText(dependency.licenseConcluded);
                if (!COPYRIGHT_REPLACE_PATTERN.includes(dependency.copyrightText)) {
                }
                let subcomponentObject: AosdSubComponent = {
                   subcomponentName: "main",
-                  spdxId: dependency.licenseDeclared,
+                  spdxId: dependency.licenseConcluded,
                   copyrights: !COPYRIGHT_REPLACE_PATTERN.includes(dependency.copyrightText) && dependency.copyrightText !== null && dependency.copyrightText !== undefined ? [dependency.copyrightText] : [],
                   authors: [],
                   licenseText: licenseText.trim(),
