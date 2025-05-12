@@ -46,7 +46,7 @@
       "hasFiles": [
       ],
       "licenseDeclared":"BSD-3-Clause",
-      "licenseConcluded": "NOASSERTATION"
+      "licenseConcluded": "BSD-3-Clause"
     },
     {
       "SPDXID": "SPDXRef-mvn-com.typesafe.akka-akka-remote-2.13-2.6.19",
