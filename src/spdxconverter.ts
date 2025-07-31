@@ -60,7 +60,7 @@ export const convertSpdx = async (cliArgument: string): Promise<void> => {
         let newObject: AosdObject  = {
             schemaVersion: '2.1.0',
             externalId: '',
-            scanned: false,
+            scanned: true,
             directDependencies: [],
             components: [],
         };
