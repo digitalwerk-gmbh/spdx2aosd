@@ -43,7 +43,7 @@ export const convertSpdx = async (cliArgument: string): Promise<void> => {
                 extractedText: licenseInfo.extractedText,
             }
             licenseTextMap.push(mapl);
-        });
+        });      
         // Get the license text from the licenses.json file if needed
         const getLicenseText = (licenseId: string) => {
             // Try to get the license text from the licenseTextMap
@@ -60,7 +60,7 @@ export const convertSpdx = async (cliArgument: string): Promise<void> => {
         let newObject: AosdObject  = {
             schemaVersion: '2.1.0',
             externalId: '',
-            scanned: false,
+            scanned: true,
             directDependencies: [],
             components: [],
         };
@@ -222,7 +222,7 @@ export const convertSpdx = async (cliArgument: string): Promise<void> => {
                     const spdxLicense = licenseData.data.find(license => license.spdx_license_key === licenseComment);
                     if (spdxLicense) return spdxLicense.spdx_license_key;
                     // Check in hasExtractedLicensingInfos if not found in licenses.json
-                    const extractedLicense = jsonInputArray['hasExtractedLicensingInfos'].find((eInfo: { licenseId: string; }) => eInfo.licenseId === licenseComment);
+                    const extractedLicense = jsonInputArray['hasExtractedLicensingInfos']?.find((eInfo: { licenseId: string; }) => eInfo.licenseId === licenseComment);
                     if (extractedLicense) {
                         const isValidSpdxKey = licenseData.data.some(license => license.spdx_license_key === extractedLicense.name);
                         if (isValidSpdxKey) return extractedLicense.name;
@@ -246,11 +246,13 @@ export const convertSpdx = async (cliArgument: string): Promise<void> => {
                     licenseText += text;
                 });
                 let tmpSpdxKey: string = fileData[0]?.licenseConcluded.replace("chosen: ", "").trim() || "";
-                for (let k=0; k<tempLicenses?.length; k++) {
-                    tmpLicense = jsonInputArray['hasExtractedLicensingInfos'].filter((eInfo: { licenseId: string; }) => eInfo.licenseId ===  tempLicenses[k]);
-                    if (tmpLicense.length === 1) {
+                if (jsonInputArray.hasOwnProperty("hasExtractedLicensingInfos")) {
+                   for (let k=0; k<tempLicenses?.length; k++) {
+                      tmpLicense = jsonInputArray['hasExtractedLicensingInfos'].filter((eInfo: { licenseId: string; }) => eInfo.licenseId ===  tempLicenses[k]);
+                      if (tmpLicense.length === 1) {
                         tmpSpdxKey = tmpSpdxKey.replace(tmpLicense[0]['licenseId'], tmpLicense[0]['name']);
-                    }
+                      }
+                   }
                 }
                 // Update the selectedLicense based on licenseComments
                 let selectedLicense = fileData[0]?.licenseComments?.replace("chosen: ", "").trim() || "";
