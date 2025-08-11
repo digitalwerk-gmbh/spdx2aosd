@@ -56,11 +56,19 @@ The command-line interface (CLI) provides a series of commands. You can also run
 
 $ npm run licenses
 
-# Convert the JSON file from AOSD 2.0 to AOSD 2.1 format.
+# Convert the JSON file from AOSD 2.0 to AOSD 2.1 JSON format.
 
 $ npm run up <filename>
 
-# Convert the JSON file from AOSD 2.1 to AOSD 2.0 format.
+# Convert the EXCEL file from AOSD 1.0 to AOSD 2.1 JSON format.
+
+$ npm run upxls <filename>
+
+# Convert the CSV file from AOSD 1.0 to AOSD 2.1 JSON format.
+
+$ npm run upcsv <filename>
+
+# Convert the JSON file from AOSD 2.1 to AOSD 2.0 JSON format.
 
 $ npm run down <filename>
 
