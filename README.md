@@ -64,10 +64,6 @@ $ npm run up <filename>
 
 $ npm run upxls <filename>
 
-# Convert the CSV file from AOSD 1.0 to AOSD 2.1 JSON format.
-
-$ npm run upcsv <filename>
-
 # Convert the JSON file from AOSD 2.1 to AOSD 2.0 JSON format.
 
 $ npm run down <filename>
@@ -122,6 +118,7 @@ spdx2aosd
 │	
 └──src
 │  accumulate.ts
+│  aosd1converter.ts
 │  aosdvalidator.ts
 │  downconverter.ts
 │  helper.ts
@@ -154,6 +151,7 @@ spdx2aosd
 .env.example
 .gitignore
 babel.config.cjs
+CHANGELOG.md
 error.log
 jest.config.cjs
 LICENSE.txt
@@ -248,3 +246,6 @@ After the license list has been updated or you have skipped this step, you shoul
 3. Improve error messages in general
 4. Expand unit tests
 5. Extend plausibility checks
+6. Implement OSSelot compability
+7. Implement SPDX2.3 standard on top of GroupSpec
+8. Implememt CycloneDX Konverter for automotive projext data

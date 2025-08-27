@@ -44,5 +44,4 @@
 # Update from version 1.4.0-beta to 1.5.0-beta
 # [Fixed] Fixed npm vulnerabilities in npm packages through updates to fixed versions via npm audit fix.
 # [Added] New converter to convert Excel files in AOSD1.0 format to AOSD2.1 JSON format.
-# [Added] New converter to convert CSV files in AOSD1.0 format to AOSD2.1 JSON format.
 

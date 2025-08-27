@@ -8,7 +8,6 @@
   "main": "main.ts",
   "scripts": {
     "upxls": "cross-env RUN_MODE=production SCRIPT=upxls ts-node main.ts",
-    "upcsv": "cross-env RUN_MODE=production SCRIPT=upcsv ts-node main.ts",
     "up": "cross-env RUN_MODE=production SCRIPT=up ts-node main.ts",
     "down": "cross-env RUN_MODE=production SCRIPT=down ts-node main.ts",
     "spdx": "cross-env RUN_MODE=production SCRIPT=spdx ts-node main.ts",

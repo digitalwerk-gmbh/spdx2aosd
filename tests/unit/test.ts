@@ -4,7 +4,8 @@ import { convertDown } from '../../src/downconverter';
 import { convertUp } from '../../src/upconverter';
 import { convertSpdx } from "../../src/spdxconverter";
 import { accumulate } from "../../src/accumulate";
-import { getUniqueValues, getMultibleUsedIds, getMissingComponentIds, generateDataValidationMessage, generateUniqueSubcomponentName, generateStringFromJsonObject, validateDependencies, validateSPDXIds, validateSelectedLicenseForDualLicenses, validateLicenseTextUrl, validateComponentsForModificationAndLinking } from '../../src/helper';
+import { convertUpXls } from "../../src/aosd1converter";
+import { getUniqueValues, getMultibleUsedIds, getMissingComponentIds, generateDataValidationMessage, generateUniqueSubcomponentName, generateStringFromJsonObject, validateDependencies, validateSPDXIds, validateSelectedLicenseForDualLicenses, validateLicenseTextUrl, validateComponentsForModificationAndLinking, linkingMapper, modificationMapper, spdxKeyMapper } from '../../src/helper';
 
 describe("Test for helper functions", () => {
     test('Test getUniqueValues exists', async () => {
@@ -411,6 +412,165 @@ describe("Test for helper functions", () => {
         expect(validationResults.length).toBe(6);
       });
     });
+
+    describe("AOSD1.0 linkingMapper Tests", () => {
+    test('Test linkingMapper function to be defined', async () => {
+      expect(linkingMapper).toBeDefined();
+    });
+    test('Test 01 linkingMapper function works as expected', async () => {
+      const linkingInformation = 'no';
+      const linkingResult = 'process_call';
+      const response = await linkingMapper(linkingInformation);
+      expect(response).toBe(linkingResult);
+    });
+    test('Test 02 linkingMapper function works as expected', async () => {
+      const linkingInformation = 'nein';
+      const linkingResult = 'process_call';
+      const response = await linkingMapper(linkingInformation);
+      expect(response).toBe(linkingResult);
+    });
+    test('Test 03 linkingMapper function works as expected', async () => {
+      const linkingInformation = 'yes, statically';
+      const linkingResult = 'static_linking';
+      const response = await linkingMapper(linkingInformation);
+      expect(response).toBe(linkingResult);
+    });
+    test('Test 04 linkingMapper function works as expected', async () => {
+      const linkingInformation = 'yes, dynamically';
+      const linkingResult = 'dynamic_linking';
+      const response = await linkingMapper(linkingInformation);
+      expect(response).toBe(linkingResult);
+    });
+    test('Test 05 linkingMapper function works as expected', async () => {
+      const linkingInformation = 'statisch';
+      const linkingResult = 'static_linking';
+      const response = await linkingMapper(linkingInformation);
+      expect(response).toBe(linkingResult);
+    });
+    test('Test 06 linkingMapper function works as expected', async () => {
+      const linkingInformation = 'dynamisch';
+      const linkingResult = 'dynamic_linking';
+      const response = await linkingMapper(linkingInformation);
+      expect(response).toBe(linkingResult);
+    });
+    test('Test 07 linkingMapper function works as expected', async () => {
+      const linkingInformation = '';
+      const linkingResult = null;
+      const response = await linkingMapper(linkingInformation);
+      expect(response).toBe(linkingResult);
+    });
+    test('Test 08 linkingMapper function works as expected', async () => {
+      const linkingResult = null;
+      const response = await linkingMapper();
+      expect(response).toBe(linkingResult);
+    });
+  });
+
+  describe("AOSD1.0 modificationMapper Tests", () => {
+    test('Test modificationMapper function to be defined', async () => {
+      expect(modificationMapper).toBeDefined();
+    });
+    test('Test 01 modificationMapper function works as expected', async () => {
+      const modificationInformation = 'no';
+      const modificationResult = false;
+      const response = await modificationMapper(modificationInformation);
+      expect(response).toBe(modificationResult);
+    });
+    test('Test 02 modificationMapper function works as expected', async () => {
+      const modificationInformation = 'yes';
+      const modificationResult = true;
+      const response = await modificationMapper(modificationInformation);
+      expect(response).toBe(modificationResult);
+    });
+    test('Test 03 modificationMapper function works as expected', async () => {
+      const modificationInformation = 'No';
+      const modificationResult = false;
+      const response = await modificationMapper(modificationInformation);
+      expect(response).toBe(modificationResult);
+    });
+    test('Test 04 modificationMapper function works as expected', async () => {
+      const modificationInformation = 'Yes';
+      const modificationResult = true;
+      const response = await modificationMapper(modificationInformation);
+      expect(response).toBe(modificationResult);
+    });
+    test('Test 05 modificationMapper function works as expected', async () => {
+      const modificationInformation = 'nein';
+      const modificationResult = false;
+      const response = await modificationMapper(modificationInformation);
+      expect(response).toBe(modificationResult);
+    });
+    test('Test 06 modificationMapper function works as expected', async () => {
+      const modificationInformation = 'ja';
+      const modificationResult = true;
+      const response = await modificationMapper(modificationInformation);
+      expect(response).toBe(modificationResult);
+    });
+    test('Test 07 modificationMapper function works as expected', async () => {
+      const modificationInformation = 'Nein';
+      const modificationResult = false;
+      const response = await modificationMapper(modificationInformation);
+      expect(response).toBe(modificationResult);
+    });
+    test('Test 08 modificationMapper function works as expected', async () => {
+      const modificationInformation = 'Ja';
+      const modificationResult = true;
+      const response = await modificationMapper(modificationInformation);
+      expect(response).toBe(modificationResult);
+    });
+    test('Test 09 modificationMapper function works as expected', async () => {
+      const modificationInformation = '';
+      const modificationResult = null;
+      const response = await modificationMapper(modificationInformation);
+      expect(response).toBe(modificationResult);
+    });
+    test('Test 10 modificationMapper function works as expected', async () => {
+      const modificationResult = null;
+      const response = await modificationMapper();
+      expect(response).toBe(modificationResult);
+    });
+  });
+
+  describe("AOSD1.0 spdxKeyMapper Tests", () => {
+    test('Test spdxKeyMapper function to be defined', async () => {
+      expect(spdxKeyMapper).toBeDefined();
+    });
+    test('Test 01 spdxKeyMapper function works as expected', async () => {
+      const modificationInformation = '_different licenses including such with strict copyleft [no official SPDX]';
+      const modificationResult = 'LicenseRef-scancode-other-copyleft';
+      const response = await spdxKeyMapper(modificationInformation);
+      expect(response).toBe(modificationResult);
+    });
+    test('Test 02 spdxKeyMapper function works as expected', async () => {
+      const modificationInformation = '_different licenses including such with limited but no strict copyleft [no official SPDX]';
+      const modificationResult = 'LicenseRef-scancode-other-copyleft';
+      const response = await spdxKeyMapper(modificationInformation);
+      expect(response).toBe(modificationResult);
+    });
+    test('Test 03 spdxKeyMapper function works as expected', async () => {
+      const modificationInformation = '_different licenses all without copyleft [no official SPDX]';
+      const modificationResult = 'LicenseRef-scancode-other-permissive';
+      const response = await spdxKeyMapper(modificationInformation);
+      expect(response).toBe(modificationResult);
+    });
+    test('Test 04 spdxKeyMapper function works as expected', async () => {
+      const modificationInformation = '_Public Domain [no official SPDX]';
+      const modificationResult = 'LicenseRef-scancode-public-domain';
+      const response = await spdxKeyMapper(modificationInformation);
+      expect(response).toBe(modificationResult);
+    });
+    test('Test 05 spdxKeyMapper function works as expected', async () => {
+      const modificationInformation = '';
+      const modificationResult = '';
+      const response = await spdxKeyMapper(modificationInformation);
+      expect(response).toBe(modificationResult);
+    });
+    test('Test 06 spdxKeyMapper function works as expected', async () => {
+      const modificationResult = '';
+      const response = await spdxKeyMapper();
+      expect(response).toBe(modificationResult);
+    });
+  });    
 });
 
 describe("AOSD2.1 to AOSD2.0 converter test", () => {

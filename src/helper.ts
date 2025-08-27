@@ -227,3 +227,63 @@ export const validateComponentsForModificationAndLinking = (
     });
   });
 };
+
+/*
+* Linking Mapper for AOSD1.0 xls format
+**/
+export const linkingMapper = (linkingInformation: string = ''): string | null => {
+    try {
+        switch(linkingInformation) {
+            case 'no': return 'process_call';
+            case 'nein': return 'process_call';
+            case 'yes, statically': return 'static_linking';
+            case 'yes, dynamically': return 'dynamic_linking';
+            case 'statisch': return 'static_linking';
+            case 'dynamisch': return 'dynamic_linking';
+            default: null;
+        }
+        return null;
+    } catch(error: any) {
+        return null;
+    }
+}
+
+/*
+* Modification Mapper for AOSD1.0 xls format
+**/
+export const modificationMapper = (modificationInformation: string = ''): boolean| null => {
+    try {
+        switch(modificationInformation) {
+            case 'no': return false;
+            case 'yes': return true;
+            case 'No': return false;
+            case 'Yes': return true;
+            case 'nein': return false;
+            case 'ja': return true;
+            case 'Nein': return false;
+            case 'Ja': return true;
+            default: null;
+        }
+        return null;
+    } catch(error: any) {
+        return null;
+    }
+}
+
+/*
+* SPDX Key Mapper for AOSD1.0 xls format
+**/
+export const spdxKeyMapper = (spdxKeyInformation: string = ''): string => {
+    try {
+        switch(spdxKeyInformation) {
+            case '_different licenses including such with strict copyleft [no official SPDX]': return 'LicenseRef-scancode-other-copyleft';
+            case '_different licenses including such with limited but no strict copyleft [no official SPDX]': return 'LicenseRef-scancode-other-copyleft';
+            case '_different licenses all without copyleft [no official SPDX]': return 'LicenseRef-scancode-other-permissive';
+            case '_Public Domain [no official SPDX]': return 'LicenseRef-scancode-public-domain';
+            default: spdxKeyInformation;
+        }
+        return spdxKeyInformation;
+    } catch(error: any) {
+        return spdxKeyInformation;
+    }
+}

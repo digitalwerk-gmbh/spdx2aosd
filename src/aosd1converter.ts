@@ -3,7 +3,7 @@ const ExcelJS = require('exceljs');
 require('dotenv').config();
 import { AosdObject, AosdComponent, AosdSubComponent } from "../interfaces/interfaces";
 import { validateAosd } from './aosdvalidator';
-import { generateDataValidationMessage } from "./helper";
+import { generateDataValidationMessage, linkingMapper, modificationMapper, spdxKeyMapper} from "./helper";
 let inputJsonPath: string | undefined = '';
 let outputJsonPath: string | undefined = '';
 let outputFile: string = '';
@@ -139,62 +139,5 @@ export const convertUpXls = async (cliArgument: string): Promise<void> => {
     } catch(error: any) {
         fs.writeFileSync(process.env.LOG_FILE_PATH, error.toString(), { encoding: 'utf8' });
         console.log("Sorry for that - something went wrong! Please check the error.log file in the root folder for detailed information.");
-    }
-}
-
-export const convertUpCsv = async (cliArgument: string): Promise<void> => {
-    try {} catch(error: any) {
-        fs.writeFileSync(process.env.LOG_FILE_PATH, error.toString(), { encoding: 'utf8' });
-        console.log("Sorry for that - something went wrong! Please check the error.log file in the root folder for detailed information.");
-    }
-}
-
-const linkingMapper = (linkingInformation: string): string | null => {
-    try {
-        switch(linkingInformation) {
-            case 'no': return 'process_call';
-            case 'nein': return 'process_call';
-            case 'yes, statically': return 'static_linking';
-            case 'yes, dynamically': return 'dynamic_linking';
-            case 'statisch': return 'static_linking';
-            case 'dynamisch': return 'dynamic_linking';
-            default: null;
-        }
-        return null;
-    } catch(error: any) {
-        return null;
-    }
-}
-
-const modificationMapper = (modificationInformation: string): boolean| null => {
-    try {
-        switch(modificationInformation) {
-            case 'no': return false;
-            case 'yes': return true;
-            case 'No': return false;
-            case 'Yes': return true;
-            case 'nein': return false;
-            case 'ja': return true;
-            case 'Nein': return false;
-            case 'Ja': return true;
-            default: null;
-        }
-        return null;
-    } catch(error: any) {
-        return null;
-    }
-}
-
-const spdxKeyMapper = (spdxKeyInformation: string): string => {
-    try {
-        switch(spdxKeyInformation) {
-            case '_different licenses including such with strict copyleft [no official SPDX]': return 'LicenseRef-scancode-other-copyleft';
-            case '_different licenses including such with limited but no strict copyleft [no official SPDX]': return 'LicenseRef-scancode-other-copyleft';
-            case '_different licenses all without copyleft [no official SPDX]': return 'LicenseRef-scancode-other-permissive';
-            case '_Public Domain [no official SPDX]': return 'LicenseRef-scancode-public-domain';
-            default: spdxKeyInformation;        }
-        return spdxKeyInformation;
-    } catch(error: any) {
-        return spdxKeyInformation;
     }
 }

@@ -7,6 +7,7 @@ node_modules
 # Output folders
 **/tests/data/output/*
 !**/tests/data/output/.gitkeep
+!**/tests/data/input/aosd1.0_excel_import.xlsx
 !**/tests/data/input/aosd2.0_import.json
 !**/tests/data/input/aosd2.1_import.json
 !**/tests/data/input/aosd2.1_jsonObject.json
