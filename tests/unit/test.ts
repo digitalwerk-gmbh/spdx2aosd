@@ -5,9 +5,69 @@ import { convertUp } from '../../src/upconverter';
 import { convertSpdx } from "../../src/spdxconverter";
 import { accumulate } from "../../src/accumulate";
 import { convertUpXls } from "../../src/aosd1converter";
-import { getUniqueValues, getMultibleUsedIds, getMissingComponentIds, generateDataValidationMessage, generateUniqueSubcomponentName, generateStringFromJsonObject, validateDependencies, validateSPDXIds, validateSelectedLicenseForDualLicenses, validateLicenseTextUrl, validateComponentsForModificationAndLinking, linkingMapper, modificationMapper, spdxKeyMapper } from '../../src/helper';
+import { getUniqueValues, getMultibleUsedIds, getMissingComponentIds, generateDataValidationMessage, generateUniqueSubcomponentName, generateStringFromJsonObject, validateDependencies, validateSPDXIds, validateSelectedLicenseForDualLicenses, validateLicenseTextUrl, validateComponentsForModificationAndLinking, linkingMapper, modificationMapper, spdxKeyMapper, loadSPDXKeys, loadDeprecatedSPDXKeys } from '../../src/helper';
 
 describe("Test for helper functions", () => {
+
+    test('Test loadSPDXKeys exists', async () => {
+        expect(loadSPDXKeys).toBeDefined();
+    });
+
+    test('Test - loadSPDXKeys works as expected', async () => {
+        const response = loadSPDXKeys();
+        expect(response).toContain('389-exception');
+        expect(response).toContain('ZPL-1.1');
+    });
+
+    test('Test loadDeprecatedSPDXKeys exists', async () => {
+        expect(loadDeprecatedSPDXKeys).toBeDefined();
+    });
+
+    test('Test - loadDeprecatedSPDXKeys works as expected', async () => {
+        const response = loadDeprecatedSPDXKeys();
+        expect(response).toContain('GPL-2.0-with-autoconf-exception');
+        expect(response).toContain('GPL-2.0-with-classpath-exception');
+        expect(response).toContain('GPL-2.0-with-font-exception');
+        expect(response).toContain('GPL-2.0-with-GCC-exception');
+        expect(response).toContain('GPL-3.0-with-autoconf-exception');
+        expect(response).toContain('GPL-3.0-with-GCC-exception');
+    });
+
+    test('Test validateLicenseTextUrl exists', async () => {
+        expect(validateLicenseTextUrl).toBeDefined();
+    });
+
+    test('Test - validateLicenseTextUrl works as expected', async () => {
+        const componentsArray = [
+          {
+            "id":"1",
+            "componentName":"test_component_1",
+            "componentVersion":"7.0.3",
+            "scmUrl":"https://registry.npmjs.org/test_comonent_1/test_comonent_1.tgz",
+            "modified":true,
+            "linking":"dynamic_linking",
+            "transitiveDependencies":[6],
+            "subcomponents":[
+              {
+                "subcomponentName":"main",
+                "spdxId":"GFDL-1.2-or-later",
+                "copyrights":["Copyright (c) 2017 Adam Generic"],
+                "authors":[],
+                "licenseText":"",
+                "licenseTextUrl":"",
+                "selectedLicense":"",
+                "additionalLicenseInfos":""
+              }
+            ]
+          }    
+        ];
+        const validationResults: Array<string> = [];
+        const response = validateLicenseTextUrl(componentsArray, validationResults);
+        expect(validationResults).toContain(
+          "Warning: licenseTextUrl in component name: test_component_1 - subcomponent: main is a required field."
+        );
+    });
+
     test('Test getUniqueValues exists', async () => {
         expect(getUniqueValues).toBeDefined();
     });
@@ -232,10 +292,11 @@ describe("Test for helper functions", () => {
 
     describe('validateSPDXIds', () => {
        const validSPDXKeys = new Set(['MIT', 'Apache-2.0', 'GPL-3.0']);
+       const deprecatedSPDXKeys = new Set(['MIT', 'Apache-2.0', 'GPL-3.0']);
   
        it('should return a warning for invalid SPDX keys in spdxIds', () => {
           const spdxIds = ['MIT', 'LicenseRef-1'];
-          const messages = validateSPDXIds(spdxIds, validSPDXKeys, 'test_component', 'test_subcomponent');
+          const messages = validateSPDXIds(spdxIds, validSPDXKeys, deprecatedSPDXKeys, 'test_component', 'test_subcomponent');
   
           expect(messages).toContain("Warning: invalid SPDX key(s) - 'LicenseRef-1' - component name: test_component - subcomponent: test_subcomponent");
           expect(messages.length).toBe(1);
@@ -243,7 +304,7 @@ describe("Test for helper functions", () => {
   
        it('should not return a warning if all SPDX keys are valid', () => {
          const spdxIds = ['MIT', 'Apache-2.0'];
-         const messages = validateSPDXIds(spdxIds, validSPDXKeys, 'test_component', 'test_subcomponent');
+         const messages = validateSPDXIds(spdxIds, validSPDXKeys, deprecatedSPDXKeys, 'test_component', 'test_subcomponent');
   
          expect(messages.length).toBe(0);
        });
@@ -251,7 +312,7 @@ describe("Test for helper functions", () => {
        it('should return a warning for an invalid selectedLicense', () => {
          const spdxIds = ['MIT'];
          const selectedLicense = 'Mit';
-         const messages = validateSPDXIds(spdxIds, validSPDXKeys, 'test_component', 'test_subcomponent', selectedLicense);
+         const messages = validateSPDXIds(spdxIds, validSPDXKeys, deprecatedSPDXKeys, 'test_component', 'test_subcomponent', selectedLicense);
   
          expect(messages).toContain("Warning: invalid SPDX key in selectedLicense 'Mit' - component name: test_component - subcomponent: test_subcomponent");
          expect(messages.length).toBe(1);
@@ -260,7 +321,7 @@ describe("Test for helper functions", () => {
        it('should not return a warning if selectedLicense is valid', () => {
          const spdxIds = ['MIT'];
          const selectedLicense = 'Apache-2.0';
-         const messages = validateSPDXIds(spdxIds, validSPDXKeys, 'test_component', 'test_subcomponent', selectedLicense);
+         const messages = validateSPDXIds(spdxIds, validSPDXKeys, deprecatedSPDXKeys, 'test_component', 'test_subcomponent', selectedLicense);
   
          expect(messages.length).toBe(0);
        });
@@ -1201,5 +1262,24 @@ describe("Accumulate Tests", () => {
     expect(testDataArray.components[3]["subcomponents"][1]["selectedLicense"]).toBe("");
     expect(testDataArray.components[3]["subcomponents"][1]["additionalLicenseInfos"]).toBeDefined();
     expect(testDataArray.components[3]["subcomponents"][1]["additionalLicenseInfos"]).toBe("");
+  });
+});
+
+describe("AOSD1.0 XLS to AOSD2.1 converter test", () => {
+    test('Test convertUpXls exists', async () => {
+        expect(convertUpXls).toBeDefined();
+    });
+
+    test('Test convertUpXls works as expected', async () => {
+
+        const response = await convertUpXls('aosd1.0_excel_import.xlsx');
+        const path = './tests/data/input/aosd1.0_excel_import.xlsx';
+        const resultFile = './tests/data/output/aosd1.0_excel_import_aosd2.1.json';
+        const testDataArray = JSON.parse(fs.readFileSync(resultFile, 'utf8'));
+        expect(fs.existsSync(path)).toBe(true);
+        //expect(fs.existsSync(resultFile)).toBe(true);
+        expect(fs.existsSync(path)).toBe(true);
+        //expect(fs.existsSync(resultFile)).toBe(true);
+        //expect(testDataArray["schemaVersion"]).toBeDefined();
   });
 });

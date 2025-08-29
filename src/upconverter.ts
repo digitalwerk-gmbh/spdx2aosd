@@ -1,6 +1,6 @@
 const fs = require('fs');
 require('dotenv').config();
-import { generateDataValidationMessage, generateUniqueSubcomponentName, loadSPDXKeys, validateComponentsForModificationAndLinking, validateDependencies, validateSPDXIds } from './helper'
+import { generateDataValidationMessage, generateUniqueSubcomponentName, loadDeprecatedSPDXKeys, loadSPDXKeys, validateComponentsForModificationAndLinking, validateDependencies, validateSPDXIds } from './helper'
 import { AosdObject, AosdComponent, AosdSubComponent, LicenseAosd } from "../interfaces/interfaces";
 import { validateAosd } from './aosdvalidator';
 let inputJsonPath: string | undefined = '';
@@ -89,12 +89,13 @@ export const convertUp = async (cliArgument: string): Promise<void> => {
                     
                     // Validate 'spdxId' from licenses,json
                     const validSPDXKeys = loadSPDXKeys();
+                    const deprecatedSPDXKeys = loadDeprecatedSPDXKeys();
                     dependenciesArray[i]['parts'].forEach((part: { name: string; providers: any[]; }) => {
                         const subcomponentName = part.name;  
                       
                         part.providers?.forEach((provider) => {
                           const spdxIds = provider.additionalLicenses.map((adl: LicenseAosd) => adl.spdxId);
-                          const spdxValidationErrors = validateSPDXIds(spdxIds, validSPDXKeys, dependenciesArray[i]['name'], subcomponentName);
+                          const spdxValidationErrors = validateSPDXIds(spdxIds, validSPDXKeys, deprecatedSPDXKeys, dependenciesArray[i]['name'], subcomponentName);
                           validationResults = validationResults.concat(spdxValidationErrors);
                         });
                     });

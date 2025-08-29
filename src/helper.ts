@@ -112,7 +112,7 @@ export const validateDependencies = (
   return validationMessages;
 };
 
-// Validate spdx keys
+// Load all spdx keys
 export const loadSPDXKeys = (): Set<string> => {
   try {
     const data = JSON.parse(fs.readFileSync(process.env.LICENSE_FILE_PATH!, 'utf8')).data;
@@ -122,9 +122,21 @@ export const loadSPDXKeys = (): Set<string> => {
   }
 };
 
+// Load all deprecated spdx keys
+export const loadDeprecatedSPDXKeys = (): Set<string> => {
+  try {
+    const data = JSON.parse(fs.readFileSync(process.env.LICENSE_FILE_PATH!, 'utf8')).data;
+    const deprecatedLicenses = data.filter((l:any) => l.is_depricated == true);
+    return new Set(deprecatedLicenses?.map(({ spdx_license_key } : { spdx_license_key: string }) => spdx_license_key) || []);
+  } catch {
+    throw new Error('The licenses.json file is missing or has an invalid format.');
+  }
+};
+
 export const validateSPDXIds = (
   spdxIds: Array<string>,
   validSPDXKeys: Set<string>,
+  deprecatedSPDXKeys: Set<string>,
   componentName: string,
   subcomponentName?: string,
   selectedLicense?: string
@@ -141,6 +153,14 @@ export const validateSPDXIds = (
       if (invalidLicenses.length > 0) {
         validationMessages.push(
           `Warning: invalid SPDX key(s) - '${invalidLicenses.join(", ")}' - component name: ${componentName} - subcomponent: ${subcomponentName}`
+        );
+      }
+
+      // Check for depricated licenses
+      const depLicenses = licenses.filter(part => deprecatedSPDXKeys.has(part.trim()));
+      if (depLicenses.length > 0) {
+        validationMessages.push(
+          `Warning: depricated SPDX key(s) - '${depLicenses.join(", ")}' - component name: ${componentName} - subcomponent: ${subcomponentName}`
         );
       }
  });

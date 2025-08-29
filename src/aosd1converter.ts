@@ -3,17 +3,20 @@ const ExcelJS = require('exceljs');
 require('dotenv').config();
 import { AosdObject, AosdComponent, AosdSubComponent } from "../interfaces/interfaces";
 import { validateAosd } from './aosdvalidator';
-import { generateDataValidationMessage, linkingMapper, modificationMapper, spdxKeyMapper} from "./helper";
+import { generateDataValidationMessage, linkingMapper, loadSPDXKeys, loadDeprecatedSPDXKeys, modificationMapper, spdxKeyMapper, validateComponentsForModificationAndLinking, validateSelectedLicenseForDualLicenses, validateSPDXIds, validateLicenseTextUrl} from "./helper";
 let inputJsonPath: string | undefined = '';
 let outputJsonPath: string | undefined = '';
 let outputFile: string = '';
 let validationResults: Array<string> = [];
+const validSPDXKeys = loadSPDXKeys();
+const deprecatedSPDXKeys = loadDeprecatedSPDXKeys();
 
 export const convertUpXls = async (cliArgument: string): Promise<void> => {
     try {
+        validationResults.push('-----------------------------------------------------\nData-Validation errors:\n-----------------------------------------------------\n');
         inputJsonPath = process.env.INPUT_JSON_PATH + cliArgument;
         outputJsonPath = process.env.OUTPUT_JSON_PATH;
-        const myWorkBook = new ExcelJS.Workbook();
+        const myWorkBook = await new ExcelJS.Workbook();
         let json: any = [];
         let tmpArray: Array<object> = [];
         myWorkBook.xlsx.readFile(inputJsonPath)
@@ -110,7 +113,22 @@ export const convertUpXls = async (cliArgument: string): Promise<void> => {
                 //Push data into the new object
                 newObject['directDependencies'].push(initialId);
                 newObject['components'].push(componentObject);
+
+                // Validate spdxId
+                const spdxValidationMessages = validateSPDXIds([spdxKeyMapper(json[i]['license_spdx'])], validSPDXKeys, deprecatedSPDXKeys, componentObject.componentName, subcomponentObject.subcomponentName);
+                validationResults.push(...spdxValidationMessages);
                 initialId++;
+            }
+
+            // Validate modification and linking
+            validateComponentsForModificationAndLinking(newObject.components, validationResults);
+
+            // Validate selectedLicense
+            validateSelectedLicenseForDualLicenses(newObject.components, validationResults);
+
+            // Validate licenseTextUrl
+            if (newObject.scanned === false) {
+                validateLicenseTextUrl(newObject.components, validationResults);
             }
 
             // Prepare output file
