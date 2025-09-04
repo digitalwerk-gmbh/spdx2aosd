@@ -19,7 +19,7 @@ export const convertUpXls = async (cliArgument: string): Promise<void> => {
         const myWorkBook = await new ExcelJS.Workbook();
         let json: any = [];
         let tmpArray: Array<object> = [];
-        myWorkBook.xlsx.readFile(inputJsonPath)
+        await myWorkBook.xlsx.readFile(inputJsonPath)
         .then(() => {
             const worksheet = myWorkBook.getWorksheet('records');
             let counter = 0;

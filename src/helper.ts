@@ -296,10 +296,46 @@ export const modificationMapper = (modificationInformation: string = ''): boolea
 export const spdxKeyMapper = (spdxKeyInformation: string = ''): string => {
     try {
         switch(spdxKeyInformation) {
+            // AOSD1.0 specific
             case '_different licenses including such with strict copyleft [no official SPDX]': return 'LicenseRef-scancode-other-copyleft';
             case '_different licenses including such with limited but no strict copyleft [no official SPDX]': return 'LicenseRef-scancode-other-copyleft';
             case '_different licenses all without copyleft [no official SPDX]': return 'LicenseRef-scancode-other-permissive';
             case '_Public Domain [no official SPDX]': return 'LicenseRef-scancode-public-domain';
+            // Generell SPDX Keys
+            case 'AGPL-1.0': return 'AGPL-1.0-or-later'
+            case 'AGPL-3.0': return 'LicenseRef-scancode-unknown'
+            case 'BSD-2-Clause-FreeBSD': return 'LicenseRef-scancode-unknown'
+            case 'BSD-2-Clause-NetBSD': return 'LicenseRef-scancode-unknown'
+            case 'bzip2-1.0.5': return 'LicenseRef-scancode-unknown'
+            case 'eCos-2.0': return 'eCos-exception-2.0'
+            case 'GFDL-1.1': return 'LicenseRef-scancode-unknown'
+            case 'GFDL-1.2': return 'LicenseRef-scancode-unknown'
+            case 'GFDL-1.3': return 'LicenseRef-scancode-unknown'
+            case 'GPL-1.0': return 'GPL-1.0-only'
+            case 'GPL-1.0+': return 'GPL-1.0-or-later'
+            case 'GPL-2.0': return 'GPL-2.0-only'
+            case 'GPL-2.0+': return 'GPL-2.0-or-later'
+            case 'GPL-2.0-with-autoconf-exception': return 'GPL-2.0-only WITH Autoconf-exception-2.0'
+            case 'GPL-2.0-with-bison-exception': return 'GPL-2.0-only WITH Bison-exception-2.2'
+            case 'GPL-2.0-with-classpath-exception': return 'GPL-2.0-only WITH Classpath-exception-2.0'
+            case 'GPL-2.0-with-font-exception': return 'GPL-2.0-only WITH Font-exception-2.0'
+            case 'GPL-2.0-with-GCC-exception': return 'GPL-2.0-only WITH GCC-exception-2.0'
+            case 'GPL-3.0': return 'GPL-3.0-only'
+            case 'GPL-3.0+': return 'GPL-3.0-or-later'
+            case 'GPL-3.0-with-autoconf-exception': return 'GPL-3.0-only WITH Autoconf-exception-3.0'
+            case 'GPL-3.0-with-GCC-exception': return 'GPL-3.0-only WITH GCC-exception-3.1'
+            case 'LGPL-2.0': return 'LGPL-2.0-only'
+            case 'LGPL-2.0+': return 'LGPL-2.0-or-later'
+            case 'LGPL-2.1': return 'LGPL-2.1-only'
+            case 'LGPL-2.1+': return 'LGPL-2.1-or-later'
+            case 'LGPL-3.0': return 'LGPL-3.0-only'
+            case 'LGPL-3.0+': return 'LGPL-3.0-or-later'
+            case 'Net-SNMP': return 'LicenseRef-scancode-unknown'
+            case 'Nunit': return 'LicenseRef-scancode-unknown'
+            case 'StandardML-NJ': return 'SMLNJ'
+            case 'wxWindows': return 'WxWindows-exception-3.1'
+            // SPDX Exceptions
+            case 'Nokia-Qt-exception-1.1': return 'LicenseRef-scancode-unknown'
             default: spdxKeyInformation;
         }
         return spdxKeyInformation;

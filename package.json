@@ -13,7 +13,7 @@
     "spdx": "cross-env RUN_MODE=production SCRIPT=spdx ts-node main.ts",
     "accumulate": "cross-env RUN_MODE=production SCRIPT=accumulate ts-node main.ts",
     "licenses": "cross-env RUN_MODE=production ts-node ./src/licenses.ts",
-    "test": "cross-env RUN_MODE=test INPUT_JSON_PATH=./tests/data/input/ OUTPUT_JSON_PATH=./tests/data/output/ jest"
+    "test": "cross-env RUN_MODE=test INPUT_JSON_PATH=./tests/data/input/ OUTPUT_JSON_PATH=./tests/data/output/ jest --detectOpenHandles"
   },
   "repository": {
     "type": "gitlab",

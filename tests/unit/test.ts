@@ -291,29 +291,40 @@ describe("Test for helper functions", () => {
     });
 
     describe('validateSPDXIds', () => {
-       const validSPDXKeys = new Set(['MIT', 'Apache-2.0', 'GPL-3.0']);
-       const deprecatedSPDXKeys = new Set(['MIT', 'Apache-2.0', 'GPL-3.0']);
+       const validSPDXKeys = new Set(['MIT', 'Apache-2.0', 'GPL-3.0', 'GPL-3.0-with-GCC-exception', 'GPL-3.0-with-GCC-exception', 'BSD-style license']);
+       const deprecatedSPDXKeys = new Set(['GPL-3.0-with-GCC-exception', 'GPL-3.0-with-GCC-exception', 'BSD-style license']);
   
        it('should return a warning for invalid SPDX keys in spdxIds', () => {
           const spdxIds = ['MIT', 'LicenseRef-1'];
-          const messages = validateSPDXIds(spdxIds, validSPDXKeys, deprecatedSPDXKeys, 'test_component', 'test_subcomponent');
-  
+          const messages = validateSPDXIds(spdxIds, validSPDXKeys, deprecatedSPDXKeys, 'test_component', 'test_subcomponent');  
           expect(messages).toContain("Warning: invalid SPDX key(s) - 'LicenseRef-1' - component name: test_component - subcomponent: test_subcomponent");
           expect(messages.length).toBe(1);
        });
   
        it('should not return a warning if all SPDX keys are valid', () => {
          const spdxIds = ['MIT', 'Apache-2.0'];
-         const messages = validateSPDXIds(spdxIds, validSPDXKeys, deprecatedSPDXKeys, 'test_component', 'test_subcomponent');
-  
+         const messages = validateSPDXIds(spdxIds, validSPDXKeys, deprecatedSPDXKeys, 'test_component', 'test_subcomponent');  
          expect(messages.length).toBe(0);
+       });
+
+       it('should return a warning for deprecated SPDX keys', () => {
+         const spdxIds = ['MIT', 'Apache-2.0', 'GPL-3.0-with-GCC-exception'];
+         const messages = validateSPDXIds(spdxIds, validSPDXKeys, deprecatedSPDXKeys, 'test_component', 'test_subcomponent'); 
+         expect(messages.length).toBe(1);
+         expect(messages).toContain("Warning: depricated SPDX key(s) - 'GPL-3.0-with-GCC-exception' - component name: test_component - subcomponent: test_subcomponent");
+       });
+
+       it('should return a warning for deprecated SPDX keys', () => {
+         const spdxIds = ['MIT', 'Apache-2.0', 'GPL-3.0-with-GCC-exception', 'BSD-style license'];
+         const messages = validateSPDXIds(spdxIds, validSPDXKeys, deprecatedSPDXKeys, 'test_component', 'test_subcomponent'); 
+         expect(messages).toContain("Warning: depricated SPDX key(s) - 'GPL-3.0-with-GCC-exception' - component name: test_component - subcomponent: test_subcomponent");
+         expect(messages).toContain("Warning: depricated SPDX key(s) - 'BSD-style license' - component name: test_component - subcomponent: test_subcomponent");
        });
   
        it('should return a warning for an invalid selectedLicense', () => {
          const spdxIds = ['MIT'];
          const selectedLicense = 'Mit';
          const messages = validateSPDXIds(spdxIds, validSPDXKeys, deprecatedSPDXKeys, 'test_component', 'test_subcomponent', selectedLicense);
-  
          expect(messages).toContain("Warning: invalid SPDX key in selectedLicense 'Mit' - component name: test_component - subcomponent: test_subcomponent");
          expect(messages.length).toBe(1);
        });
@@ -322,7 +333,6 @@ describe("Test for helper functions", () => {
          const spdxIds = ['MIT'];
          const selectedLicense = 'Apache-2.0';
          const messages = validateSPDXIds(spdxIds, validSPDXKeys, deprecatedSPDXKeys, 'test_component', 'test_subcomponent', selectedLicense);
-  
          expect(messages.length).toBe(0);
        });
     });
@@ -631,6 +641,216 @@ describe("Test for helper functions", () => {
       const response = await spdxKeyMapper();
       expect(response).toBe(modificationResult);
     });
+    test('Test 07 spdxKeyMapper function works as expected', async () => {
+      const modificationInformation = 'AGPL-1.0';
+      const modificationResult = 'AGPL-1.0-or-later';
+      const response = await spdxKeyMapper(modificationInformation);
+      expect(response).toBe(modificationResult);
+    });
+     test('Test 08 spdxKeyMapper function works as expected', async () => {
+      const modificationInformation = 'AGPL-3.0';
+      const modificationResult = 'LicenseRef-scancode-unknown';
+      const response = await spdxKeyMapper(modificationInformation);
+      expect(response).toBe(modificationResult);
+    });
+     test('Test 09 spdxKeyMapper function works as expected', async () => {
+      const modificationInformation = 'BSD-2-Clause-FreeBSD';
+      const modificationResult = 'LicenseRef-scancode-unknown';
+      const response = await spdxKeyMapper(modificationInformation);
+      expect(response).toBe(modificationResult);
+    });
+     test('Test 10 spdxKeyMapper function works as expected', async () => {
+      const modificationInformation = 'BSD-2-Clause-NetBSD';
+      const modificationResult = 'LicenseRef-scancode-unknown';
+      const response = await spdxKeyMapper(modificationInformation);
+      expect(response).toBe(modificationResult);
+    });
+     test('Test 11 spdxKeyMapper function works as expected', async () => {
+      const modificationInformation = 'bzip2-1.0.5';
+      const modificationResult = 'LicenseRef-scancode-unknown';
+      const response = await spdxKeyMapper(modificationInformation);
+      expect(response).toBe(modificationResult);
+    });
+     test('Test 12 spdxKeyMapper function works as expected', async () => {
+      const modificationInformation = 'eCos-2.0';
+      const modificationResult = 'eCos-exception-2.0';
+      const response = await spdxKeyMapper(modificationInformation);
+      expect(response).toBe(modificationResult);
+    });
+     test('Test 13 spdxKeyMapper function works as expected', async () => {
+      const modificationInformation = 'GFDL-1.1';
+      const modificationResult = 'LicenseRef-scancode-unknown';
+      const response = await spdxKeyMapper(modificationInformation);
+      expect(response).toBe(modificationResult);
+    })
+    test('Test 14 spdxKeyMapper function works as expected', async () => {
+      const modificationInformation = 'GFDL-1.2';
+      const modificationResult = 'LicenseRef-scancode-unknown';
+      const response = await spdxKeyMapper(modificationInformation);
+      expect(response).toBe(modificationResult);
+    })
+    test('Test 15 spdxKeyMapper function works as expected', async () => {
+      const modificationInformation = 'GFDL-1.3';
+      const modificationResult = 'LicenseRef-scancode-unknown';
+      const response = await spdxKeyMapper(modificationInformation);
+      expect(response).toBe(modificationResult);
+    })
+    test('Test 16 spdxKeyMapper function works as expected', async () => {
+      const modificationInformation = 'GPL-1.0';
+      const modificationResult = 'GPL-1.0-only';
+      const response = await spdxKeyMapper(modificationInformation);
+      expect(response).toBe(modificationResult);
+    })
+    test('Test 17 spdxKeyMapper function works as expected', async () => {
+      const modificationInformation = 'GPL-1.0+';
+      const modificationResult = 'GPL-1.0-or-later';
+      const response = await spdxKeyMapper(modificationInformation);
+      expect(response).toBe(modificationResult);
+    })
+    test('Test 18 spdxKeyMapper function works as expected', async () => {
+      const modificationInformation = 'GPL-2.0';
+      const modificationResult = 'GPL-2.0-only';
+      const response = await spdxKeyMapper(modificationInformation);
+      expect(response).toBe(modificationResult);
+    })
+    test('Test 19 spdxKeyMapper function works as expected', async () => {
+      const modificationInformation = 'GPL-2.0+';
+      const modificationResult = 'GPL-2.0-or-later';
+      const response = await spdxKeyMapper(modificationInformation);
+      expect(response).toBe(modificationResult);
+    })
+    test('Test 20 spdxKeyMapper function works as expected', async () => {
+      const modificationInformation = 'GPL-2.0-with-autoconf-exception';
+      const modificationResult = 'GPL-2.0-only WITH Autoconf-exception-2.0';
+      const response = await spdxKeyMapper(modificationInformation);
+      expect(response).toBe(modificationResult);
+    })
+    test('Test 21 spdxKeyMapper function works as expected', async () => {
+      const modificationInformation = 'GPL-2.0-with-bison-exception';
+      const modificationResult = 'GPL-2.0-only WITH Bison-exception-2.2';
+      const response = await spdxKeyMapper(modificationInformation);
+      expect(response).toBe(modificationResult);
+    })
+    test('Test 22 spdxKeyMapper function works as expected', async () => {
+      const modificationInformation = 'GPL-2.0-with-classpath-exception';
+      const modificationResult = 'GPL-2.0-only WITH Classpath-exception-2.0';
+      const response = await spdxKeyMapper(modificationInformation);
+      expect(response).toBe(modificationResult);
+    })
+    test('Test 23 spdxKeyMapper function works as expected', async () => {
+      const modificationInformation = 'GPL-2.0-with-font-exception';
+      const modificationResult = 'GPL-2.0-only WITH Font-exception-2.0';
+      const response = await spdxKeyMapper(modificationInformation);
+      expect(response).toBe(modificationResult);
+    })
+    test('Test 24 spdxKeyMapper function works as expected', async () => {
+      const modificationInformation = 'GPL-2.0-with-GCC-exception';
+      const modificationResult = 'GPL-2.0-only WITH GCC-exception-2.0';
+      const response = await spdxKeyMapper(modificationInformation);
+      expect(response).toBe(modificationResult);
+    })
+    test('Test 25 spdxKeyMapper function works as expected', async () => {
+      const modificationInformation = 'GPL-3.0';
+      const modificationResult = 'GPL-3.0-only';
+      const response = await spdxKeyMapper(modificationInformation);
+      expect(response).toBe(modificationResult);
+    })
+    test('Test 26 spdxKeyMapper function works as expected', async () => {
+      const modificationInformation = 'GPL-3.0+';
+      const modificationResult = 'GPL-3.0-or-later';
+      const response = await spdxKeyMapper(modificationInformation);
+      expect(response).toBe(modificationResult);
+    })
+    test('Test 27 spdxKeyMapper function works as expected', async () => {
+      const modificationInformation = 'GPL-3.0-with-autoconf-exception';
+      const modificationResult = 'GPL-3.0-only WITH Autoconf-exception-3.0';
+      const response = await spdxKeyMapper(modificationInformation);
+      expect(response).toBe(modificationResult);
+    })
+    test('Test 28 spdxKeyMapper function works as expected', async () => {
+      const modificationInformation = 'GPL-3.0-with-GCC-exception';
+      const modificationResult = 'GPL-3.0-only WITH GCC-exception-3.1';
+      const response = await spdxKeyMapper(modificationInformation);
+      expect(response).toBe(modificationResult);
+    })
+    test('Test 29 spdxKeyMapper function works as expected', async () => {
+      const modificationInformation = 'LGPL-2.0';
+      const modificationResult = 'LGPL-2.0-only';
+      const response = await spdxKeyMapper(modificationInformation);
+      expect(response).toBe(modificationResult);
+    })
+    test('Test 30 spdxKeyMapper function works as expected', async () => {
+      const modificationInformation = 'LGPL-2.0+';
+      const modificationResult = 'LGPL-2.0-or-later';
+      const response = await spdxKeyMapper(modificationInformation);
+      expect(response).toBe(modificationResult);
+    })
+    test('Test 31 spdxKeyMapper function works as expected', async () => {
+      const modificationInformation = 'LGPL-2.0+';
+      const modificationResult = 'LGPL-2.0-or-later';
+      const response = await spdxKeyMapper(modificationInformation);
+      expect(response).toBe(modificationResult);
+    })
+    test('Test 32 spdxKeyMapper function works as expected', async () => {
+      const modificationInformation = 'LGPL-2.1';
+      const modificationResult = 'LGPL-2.1-only';
+      const response = await spdxKeyMapper(modificationInformation);
+      expect(response).toBe(modificationResult);
+    })
+    test('Test 33 spdxKeyMapper function works as expected', async () => {
+      const modificationInformation = 'LGPL-2.1+';
+      const modificationResult = 'LGPL-2.1-or-later';
+      const response = await spdxKeyMapper(modificationInformation);
+      expect(response).toBe(modificationResult);
+    })
+    test('Test 34 spdxKeyMapper function works as expected', async () => {
+      const modificationInformation = 'LGPL-3.0';
+      const modificationResult = 'LGPL-3.0-only';
+      const response = await spdxKeyMapper(modificationInformation);
+      expect(response).toBe(modificationResult);
+    })
+    test('Test 35 spdxKeyMapper function works as expected', async () => {
+      const modificationInformation = 'LGPL-3.0+';
+      const modificationResult = 'LGPL-3.0-or-later';
+      const response = await spdxKeyMapper(modificationInformation);
+      expect(response).toBe(modificationResult);
+    })
+    test('Test 36 spdxKeyMapper function works as expected', async () => {
+      const modificationInformation = 'Net-SNMP';
+      const modificationResult = 'LicenseRef-scancode-unknown';
+      const response = await spdxKeyMapper(modificationInformation);
+      expect(response).toBe(modificationResult);
+    })
+    test('Test 37 spdxKeyMapper function works as expected', async () => {
+      const modificationInformation = 'Nunit';
+      const modificationResult = 'LicenseRef-scancode-unknown';
+      const response = await spdxKeyMapper(modificationInformation);
+      expect(response).toBe(modificationResult);
+    })
+    test('Test 38 spdxKeyMapper function works as expected', async () => {
+      const modificationInformation = 'Nunit';
+      const modificationResult = 'LicenseRef-scancode-unknown';
+      const response = await spdxKeyMapper(modificationInformation);
+      expect(response).toBe(modificationResult);
+    })
+    test('Test 39 spdxKeyMapper function works as expected', async () => {
+      const modificationInformation = 'StandardML-NJ';
+      const modificationResult = 'SMLNJ';
+      const response = await spdxKeyMapper(modificationInformation);
+      expect(response).toBe(modificationResult);
+    })
+    test('Test 40 spdxKeyMapper function works as expected', async () => {
+      const modificationInformation = 'wxWindows';
+      const modificationResult = 'WxWindows-exception-3.1';
+      const response = await spdxKeyMapper(modificationInformation);
+      expect(response).toBe(modificationResult);
+    })
+    test('Test 41 spdxKeyMapper function works as expected', async () => {
+      const modificationInformation = 'Nokia-Qt-exception-1.1';
+      const modificationResult = 'LicenseRef-scancode-unknown';
+      const response = await spdxKeyMapper(modificationInformation);
+      expect(response).toBe(modificationResult);
+    })
   });    
 });
 
@@ -1275,11 +1495,81 @@ describe("AOSD1.0 XLS to AOSD2.1 converter test", () => {
         const response = await convertUpXls('aosd1.0_excel_import.xlsx');
         const path = './tests/data/input/aosd1.0_excel_import.xlsx';
         const resultFile = './tests/data/output/aosd1.0_excel_import_aosd2.1.json';
-        const testDataArray = JSON.parse(fs.readFileSync(resultFile, 'utf8'));
+        const testDataArray = await JSON.parse(fs.readFileSync(resultFile, 'utf8'));
         expect(fs.existsSync(path)).toBe(true);
-        //expect(fs.existsSync(resultFile)).toBe(true);
+        expect(fs.existsSync(resultFile)).toBe(true);
         expect(fs.existsSync(path)).toBe(true);
-        //expect(fs.existsSync(resultFile)).toBe(true);
-        //expect(testDataArray["schemaVersion"]).toBeDefined();
+        expect(fs.existsSync(resultFile)).toBe(true);
+        expect(testDataArray["schemaVersion"]).toBeDefined();
+        expect(testDataArray["schemaVersion"]).toBe("2.1.0");
+        expect(testDataArray["externalId"]).toBeDefined();
+        expect(testDataArray["externalId"]).toBe("aosd1.0_excel_import.xlsx");
+        expect(testDataArray["scanned"]).toBeDefined();
+        expect(testDataArray["scanned"]).toBeTruthy();
+        expect(testDataArray["directDependencies"]).toBeDefined();
+        expect(testDataArray["directDependencies"]).toContain(1);
+        expect(testDataArray["directDependencies"]).toContain(2);
+        expect(testDataArray.components[0]["id"]).toBeDefined();
+        expect(testDataArray.components[0]["id"]).toBe(1);
+        expect(testDataArray.components[0]["componentName"]).toBeDefined();
+        expect(testDataArray.components[0]["componentName"]).toBe("acl");
+        expect(testDataArray.components[0]["componentVersion"]).toBeDefined();
+        expect(testDataArray.components[0]["componentVersion"]).toBe("2.2.52-r0");
+        expect(testDataArray.components[0]["scmUrl"]).toBeDefined();
+        expect(testDataArray.components[0]["scmUrl"]).toBe("https://wiki.ubuntuusers.de/ACL/");
+        expect(testDataArray.components[0]["modified"]).toBeDefined();
+        expect(testDataArray.components[0]["modified"]).toBeTruthy();
+        expect(testDataArray.components[0]["linking"]).toBeDefined();
+        expect(testDataArray.components[0]["linking"]).toBe("process_call");
+        expect(testDataArray.components[0]["transitiveDependencies"]).toBeDefined();
+        expect(testDataArray.components[0]["transitiveDependencies"].length).toBe(0);
+        expect(testDataArray.components[0]["subcomponents"]).toBeDefined();
+        expect(testDataArray.components[0]["subcomponents"][0]["subcomponentName"]).toBeDefined();
+        expect(testDataArray.components[0]["subcomponents"][0]["subcomponentName"]).toBe("main");
+        expect(testDataArray.components[0]["subcomponents"][0]["spdxId"]).toBeDefined();
+        expect(testDataArray.components[0]["subcomponents"][0]["spdxId"]).toBe("LicenseRef-scancode-other-copyleft");
+        expect(testDataArray.components[0]["subcomponents"][0]["copyrights"]).toBeDefined();
+        expect(testDataArray.components[0]["subcomponents"][0]["copyrights"].length).toBe(0);
+        expect(testDataArray.components[0]["subcomponents"][0]["authors"]).toBeDefined();
+        expect(testDataArray.components[0]["subcomponents"][0]["authors"].length).toBe(0);
+        expect(testDataArray.components[0]["subcomponents"][0]["licenseText"]).toBeDefined();
+        expect(testDataArray.components[0]["subcomponents"][0]["licenseText"]).toContain("GNU LESSER GENERAL PUBLIC LICENSE Version 2.1, February 1999");
+        expect(testDataArray.components[0]["subcomponents"][0]["licenseTextUrl"]).toBeDefined();
+        expect(testDataArray.components[0]["subcomponents"][0]["licenseTextUrl"]).toBe("");
+        expect(testDataArray.components[0]["subcomponents"][0]["selectedLicense"]).toBeDefined();
+        expect(testDataArray.components[0]["subcomponents"][0]["selectedLicense"]).toBe("");
+        expect(testDataArray.components[0]["subcomponents"][0]["additionalLicenseInfos"]).toBeDefined();
+        expect(testDataArray.components[0]["subcomponents"][0]["additionalLicenseInfos"]).toBe("");
+        expect(testDataArray.components[1]["id"]).toBeDefined();
+        expect(testDataArray.components[1]["id"]).toBe(2);
+        expect(testDataArray.components[1]["componentName"]).toBeDefined();
+        expect(testDataArray.components[1]["componentName"]).toBe("adbd");
+        expect(testDataArray.components[1]["componentVersion"]).toBeDefined();
+        expect(testDataArray.components[1]["componentVersion"]).toBe("5.0.0-r1");
+        expect(testDataArray.components[1]["scmUrl"]).toBeDefined();
+        expect(testDataArray.components[1]["scmUrl"]).toBe("http://noscmurlfound/sorryforthat");
+        expect(testDataArray.components[1]["modified"]).toBeDefined();
+        expect(testDataArray.components[1]["modified"]).toBeFalsy();
+        expect(testDataArray.components[1]["linking"]).toBeDefined();
+        expect(testDataArray.components[1]["linking"]).toBe("process_call");
+        expect(testDataArray.components[1]["transitiveDependencies"]).toBeDefined();
+        expect(testDataArray.components[1]["transitiveDependencies"].length).toBe(0);
+        expect(testDataArray.components[1]["subcomponents"]).toBeDefined();
+        expect(testDataArray.components[1]["subcomponents"][0]["subcomponentName"]).toBeDefined();
+        expect(testDataArray.components[1]["subcomponents"][0]["subcomponentName"]).toBe("main");
+        expect(testDataArray.components[1]["subcomponents"][0]["spdxId"]).toBeDefined();
+        expect(testDataArray.components[1]["subcomponents"][0]["spdxId"]).toBe("Apache-2.0");
+        expect(testDataArray.components[1]["subcomponents"][0]["copyrights"]).toBeDefined();
+        expect(testDataArray.components[1]["subcomponents"][0]["copyrights"].length).toBe(0);
+        expect(testDataArray.components[1]["subcomponents"][0]["authors"]).toBeDefined();
+        expect(testDataArray.components[1]["subcomponents"][0]["authors"].length).toBe(0);
+        expect(testDataArray.components[1]["subcomponents"][0]["licenseText"]).toBeDefined();
+        expect(testDataArray.components[1]["subcomponents"][0]["licenseText"]).toContain("The license text of \"APACHE LICENSE Version 2.0, January 2004\" is written below.");
+        expect(testDataArray.components[1]["subcomponents"][0]["licenseTextUrl"]).toBeDefined();
+        expect(testDataArray.components[1]["subcomponents"][0]["licenseTextUrl"]).toBe("");
+        expect(testDataArray.components[1]["subcomponents"][0]["selectedLicense"]).toBeDefined();
+        expect(testDataArray.components[1]["subcomponents"][0]["selectedLicense"]).toBe("");
+        expect(testDataArray.components[1]["subcomponents"][0]["additionalLicenseInfos"]).toBeDefined();
+        expect(testDataArray.components[1]["subcomponents"][0]["additionalLicenseInfos"]).toBe("");
   });
 });
