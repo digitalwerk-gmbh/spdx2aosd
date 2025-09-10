@@ -226,7 +226,7 @@ export const convertDown = async (cliArgument: string): Promise<void> => {
         const result = fs.writeFileSync(process.env.LOG_FILE_PATH, validationMessage, { encoding: 'utf8' });
 
         // Display success message
-        console.log('We are done! - Thank\'s for using our aosd2.1 to aosd2.0 converter!');
+        console.log('We are done! - Thank\'s for using our aosd2.1 to aosd2.0 converter! - Please look at the error.log for Info / Warning / Error');
     } catch(error) {
         console.log(error);
         console.log('Sorry for that - something went wrong! Please check the  file in the root folder for detailed information.');

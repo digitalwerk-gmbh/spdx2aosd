@@ -336,7 +336,7 @@ export const convertSpdx = async (cliArgument: string): Promise<void> => {
         const validationMessage: string = generateDataValidationMessage(validationResults);
         const result = fs.writeFileSync(process.env.LOG_FILE_PATH, validationMessage, { encoding: 'utf8' });
         // Display success message
-        console.log("We are done! - Thank's for using spdx to aosd2.1 converter!");
+        console.log("We are done! - Thank's for using spdx to aosd2.1 converter! - Please look at the error.log for Info / Warning / Error");
     } catch(error: any) {
         console.log(error);
         console.log("Sorry for that - something went wrong! Please check the  file in the root folder for detailed information.");

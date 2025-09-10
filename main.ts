@@ -2,7 +2,7 @@ require('dotenv').config();
 const fs = require('fs');
 import { convertDown } from './src/downconverter';
 import { convertUp } from './src/upconverter';
-import { convertUpXls } from './src/aosd1converter';
+import { convertUpXls, convertUpCsv } from './src/aosd1converter';
 import { convertSpdx } from './src/spdxconverter';
 import { accumulate } from './src/accumulate';
 let cliArgument: string = process.argv[2];
@@ -23,7 +23,7 @@ if(cliArgument ===  undefined ) {
 
     // Check if given file exist in the input folder
     if (!fs.existsSync(process.env.INPUT_JSON_PATH + cliArgument)) {
-        console.log('Sorry for that - something went wrong! The file ' +cliArgument+ ' does not exits in the data input folder!');
+        console.log('Sorry for that - something went wrong! The file ' +cliArgument+ ' does not exist in the data input folder!');
     } else {
         // Write data to aosd json format
         try {
@@ -41,6 +41,9 @@ if(cliArgument ===  undefined ) {
             }
             else if (process.env.SCRIPT === 'upxls') {
                 const response = convertUpXls(cliArgument);      
+            }
+            else if (process.env.SCRIPT === 'upcsv') {
+                const response = convertUpCsv(cliArgument);      
             }
         } catch(error) {
             // writeErrorLog({ message: checkErrorMessage(error) })

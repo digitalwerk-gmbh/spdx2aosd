@@ -217,7 +217,7 @@ export const convertUp = async (cliArgument: string): Promise<void> => {
         // Check for validation error
         const validationMessage: string = generateDataValidationMessage(validationResults);
         fs.writeFileSync(process.env.LOG_FILE_PATH, validationMessage, { encoding: 'utf8' });
-        console.log("We are done! - Thank's for using our aosd2.0 to aosd2.1 converter!");
+        console.log("We are done! - Thank's for using our aosd2.0 to aosd2.1 converter! - Please look at the error.log for Info / Warning / Error");
     } catch(error: any) {
         fs.writeFileSync(process.env.LOG_FILE_PATH, error.toString(), { encoding: 'utf8' });
         console.log("Sorry for that - something went wrong! Please check the error.log file in the root folder for detailed information.");

@@ -1,6 +1,8 @@
 const fs = require('fs');
 const ExcelJS = require('exceljs');
 require('dotenv').config();
+import * as path from 'path';
+import { parseStream } from 'fast-csv';
 import { AosdObject, AosdComponent, AosdSubComponent } from "../interfaces/interfaces";
 import { validateAosd } from './aosdvalidator';
 import { generateDataValidationMessage, linkingMapper, loadSPDXKeys, loadDeprecatedSPDXKeys, modificationMapper, spdxKeyMapper, validateComponentsForModificationAndLinking, validateSelectedLicenseForDualLicenses, validateSPDXIds, validateLicenseTextUrl} from "./helper";
@@ -10,6 +12,7 @@ let outputFile: string = '';
 let validationResults: Array<string> = [];
 const validSPDXKeys = loadSPDXKeys();
 const deprecatedSPDXKeys = loadDeprecatedSPDXKeys();
+let csvDataArray: Array<object> = [];
 
 export const convertUpXls = async (cliArgument: string): Promise<void> => {
     try {
@@ -22,7 +25,7 @@ export const convertUpXls = async (cliArgument: string): Promise<void> => {
         await myWorkBook.xlsx.readFile(inputJsonPath)
         .then(() => {
             const worksheet = myWorkBook.getWorksheet('records');
-            let counter = 0;
+            let rowCounter = 0;
             worksheet.eachRow({ includeEmpty: false }, function(row: any) {
                 let rowObject = {
                     id: 0,
@@ -39,34 +42,64 @@ export const convertUpXls = async (cliArgument: string): Promise<void> => {
 		            use_comment: ''
                 };
                 tmpArray = [];
+                let colCounter = 1;
                 row.eachCell({ includeEmpty: true }, function(cell: any, colNumber: any) {
                     if (cell.value === null) {
                         cell.value = '';
-                        // Replace line breaks - problem error message
-                        // myString.replace(/\n/g, ' ') 
                     }
-                    if (colNumber === 5 && cell.value !== '' && cell.value !== null) {
+                    // Check if the columns are complete and int the correct order 
+                    // -----------------------------------------------------------
+                    // Expected AOSD1.0 template columns
+                    // -----------------------------------------------------------
+                    // (1)  Column (A) - id
+                    // (2)  Column (B) - software_name
+                    // (3)  Column (C) - software_version
+                    // (4)  Column (D) - software_download_link
+                    // (5)  Column (E) - license_spdx
+                    // (6)  Column (F) - license_text
+                    // (7)  Column (G) - use_linkage
+                    // (8)  Column (H) - use_modification
+                    // (9)  Column (I) - use_start
+                    // (10) Column (J) - use_end
+                    // (11) Column (K) - use_comment
+
+                    if (rowCounter === 0) {
+                        if (colCounter === 1 && cell.value !== 'id') { throw new Error("Column A must have the name id.");};
+                        if (colCounter === 2 && cell.value !== 'software_name') { throw new Error("Column B must have the name software_name.");};
+                        if (colCounter === 3 && cell.value !== 'software_version') { throw new Error("Column C must have the name software_version.");};
+                        if (colCounter === 4 && cell.value !== 'software_download_link') { throw new Error("Column D must have the name software_download_link.");};
+                        if (colCounter === 5 && cell.value !== 'license_spdx') { throw new Error("Column E must have the name license_spdx.");};
+                        if (colCounter === 6 && cell.value !== 'license_text') { throw new Error("Column F must have the name license_text.");};
+                        if (colCounter === 7 && cell.value !== 'use_linkage') { throw new Error("Column G must have the name use_linkage.");};
+                        if (colCounter === 8 && cell.value !== 'use_modification') { throw new Error("Column H must have the name use_modification.");};
+                        if (colCounter === 9 && cell.value !== 'use_start') { throw new Error("Column I must have the name use_start.");};
+                        if (colCounter === 10 && cell.value !== 'use_end') { throw new Error("Column J must have the name use_end.");};
+                        if (colCounter === 11 && cell.value !== 'use_comment') { throw new Error("Column K must have the name use_comment.");};
+                    }
+
+                    if (rowCounter !== 0 && colNumber === 4 && cell.value !== '' && cell.value !== null) {
                         cell.value = cell.value.text;
-                    }
+                    } 
                     switch(colNumber) {
-                        case 1: rowObject.id = counter; 
-		                case 3: rowObject.software_name = cell.value;
-		                case 4: rowObject.software_version = cell.value;
-		                case 5: rowObject.software_download_link = cell.value;
-		                case 6: rowObject.license_spdx = cell.value; 
-		                case 7: rowObject.license_text = cell.value; 
-		                case 8: rowObject.use_linkage = cell.value; 
-		                case 9: rowObject.use_modification = cell.value; 
-		                case 10: rowObject.use_distribution = cell.value; 
-		                case 11: rowObject.use_start = cell.value;  
-		                case 12: rowObject.use_end = cell.value; 
-		                case 13: rowObject.use_comment = cell.value; 
-                    }    
+                        case 1: rowObject.id = rowCounter; 
+		                case 2: rowObject.software_name = cell.value;
+		                case 3: rowObject.software_version = cell.value;
+		                case 4: rowObject.software_download_link = cell.value;
+		                case 5: rowObject.license_spdx = cell.value; 
+		                case 6: rowObject.license_text = cell.value; 
+		                case 7: rowObject.use_linkage = cell.value; 
+                        case 8: rowObject.use_modification = cell.value; 
+		                case 9: rowObject.use_start = cell.value;  
+		                case 10: rowObject.use_end = cell.value; 
+		                case 11: rowObject.use_comment = cell.value;
+                    }
+                    colCounter++;
                 })
-                if (counter !== 0) {
+                // Do not push header row
+                if (rowCounter !== 0) {
                     json.push(rowObject);
                 }
-                counter++;
+                rowCounter++;
             });
 
             // Converter AOSD1.0 to AOSD2.1
@@ -98,7 +131,7 @@ export const convertUpXls = async (cliArgument: string): Promise<void> => {
                 // Create subComponent object
                 let subcomponentObject: AosdSubComponent = {
                     subcomponentName: 'main',
-                    spdxId: spdxKeyMapper(json[i]['license_spdx']),
+                    spdxId: spdxKeyMapper(json[i]['license_spdx'], validationResults),
                     copyrights: [],
                     authors: [],
                     licenseText: json[i]['license_text'],
@@ -115,7 +148,7 @@ export const convertUpXls = async (cliArgument: string): Promise<void> => {
                 newObject['components'].push(componentObject);
 
                 // Validate spdxId
-                const spdxValidationMessages = validateSPDXIds([spdxKeyMapper(json[i]['license_spdx'])], validSPDXKeys, deprecatedSPDXKeys, componentObject.componentName, subcomponentObject.subcomponentName);
+                const spdxValidationMessages = validateSPDXIds([spdxKeyMapper(json[i]['license_spdx'], validationResults)], validSPDXKeys, deprecatedSPDXKeys, componentObject.componentName, subcomponentObject.subcomponentName);
                 validationResults.push(...spdxValidationMessages);
                 initialId++;
             }
@@ -148,7 +181,7 @@ export const convertUpXls = async (cliArgument: string): Promise<void> => {
             // Check for validation error
             const validationMessage: string = generateDataValidationMessage(validationResults);
             fs.writeFileSync(process.env.LOG_FILE_PATH, validationMessage, { encoding: 'utf8' });
-            console.log("We are done! - Thank's for using our aosd1.0 to aosd2.1 converter!");
+            console.log("We are done! - Thank's for using our aosd1.0 to aosd2.1 converter! - Please look at the error.log for Info / Warning / Error");
         })    
         .catch((error:any) => {
             fs.writeFileSync(process.env.LOG_FILE_PATH, error.toString(), { encoding: 'utf8' });
@@ -159,3 +192,46 @@ export const convertUpXls = async (cliArgument: string): Promise<void> => {
         console.log("Sorry for that - something went wrong! Please check the error.log file in the root folder for detailed information.");
     }
 }
+
+// https://www.oneschema.co/blog/top-5-javascript-csv-parsers
+// https://www.npmjs.com/package/fast-csv
+// https://github.com/C2FO/fast-csv
+// https://c2fo.github.io/fast-csv/docs/introduction/example
+export const convertUpCsv = async (cliArgument: string): Promise<void> => {
+    try {
+        validationResults.push('-----------------------------------------------------\nData-Validation errors:\n-----------------------------------------------------\n');
+        inputJsonPath = process.env.INPUT_JSON_PATH + cliArgument;
+        outputJsonPath = process.env.OUTPUT_JSON_PATH;
+        console.log('INFO: ', 'Work under progress');
+        const stream = fs.createReadStream(path.resolve(inputJsonPath), { encoding: "utf8" })
+        parseStream(stream, { headers: true })
+        .on('error', (error: any) => console.error(error))
+        .on('data', (rowData) => {
+            csvDataArray.push(rowData);
+        })
+        .on('end', () => outputData(csvDataArray, cliArgument));
+
+    } catch(error: any) {
+        fs.writeFileSync(process.env.LOG_FILE_PATH, error.toString(), { encoding: 'utf8' });
+        console.log("Sorry for that - something went wrong! Please check the error.log file in the root folder for detailed information.");
+    }
+}
+
+const outputData = (data: Array<object>, cliArgument: string) => {
+    // Converter AOSD1.0 to AOSD2.1
+    // Create new Aosd JSON Object
+    let newObject: AosdObject  = {
+        schemaVersion: '2.1.0',
+        externalId: cliArgument,
+        scanned: true,
+        directDependencies: [],
+        components: [],
+    };
+
+    // Starting Id
+    let initialId: number = 1;
+
+    for (let i = 0; i < csvDataArray?.length; i++) {
+        console.log('WHAT: ', csvDataArray[i]);
+    }
+};

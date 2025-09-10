@@ -173,7 +173,7 @@ This means that if the values are `null` in AOSD 2.1, we cannot convert these va
 If you use the cumulative data feature, we recommend checking the results again thoroughly to ensure that you don't lose any data. This feature is currently provided as experimental.
 If you use the experimental cumulative data feature the removed subcomponets will be listet in the error.log file. This might help if you double check the data.
 
-## Detailed Warning and Error Messages
+## Detailed Info, Warning and Error Messages
 
 Warning and error messages will not be displayed in the console. Only a hint will be shown:
 
@@ -182,6 +182,8 @@ Sorry for that - something went wrong! Please check the error.log file in the ro
 ```
 
 All findings and errors are recorded in a log file named `error.log`. This file is located in the root directory of the tool. There you will find detailed descriptions of errors or warnings.
+
+### Infos Explained
 
 ### Warnings Explained
 
