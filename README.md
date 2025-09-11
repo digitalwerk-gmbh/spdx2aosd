@@ -1,12 +1,16 @@
 # spdx2aosd: SPDX to AOSD converter with support for multiple AOSD formats
 
-[Digitalwerk](https://www.digitalwerk.net) has developed the **spdx2aosd** converter for the AOSD ecosystem and made it available to the open-source community. This CLI tool enables easy and flexible conversion of various JSON data formats into the specified proprietary AOSD format. For additional support in reviewing and managing open-source licenses, please visit the [Digitalwerk EasyCheckOSS Service](https://easycheckoss.ai/).
+[Digitalwerk](https://www.digitalwerk.net) has developed the **spdx2aosd** converter for the AOSD ecosystem and made it available to the open-source community. This CLI tool enables easy and flexible conversion of various JSON data formats into the specified proprietary AOSD format.
+We have also added support for the AOSD1.0 format that originally is Excel or CSV. For additional support in reviewing and managing open-source licenses, please visit the [Digitalwerk EasyCheckOSS Service](https://easycheckoss.ai/).
 
 ## Features
 
 - **License Data Generation:** Create a current JSON file with all SPDX and Scancode licenses.
-- **Conversion Between AOSD Versions:** Convert proprietary AOSD JSON files between versions 2.0 and 2.1.
+- **Conversion Between AOSD Versions:** Convert proprietary AOSD JSON files between versions 2.0 and 2.1 or version 1.0 to 2.1.
 - **SPDX File Customization:** Convert SPDX 2.3 JSON files that meet the group requirements of Audi and Volkswagen into the proprietary AOSD 2.1 format.
+- **AOSD2.0 File Customization:** Convert AOSD2.0 JSON files into the proprietary AOSD 2.1 format.
+- **AOSD1.0 File Customization:** Convert AOSD1.0 Excel or CSV files into the proprietary AOSD 2.1 format.
+- **AOSD2.1 File Customization:** Convert AOSD2.1 JSON files into the proprietary AOSD 2.0 format.
 
 ## More Information
 
@@ -56,13 +60,17 @@ The command-line interface (CLI) provides a series of commands. You can also run
 
 $ npm run licenses
 
-# Convert the JSON file from AOSD 2.0 to AOSD 2.1 JSON format.
-
-$ npm run up <filename>
-
 # Convert the EXCEL file from AOSD 1.0 to AOSD 2.1 JSON format.
 
 $ npm run upxls <filename>
+
+# Convert the CSV file from AOSD 1.0 to AOSD 2.1 JSON format.
+
+$ npm run upcsv <filename>
+
+# Convert the JSON file from AOSD 2.0 to AOSD 2.1 JSON format.
+
+$ npm run up <filename>
 
 # Convert the JSON file from AOSD 2.1 to AOSD 2.0 JSON format.
 
@@ -131,15 +139,13 @@ spdx2aosd
 │  └──data
 │  │   │
 │  │   └──input
+│  │   │  aosd1.0_excel_import.json
 │  │   │  aosd2.0_import.json
 │  │   │  aosd2.1_import.json
-│  │   │  Example1-RELothMOD-RELcontainsFOSSreportSPDX2.3.spdx.json
-│  │   │  Example2-RELfilemod-RELcontainsFOSSreportSPDX2.3.spdx.json
-│  │   │  Example3-RELothMOD-hasFilesFOSSreportSPDX2.3.spdx.json
-│  │   │  Example4-RELfilemod-hasFilesFOSSreportSPDX2.3.spdx.json
-│  │   │  SPDXJSONExample-v2.3.spdx.json
+│  │   │  aosd2.1_json_accumulate.json
+│  │   │  aosd2.1_jsonObject.json
 │  │   │  test_group_spec_spdx.json
-│  │   │  testFile.json
+│  │   │  test.csv
 │  │   │
 │  │   └──output
 │  │      .gitkeep
@@ -164,6 +170,8 @@ tsconfig.json
 
 ## Important to Know
 
+### AOSD2.1 to AOSD2.0
+
 Note that when converting data from version 2.1 to version 2.0, there are some specific considerations to be aware of.
 
 In AOSD 2.1, the fields `usage` and `linking` are conditionally mandatory, while they are mandatory in AOSD 2.0.
@@ -172,6 +180,18 @@ This means that if the values are `null` in AOSD 2.1, we cannot convert these va
 
 If you use the cumulative data feature, we recommend checking the results again thoroughly to ensure that you don't lose any data. This feature is currently provided as experimental.
 If you use the experimental cumulative data feature the removed subcomponets will be listet in the error.log file. This might help if you double check the data.
+
+### AOSD1.0 to AOSD2.1
+
+You can convert AOSD1.0 Excel files to proprietary AOSD2.1 JSON format. This assumes you've used the template for the Excel file from the AOSD 1.0 tool. It can be downloaded there. To use the template is important because of the naming for columns and the order of the fields.
+
+Alternatively, you can also convert a AOSD1.0 CSV file instead of the AOSD1.0 Excel file. However, you must adhere to the specified column names here, otherwise the converter will fail with an error message.
+
+### AOSD2.1 JSON accumlation 
+
+We have also added functionality to combine duplicate subcomponents within a software component to optimize the file size of the AOSD2.1 JSON import file and also the data volume.
+
+For example, if a subcomponent contains 200 copies of the same Apache 2.0 license with identical license text and SPDX key, these are combined into a single subcomponent. This is regardless of whether the copyright holders are different, as they are also combined in the copyrights array. This saves you from having to import 200 subcomponents and then check them in the AOSD. The combination always occurs only within one component.
 
 ## Detailed Info, Warning and Error Messages
 
@@ -184,6 +204,18 @@ Sorry for that - something went wrong! Please check the error.log file in the ro
 All findings and errors are recorded in a log file named `error.log`. This file is located in the root directory of the tool. There you will find detailed descriptions of errors or warnings.
 
 ### Infos Explained
+
+Infos are no errors but may indicate that you should review your JSON file for potential errors. A info can also be acceptable in a specific case and ignored.
+
+```sh
+Info mapped spdxKey from "GPL-3.0-with-GCC-exception" to "GPL-3.0-only WITH GCC-exception-3.1".
+```
+
+Meaning:
+
+For example we have added a new spdx key mapper in the aosd1converter that is mapping known
+deprecated license keys to new keys that will be accepted by the aosd tool.
+This info block will tell you that we have changed the deprecated spdx keys to the newer ones.
 
 ### Warnings Explained
 
@@ -217,8 +249,6 @@ Warning: we have found component(s) that is neither in direct dependencies nor i
 
 This warning indicates that you have generated data for a software component. However, the ID of this software component is neither in `directDependencies` nor in `transitiveDependencies`. This component will be ignored during AOSD import!
 
-## Error Messages Explained
-
 ### Requirements for the spdx2aosd Converter
 
 This spdx2aosd converter can only process SPDX 2.3 JSON files that meet the requirements of the group specifications from Audi and Volkswagen. The converter has been specifically developed for the group requirements. We only validate data fields described in this specification. We assume that the data in the SPDX 2.3 JSON file is already curated and correct.
@@ -243,11 +273,10 @@ After the license list has been updated or you have skipped this step, you shoul
 
 ## Roadmap
 
-1. Fix the warning in strict mode in the unit tests
-2. Improve error messages for validating the JSON schema
-3. Improve error messages in general
-4. Expand unit tests
-5. Extend plausibility checks
-6. Implement OSSelot compability
-7. Implement SPDX2.3 standard on top of GroupSpec
-8. Implememt CycloneDX Konverter for automotive projext data
+1. Implement SPDX2.3 standard on top of GroupSpec
+2. Implement OSSelot compability
+3. Improve error messages for validating the JSON schema
+4. Improve error messages in general
+5. Expand unit tests
+6. Extend plausibility checks
+7. Implememt CycloneDX Konverter for automotive projext data

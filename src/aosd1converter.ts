@@ -102,7 +102,7 @@ export const convertUpXls = async (cliArgument: string): Promise<void> => {
                 rowCounter++;
             });
 
-            // Converter AOSD1.0 to AOSD2.1
+            // Converter AOSD1.0 XLSX to AOSD2.1 JSON
             // Create new Aosd JSON Object
             let newObject: AosdObject  = {
                 schemaVersion: '2.1.0',
@@ -120,7 +120,7 @@ export const convertUpXls = async (cliArgument: string): Promise<void> => {
                 let componentObject: AosdComponent = {
                     id: initialId,
                     componentName: json[i]['software_name'].toString().replace(/\n/g, ''),
-                    componentVersion: json[i]['software_version'].toString().replace(/\n/g, ''),
+                    componentVersion: json[i]['software_version'].toString().length > 0 ? json[i]['software_version'].toString().replace(/\n/g, '') : 'no-version',
                     scmUrl: json[i]['software_download_link'] !== null && json[i]['software_download_link'].length > 0 ? json[i]['software_download_link'] : 'http://noscmurlfound/sorryforthat',
                     modified: modificationMapper(json[i]['use_modification']),
                     linking: linkingMapper(json[i]['use_linkage']),
@@ -131,7 +131,7 @@ export const convertUpXls = async (cliArgument: string): Promise<void> => {
                 // Create subComponent object
                 let subcomponentObject: AosdSubComponent = {
                     subcomponentName: 'main',
-                    spdxId: spdxKeyMapper(json[i]['license_spdx'], validationResults),
+                    spdxId: json[i]['license_spdx'].length > 0 ? spdxKeyMapper(json[i]['license_spdx'], validationResults) : 'no-spdxId',
                     copyrights: [],
                     authors: [],
                     licenseText: json[i]['license_text'],
@@ -181,7 +181,7 @@ export const convertUpXls = async (cliArgument: string): Promise<void> => {
             // Check for validation error
             const validationMessage: string = generateDataValidationMessage(validationResults);
             fs.writeFileSync(process.env.LOG_FILE_PATH, validationMessage, { encoding: 'utf8' });
-            console.log("We are done! - Thank's for using our aosd1.0 to aosd2.1 converter! - Please look at the error.log for Info / Warning / Error");
+            console.log("We are done! - Thank's for using our aosd1.0 xlsx to aosd2.1 converter! - Please look at the error.log for Info / Warning / Error");
         })    
         .catch((error:any) => {
             fs.writeFileSync(process.env.LOG_FILE_PATH, error.toString(), { encoding: 'utf8' });
@@ -193,10 +193,6 @@ export const convertUpXls = async (cliArgument: string): Promise<void> => {
     }
 }
 
-// https://www.oneschema.co/blog/top-5-javascript-csv-parsers
-// https://www.npmjs.com/package/fast-csv
-// https://github.com/C2FO/fast-csv
-// https://c2fo.github.io/fast-csv/docs/introduction/example
 export const convertUpCsv = async (cliArgument: string): Promise<void> => {
     try {
         validationResults.push('-----------------------------------------------------\nData-Validation errors:\n-----------------------------------------------------\n');
@@ -209,29 +205,99 @@ export const convertUpCsv = async (cliArgument: string): Promise<void> => {
         .on('data', (rowData) => {
             csvDataArray.push(rowData);
         })
-        .on('end', () => outputData(csvDataArray, cliArgument));
-
+        .on('end', async () => await outputData(csvDataArray, cliArgument));
+        stream.end();
+        console.log("We are done! - Thank's for using our aosd1.0 csv to aosd2.1 converter! - Please look at the error.log for Info / Warning / Error");
     } catch(error: any) {
         fs.writeFileSync(process.env.LOG_FILE_PATH, error.toString(), { encoding: 'utf8' });
         console.log("Sorry for that - something went wrong! Please check the error.log file in the root folder for detailed information.");
     }
 }
 
-const outputData = (data: Array<object>, cliArgument: string) => {
-    // Converter AOSD1.0 to AOSD2.1
-    // Create new Aosd JSON Object
-    let newObject: AosdObject  = {
-        schemaVersion: '2.1.0',
-        externalId: cliArgument,
-        scanned: true,
-        directDependencies: [],
-        components: [],
-    };
+const outputData = async (csvData: Array<object>, cliArgument: string) => {
+    try {
+        // Converter AOSD1.0 CSV to AOSD2.1 JSON
+        // Create new Aosd JSON Object
+        let newObject: AosdObject  = {
+            schemaVersion: '2.1.0',
+            externalId: cliArgument,
+            scanned: true,
+            directDependencies: [],
+            components: [],
+        };
 
-    // Starting Id
-    let initialId: number = 1;
+        // Starting IdcsvDataArray
+        let initialId: number = 1;
+        for (let i = 0; i < csvData?.length; i++) {
+            // Create component object
+            const tmpRecord = JSON.stringify(csvData[i]);
+            const record = JSON.parse(tmpRecord);
+            let componentObject: AosdComponent = {
+                id: initialId,
+                componentName: record['software_name'].toString().replace(/\n/g, ''),
+                componentVersion: record['software_version'].toString().length > 0 ? record['software_version'].toString().replace(/\n/g, '').replace('+', '').replace('-', '').substring(0, 49) : 'no-version',
+                scmUrl: record['software_download_link'] !== null && record['software_download_link'].length > 0 ? record['software_download_link'] : 'http://noscmurlfound/sorryforthat',
+                modified: modificationMapper(record['use_modification']),
+                linking: linkingMapper(record['use_linkage']),
+                transitiveDependencies: [],
+                subcomponents: [],
+            };
 
-    for (let i = 0; i < csvDataArray?.length; i++) {
-        console.log('WHAT: ', csvDataArray[i]);
+            // Create subComponent object
+            let subcomponentObject: AosdSubComponent = {
+                subcomponentName: 'main',
+                spdxId: record['license_spdx'].length > 0 ? spdxKeyMapper(record['license_spdx'], validationResults) : 'no-spdxId',
+                copyrights: [],
+                authors: [],
+                licenseText: record['license_text'],
+                licenseTextUrl: '',
+                selectedLicense: "",
+                additionalLicenseInfos: ""
+            };
+
+            // Push data into new subcomponent object
+            componentObject['subcomponents'].push(subcomponentObject);    
+
+            //Push data into the new object
+            newObject['directDependencies'].push(initialId);
+            newObject['components'].push(componentObject);
+                
+            // Validate spdxId
+            const spdxValidationMessages = validateSPDXIds([spdxKeyMapper(record['license_spdx'], validationResults)], validSPDXKeys, deprecatedSPDXKeys, componentObject.componentName, subcomponentObject.subcomponentName);
+            validationResults.push(...spdxValidationMessages);
+            initialId++;
+        }
+
+        // Validate modification and linking
+        validateComponentsForModificationAndLinking(newObject.components, validationResults);
+
+        // Validate selectedLicense
+        validateSelectedLicenseForDualLicenses(newObject.components, validationResults);
+
+        // Validate licenseTextUrl
+        if (newObject.scanned === false) {
+            validateLicenseTextUrl(newObject.components, validationResults);
+        }
+
+        // Prepare output file
+        const outputFileName: string = cliArgument.replace(".csv", "") + "_aosd2.1" + ".json";
+        outputFile = outputJsonPath + outputFileName;
+
+        // Write data to aosd json format
+        fs.writeFileSync(outputFile, JSON.stringify(newObject, null, '\t'));
+
+        // Validate the aosd json result 
+        const validationAosdResult = validateAosd(process.env.OUTPUT_JSON_PATH + outputFileName, process.env.AOSD2_1_JSON_SCHEME);
+        // If the scheme validation returns errors add them to log
+        if (validationAosdResult.length > 0) {
+            validationResults = validationResults.concat(validationAosdResult);
+        }
+    
+        // Check for validation error
+        const validationMessage: string = generateDataValidationMessage(validationResults);
+        fs.writeFileSync(process.env.LOG_FILE_PATH, validationMessage, { encoding: 'utf8' });
+    } catch(error: any) {
+        fs.writeFileSync(process.env.LOG_FILE_PATH, error.toString(), { encoding: 'utf8' });
+        console.log("Sorry for that - something went wrong! Please check the error.log file in the root folder for detailed information.");
     }
 };

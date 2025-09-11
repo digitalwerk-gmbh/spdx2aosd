@@ -13,6 +13,7 @@ node_modules
 !**/tests/data/input/aosd2.1_jsonObject.json
 !**/tests/data/input/test_group_spec_spdx.json
 !**/tests/data/input/aosd2.1_json_accumulate.json
+!**/tests/data/input/test.csv
 **/data/input/*
 !**/data/input/.gitkeep
 **/data/output/*
