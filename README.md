@@ -195,13 +195,13 @@ For example, if a subcomponent contains 200 copies of the same Apache 2.0 licens
 
 ## Detailed Info, Warning and Error Messages
 
-Warning and error messages will not be displayed in the console. Only a hint will be shown:
+Info, warning and error messages will not be displayed in the console. Only a hint will be shown:
 
 ```sh
 Sorry for that - something went wrong! Please check the error.log file in the root folder for detailed information.
 ```
 
-All findings and errors are recorded in a log file named `error.log`. This file is located in the root directory of the tool. There you will find detailed descriptions of errors or warnings.
+All infos, findings and errors are recorded in a log file named `error.log`. This file is located in the root directory of the tool. There you will find detailed descriptions of infos, errors or warnings.
 
 ### Infos Explained
 
