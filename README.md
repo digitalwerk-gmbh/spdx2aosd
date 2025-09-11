@@ -117,6 +117,7 @@ spdx2aosd
 │	
 └──docs
 │  231102_GroupSpecification_1.1_DRAFT.pdf
+│  aosd1_import_template.xlsx
 │  KonzernFOSSPflichtfelder - SPDX Group Spec CycloneDX AOSD2.1.xlsx
 │	
 └──interfaces
@@ -183,7 +184,7 @@ If you use the experimental cumulative data feature the removed subcomponets wil
 
 ### AOSD1.0 to AOSD2.1
 
-You can convert AOSD1.0 Excel files to proprietary AOSD2.1 JSON format. This assumes you've used the template for the Excel file from the AOSD 1.0 tool. It can be downloaded there. To use the template is important because of the naming for columns and the order of the fields.
+You can convert AOSD1.0 Excel files to proprietary AOSD2.1 JSON format. This assumes you've used the template for the Excel file from the AOSD 1.0 tool. It can be downloaded there. Or you can find the template also in the docs folder of this reporitory. To use the template is important because of the naming for columns and the order of the fields.
 
 Alternatively, you can also convert a AOSD1.0 CSV file instead of the AOSD1.0 Excel file. However, you must adhere to the specified column names here, otherwise the converter will fail with an error message.
 
