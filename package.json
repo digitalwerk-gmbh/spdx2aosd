@@ -16,6 +16,9 @@
     "licenses": "cross-env RUN_MODE=production ts-node ./src/licenses.ts",
     "test": "cross-env RUN_MODE=test INPUT_JSON_PATH=./tests/data/input/ OUTPUT_JSON_PATH=./tests/data/output/ jest --detectOpenHandles"
   },
+  "engines": {
+    "node": ">=22"
+  },
   "repository": {
     "type": "gitlab",
     "url": "gitlab+https://gitlab.com/digitalwerk/checkoss/aosdtoaosdconverter.git"
