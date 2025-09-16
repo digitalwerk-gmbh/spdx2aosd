@@ -40,3 +40,8 @@
 
 # Update from version 1.3.0-beta to 1.4.0-beta
 # [Changed] The SPDX license information now comes from licenseConcluded instead of licenseDeclared (corresponds to the SPDX specification recommendation).
+
+# Update from version 1.4.0-beta to 1.5.0-beta
+# [Changed] renamed spdxconverter to spdxspecconverter and also the coresponding function
+# [Added] spdx converter according to SPDX2.3 specification without group spec exceptions
+

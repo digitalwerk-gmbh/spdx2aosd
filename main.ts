@@ -2,6 +2,7 @@ require('dotenv').config();
 const fs = require('fs');
 import { convertDown } from './src/downconverter';
 import { convertUp } from './src/upconverter';
+import { convertSpdxSpec } from './src/spdxspecconverter';
 import { convertSpdx } from './src/spdxconverter';
 import { accumulate } from './src/accumulate';
 let cliArgument: string = process.argv[2];
@@ -31,6 +32,9 @@ if(cliArgument ===  undefined ) {
             }
             else if (process.env.SCRIPT === 'up') {
                 const response = convertUp(cliArgument);      
+            }
+            else if (process.env.SCRIPT === 'spdxspec') {
+                const response = convertSpdxSpec(cliArgument);    
             }
             else if (process.env.SCRIPT === 'spdx') {
                 const response = convertSpdx(cliArgument);    

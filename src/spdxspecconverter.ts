@@ -13,9 +13,7 @@ let idMapping: Array<exportMapper> = [];
 let validationResults: Array<string> = [];
 let tmpLicense: Array<ExtractedLicense> = [];
 const COPYRIGHT_REPLACE_PATTERN: Array<string> = ["NOASSERTION", "NONE"];
-let jsonInputArray: Array<string> = [];
-
-export const convertSpdx = async (cliArgument: string): Promise<void> => {
+export const convertSpdxSpec = async (cliArgument: string): Promise<void> => {
     try {
         // Check update status of licenses
         if (fs.existsSync(process.env.LICENSE_FILE_PATH)) {
@@ -34,78 +32,18 @@ export const convertSpdx = async (cliArgument: string): Promise<void> => {
             validationResults = validationResults.concat(validationSpdxResult);
         }
         validationResults.push('\n-----------------------------------------------------\nData-Validation errors:\n-----------------------------------------------------\n');
-        // Read the input spdx json file as stream
-        const stream = await fs.createReadStream(inputJsonPath, { encoding: 'utf8' });
-        const parser = await JSONStream.parse('*');
-        // const parser = await JSONStream.parse(['docs', {recurse: true}, 'value']);
-        stream.pipe(parser);
-
-        // Push data block into array as string blocks
-        parser.on('data', (objectData: any) => {
-            jsonInputArray.push(JSON.stringify(objectData));
-        });
-
-        // Finally return the result array
-        parser.on('end', async () => await convertData(jsonInputArray, cliArgument));
-        console.log('Parsing complete.');
-
-        // On error log
-        parser.on('error', (error: any) => {
-            console.error('Error occurred:', error);
-        });
-    } catch(error: any) {
-        console.log(error);
-        console.log("Sorry for that - something went wrong! Please check the  file in the root folder for detailed information.");
-    }
-}
-
-
-const convertData = async (jsonData: Array<string>, cliArgument: string) => {
-    try {
-        let tmpExtractedLicensesData: Array<object> = [];
-        let tmpPackageData: Array<object> = [];
-        let tmpFileData: Array<object> = [];
-        let tmpRelationshipsData: Array<object> = [];
-
-        jsonData.forEach(datablock => {
-            let tmpObject = JSON.parse(datablock);
-            if (typeof tmpObject[0] === 'object') {
-                if (tmpObject[0].hasOwnProperty('extractedText')) {
-                    tmpExtractedLicensesData = tmpObject;
-                }
-                if (tmpObject[0].hasOwnProperty('filesAnalyzed')) {
-                    tmpPackageData = tmpObject;
-                }
-                if (tmpObject[0].hasOwnProperty('fileName')) {
-                    tmpFileData = tmpObject;
-                }
-                if (tmpObject[0].hasOwnProperty('relationshipType')) {
-                    tmpRelationshipsData = tmpObject;
-                }
-            } 
-        });
-        const extractedLicensesData = tmpExtractedLicensesData.length > 0 ? JSON.parse(JSON.stringify(tmpExtractedLicensesData)) : [];
-        const packageData = tmpPackageData.length > 0 ? JSON.parse(JSON.stringify(tmpPackageData)) : [];
-        const licenseFileData = tmpFileData.length > 0 ? JSON.parse(JSON.stringify(tmpFileData)) : [];
-        const relationshipsData = tmpRelationshipsData.length > 0 ? JSON.parse(JSON.stringify(tmpRelationshipsData)) : [];
-
-        console.log('SPDX data blocks: ', jsonData.length);
-        console.log('SPDX input file name:', cliArgument);
-        console.log('extractedLicense blocks:', extractedLicensesData.length);
-        console.log('Number of packages:', packageData.length);
-        console.log('Number of files:', licenseFileData.length);
-        console.log('Number of relationships:', relationshipsData.length);
-
+        // Read the input spdx json file
+        let jsonInputFile = fs.readFileSync(inputJsonPath, { encoding: 'utf8' });
+        let jsonInputArray = JSON.parse(jsonInputFile);
         // Collect license id and license text
         let licenseTextMap: Array<MappedLicense> = [];
-        extractedLicensesData?.forEach((licenseInfo: ExtractedLicense) => {
+        jsonInputArray['hasExtractedLicensingInfos']?.forEach((licenseInfo: ExtractedLicense) => {
             let mapl: MappedLicense = {
                 licenseId: licenseInfo.licenseId,
                 extractedText: licenseInfo.extractedText,
             }
             licenseTextMap.push(mapl);
-        });
-        
+        });      
         // Get the license text from the licenses.json file if needed
         const getLicenseText = (licenseId: string) => {
             // Try to get the license text from the licenseTextMap
@@ -118,7 +56,6 @@ const convertData = async (jsonData: Array<string>, cliArgument: string) => {
                 return licenseInfo.length > 0 ? licenseInfo[0].text : "";
             }
         };
-
         // Create new Aosd JSON Object
         let newObject: AosdObject  = {
             schemaVersion: '2.1.0',
@@ -127,9 +64,8 @@ const convertData = async (jsonData: Array<string>, cliArgument: string) => {
             directDependencies: [],
             components: [],
         };
-
         // Convert SPDXIDs to internal Ids
-        const dependenciesArray: Array<SpdxPackages> = packageData;
+        const dependenciesArray: Array<SpdxPackages> = jsonInputArray['packages'];
         const spdxIdToInternalIdMap: Array<SpdxIdToInternalId> = [];
         dependenciesArray?.forEach((spdxBlock: SpdxPackages, index: number) => {
             let spdxb: SpdxIdToInternalId = {
@@ -138,9 +74,8 @@ const convertData = async (jsonData: Array<string>, cliArgument: string) => {
             }
             spdxIdToInternalIdMap.push(spdxb);
         });
-        
         // Get transitive dependencies for a given component ID
-        const relationships: Array<SpdxRelationsships> = JSON.parse(JSON.stringify(relationshipsData));
+        const relationships: Array<SpdxRelationsships> = jsonInputArray['relationships'];
         const getTransitiveDependencies = (componentId: string, relationships: Array<SpdxRelationsships>) => {
                 const transDepsIds: Array<string> = [];
                 relationships.forEach((rel: SpdxRelationsships) => {
@@ -163,7 +98,6 @@ const convertData = async (jsonData: Array<string>, cliArgument: string) => {
             // Ensure id uniqueness
             return [...new Set(transDepsIds)];
         };
-
         // Get linking type for a given component ID
         const getLinkingType = (componentId: string, relationships: Array<SpdxRelationsships>) => {
             let linkingType = relationships.filter(rel => rel.spdxElementId === componentId)
@@ -181,7 +115,6 @@ const convertData = async (jsonData: Array<string>, cliArgument: string) => {
                 }
             }
         };
-        
         // Get file from package bekause hasFiles is depricated
         const getPackageFiles = (componentId: string, relationships: Array<SpdxRelationsships>) => {
             let linkingType = relationships.filter(rel => rel.spdxElementId === componentId && rel.relationshipType === 'CONTAINS')
@@ -191,7 +124,6 @@ const convertData = async (jsonData: Array<string>, cliArgument: string) => {
             }
             return filesArray;
         }
-
         // Check modified value for a given component ID
         const isModified = (componentId: string, relationships: Array<SpdxRelationsships>) => {
             relationships?.forEach(rel => {
@@ -201,16 +133,13 @@ const convertData = async (jsonData: Array<string>, cliArgument: string) => {
             });
             return relationships.some(rel => rel.spdxElementId === componentId && (rel.comment === "MODIFIED" || rel.comment === "FILE_MODIFIED"));
         };
-        
         // Validate component ids vs directDependencies and transitiveDependencies
         const validateComponentIds = (component: AosdComponent, directDependencies: Array<number>): Array<number> => {
             const missingIds: Array<number> = [];
             return missingIds;
         }
-
         // Process each dependency
         dependenciesArray?.forEach((dependency: SpdxPackages) => {
-            console.log('DEBUG-DEPENDENCIES');
             const mappingObject: exportMapper = {
                 mapId: counter,
                 originalId: dependency.SPDXID,
@@ -229,9 +158,8 @@ const convertData = async (jsonData: Array<string>, cliArgument: string) => {
             if (!componentObject.componentName) {
                 validationResults.push(`Component name is missing for component with ID ${mappingObject.mapId}`);
             }
-
-            // Collect data from the spdx files array
-            const filesArray: Array<SpdxFiles> = licenseFileData;
+             // Collect data from the spdx files array
+            const filesArray: Array<SpdxFiles> = jsonInputArray['files'];
             // If we have no hasFiles Property we create one from relationships data
             if(!dependency.hasOwnProperty('hasFiles')) {
                 dependency['hasFiles'] = getPackageFiles(dependency['SPDXID'], relationships);
@@ -240,7 +168,7 @@ const convertData = async (jsonData: Array<string>, cliArgument: string) => {
             if (dependency['hasFiles'].length > 0) {
                 newObject.scanned = true;
             }
-        
+
             const validSPDXKeys = loadSPDXKeys();
             // Check for licenseConcluded and create a subcomponent if it exists
             if (dependency.licenseConcluded && dependency.licenseConcluded !== 'NOASSERTION'  && dependency.licenseConcluded !== 'NONE' && !dependency.hasFiles.length) {
@@ -294,7 +222,7 @@ const convertData = async (jsonData: Array<string>, cliArgument: string) => {
                     const spdxLicense = licenseData.data.find(license => license.spdx_license_key === licenseComment);
                     if (spdxLicense) return spdxLicense.spdx_license_key;
                     // Check in hasExtractedLicensingInfos if not found in licenses.json
-                    const extractedLicense = extractedLicensesData?.find((eInfo: { licenseId: string; }) => eInfo.licenseId === licenseComment);
+                    const extractedLicense = jsonInputArray['hasExtractedLicensingInfos']?.find((eInfo: { licenseId: string; }) => eInfo.licenseId === licenseComment);
                     if (extractedLicense) {
                         const isValidSpdxKey = licenseData.data.some(license => license.spdx_license_key === extractedLicense.name);
                         if (isValidSpdxKey) return extractedLicense.name;
@@ -317,18 +245,17 @@ const convertData = async (jsonData: Array<string>, cliArgument: string) => {
                     const text = getLicenseText(license.replace("chosen: ", "").trim() || "");
                     licenseText += text;
                 });
-
-                let tmpSpdxKey: string = fileData[0]?.licenseConcluded || "";
-                if (extractedLicensesData.length>0) {
+                let tmpSpdxKey: string = fileData[0]?.licenseConcluded.replace("chosen: ", "").trim() || "";
+                if (jsonInputArray.hasOwnProperty("hasExtractedLicensingInfos")) {
                    for (let k=0; k<tempLicenses?.length; k++) {
-                      tmpLicense = extractedLicensesData.filter((eInfo: { licenseId: string; }) => eInfo.licenseId ===  tempLicenses[k]);
+                      tmpLicense = jsonInputArray['hasExtractedLicensingInfos'].filter((eInfo: { licenseId: string; }) => eInfo.licenseId ===  tempLicenses[k]);
                       if (tmpLicense.length === 1) {
                         tmpSpdxKey = tmpSpdxKey.replace(tmpLicense[0]['licenseId'], tmpLicense[0]['name']);
                       }
                    }
                 }
                 // Update the selectedLicense based on licenseComments
-                let selectedLicense = fileData[0]?.licenseComments || "";
+                let selectedLicense = fileData[0]?.licenseComments?.replace("chosen: ", "").trim() || "";
                 selectedLicense = resolveSelectedLicense(selectedLicense, 'licenseComment');
                 // Determine copyright text to use
                 let copyrightText = "";
@@ -353,7 +280,7 @@ const convertData = async (jsonData: Array<string>, cliArgument: string) => {
                     additionalLicenseInfos: fileData[0]?.noticeText? fileData[0].noticeText : ""
                 };
                 componentObject['subcomponents'].push(subcomponentObject);
-        
+
                 // Validate spdxId
                 const spdxValidationMessages = validateSPDXIds([tmpSpdxKey], validSPDXKeys, dependency.name, fileData[0]?.fileName);
                 validationResults.push(...spdxValidationMessages);
@@ -364,19 +291,18 @@ const convertData = async (jsonData: Array<string>, cliArgument: string) => {
 
         // Add direct dependencies
         newObject.directDependencies = newObject.components.map(component => component.id);
-        
+
         // Validate modification and linking
         validateComponentsForModificationAndLinking(newObject.components, validationResults);
-        
+
         // Validate selectedLicense
         validateSelectedLicenseForDualLicenses(newObject.components, validationResults);
-        
+
         // Rewrite ids of transitive dependencies
         const remapIds = (componentId: String) => {
             const filteredId = idMapping.filter(id => id.originalId === componentId);
             return filteredId[0]?.mapId;
         };
-
         // Remove transitive dependencies from direct dependencies
         const transitiveDependencies = new Set();
         newObject.components?.forEach(component => {
@@ -393,40 +319,14 @@ const convertData = async (jsonData: Array<string>, cliArgument: string) => {
                 validationResults.push("We have found an empty subcomponent in component with componentName: " + component.componentName);
             }
         });
-
         // Remove all ids in directDependencies that can be found in transitiveDependencies
         newObject.directDependencies = newObject.directDependencies.filter(id => !transitiveDependencies.has(id));
-
         // Prepare output file
         const outputFileName: string = cliArgument.replace(".json", "") + "_aosd2.1" + ".json";
         outputFile = outputJsonPath + outputFileName;
         // Stringify
         const fileString = await generateStringFromJsonObject(newObject);
         fs.writeFileSync(outputFile, fileString);
-
-        ////------------------------------------------------------------------------------
-        //// New Stuff write data with JSONstream
-        //const transformStream = JSONStream.stringify();
-        //const outputStream = fs.createWriteStream(outputFile, { encoding: 'utf8' });
-        //
-        //// In this case, we're going to pipe the serialized objects to a data file.
-        //transformStream.pipe(outputStream);
-        //
-        //// Iterate over the records and write EACH ONE to the TRANSFORM stream individually.
-        //// --
-        //// NOTE: If we had tried to write the entire record-set in one operation, the output
-        //// would be malformed - it expects to be given items, not collections.
-        //(transformStream.write);
-        //
-        //// Once we've written each record in the record-set, we have to end the stream so that
-        //// the TRANSFORM stream knows to output the end of the array it is generating.
-        //transformStream.end();
-        //
-        ////// Once the JSONStream has flushed all data to the output stream, let's indicate done.
-        //outputStream.on('finish', async () => await handleFinish());
-        //
-        ////------------------------------------------------------------------------------
-
         // Validate the aosd json result
         const validationAosdResult = validateAosd(process.env.OUTPUT_JSON_PATH + outputFileName, process.env.AOSD2_1_JSON_SCHEME);
         // If the scheme validation returns errors add them to log
@@ -438,15 +338,6 @@ const convertData = async (jsonData: Array<string>, cliArgument: string) => {
         const result = fs.writeFileSync(process.env.LOG_FILE_PATH, validationMessage, { encoding: 'utf8' });
         // Display success message
         console.log("We are done! - Thank's for using spdx to aosd2.1 converter!");
-    } catch(error: any) {
-        console.log(error);
-        console.log("Sorry for that - something went wrong! Please check the  file in the root folder for detailed information.");
-    }
-}
-
-const handleFinish = async () => {
-    try {
-        console.log('handleFinish');
     } catch(error: any) {
         console.log(error);
         console.log("Sorry for that - something went wrong! Please check the  file in the root folder for detailed information.");
