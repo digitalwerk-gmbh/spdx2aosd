@@ -198,7 +198,6 @@ export const convertUpCsv = async (cliArgument: string): Promise<void> => {
         validationResults.push('-----------------------------------------------------\nData-Validation errors:\n-----------------------------------------------------\n');
         inputJsonPath = process.env.INPUT_JSON_PATH + cliArgument;
         outputJsonPath = process.env.OUTPUT_JSON_PATH;
-        console.log('INFO: ', 'Work under progress');
         const stream = fs.createReadStream(path.resolve(inputJsonPath), { encoding: "utf8" })
         parseStream(stream, { headers: true, delimiter: ';' })
         .on('error', (error: any) => console.error(error))
