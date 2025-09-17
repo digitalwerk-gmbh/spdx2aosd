@@ -200,13 +200,12 @@ export const convertUpCsv = async (cliArgument: string): Promise<void> => {
         outputJsonPath = process.env.OUTPUT_JSON_PATH;
         console.log('INFO: ', 'Work under progress');
         const stream = fs.createReadStream(path.resolve(inputJsonPath), { encoding: "utf8" })
-        parseStream(stream, { headers: true })
+        parseStream(stream, { headers: true, delimiter: ';' })
         .on('error', (error: any) => console.error(error))
         .on('data', (rowData) => {
             csvDataArray.push(rowData);
         })
         .on('end', async () => await outputData(csvDataArray, cliArgument));
-        stream.end();
         console.log("We are done! - Thank's for using our aosd1.0 csv to aosd2.1 converter! - Please look at the error.log for Info / Warning / Error");
     } catch(error: any) {
         fs.writeFileSync(process.env.LOG_FILE_PATH, error.toString(), { encoding: 'utf8' });
