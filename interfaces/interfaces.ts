@@ -227,6 +227,7 @@ export interface SpdxPackages {
     versionInfo: string;
     downloadLocation: string;
     hasFiles: Array<String>;
+    filesAnalyzed: boolean;
     licenseConcluded: string;
 }
 

@@ -1,4 +1,4 @@
-import { AosdObject } from '../interfaces/interfaces';
+import { AosdObject, SpdxRelationsships } from '../interfaces/interfaces';
 const fs = require('fs');
 
 export const getUniqueValues = (arrayData: Array<string> | any) => (
@@ -227,3 +227,77 @@ export const validateComponentsForModificationAndLinking = (
     });
   });
 };
+
+export const findSpdxIdFromOsadl = (license: string) => {
+  try {
+    let tmpStr1 = license.replace(/-[0-9A-Za-z]{32}/, "");
+    let tmpStr2 = tmpStr1.replaceAll("LicenseRef-","");
+    let tmpStr3 = tmpStr2.replaceAll("-WITH-", " WITH ");
+    let tmpStr4 = tmpStr3.replaceAll("-with-", " WITH ");
+    const finalExpression: string = tmpStr4;
+    return finalExpression;
+  } catch(error) {
+    return '';
+  }
+}
+
+/*
+* Function map cli option parmeter for linking
+* @parameter { string } linkingArg
+*/
+export const linkinMapper = (linkingArg: string) => {
+  switch(linkingArg) {
+    case 'dynamic': {
+      return 'dynamic_linking';
+    }
+    case 'static': {
+      return 'static_linking';
+    }
+    case 'process': {
+      return 'process_call';
+    }
+    case 'system': {
+      return 'sys_call';
+    }    
+    default: {
+      return null;
+    }
+  }
+}
+
+/*
+* Function map cli option parmeter for modification
+* @parameter { string } modificationArg
+*/
+export const modificationMapper = (modificationArg: string) => {
+  switch(modificationArg) {
+    case 'yes': {
+      return true;
+    }
+    case 'no': {
+      return false;
+    }
+    default: {
+      return null;
+    }
+  }
+}
+
+/*
+* Function check for modifiaction info in spdx relationships
+* @parameter { string } componentId
+* @parameter { array } relationships
+* @return { boolean | null }
+*/
+export const checkModified = (componentId: string, relationships: Array<SpdxRelationsships>)  => {
+  try {
+    let modificationInfo = relationships.filter(rel => rel.relatedSpdxElement === componentId && rel.relationshipType === 'FILE_MODIFIED')
+    if (modificationInfo.length === 1) {
+      return true;
+    } else {
+      return false; 
+    };
+  } catch(error) {
+    return null;
+  }
+}

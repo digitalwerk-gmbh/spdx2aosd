@@ -5,7 +5,8 @@ import { convertUp } from '../../src/upconverter';
 import { convertSpdxSpec } from "../../src/spdxspecconverter";
 import { convertSpdx } from "../../src/spdxconverter";
 import { accumulate } from "../../src/accumulate";
-import { getUniqueValues, getMultibleUsedIds, getMissingComponentIds, generateDataValidationMessage, generateUniqueSubcomponentName, generateStringFromJsonObject, validateDependencies, validateSPDXIds, validateSelectedLicenseForDualLicenses, validateLicenseTextUrl, validateComponentsForModificationAndLinking } from '../../src/helper';
+import { getUniqueValues, getMultibleUsedIds, getMissingComponentIds, generateDataValidationMessage, generateUniqueSubcomponentName, generateStringFromJsonObject, validateDependencies, validateSPDXIds, validateSelectedLicenseForDualLicenses, validateLicenseTextUrl, validateComponentsForModificationAndLinking, findSpdxIdFromOsadl, checkModified } from '../../src/helper';
+import { SpdxRelationsships } from "../../interfaces/interfaces";
 
 describe("Test for helper functions", () => {
     test('Test getUniqueValues exists', async () => {
@@ -1050,10 +1051,12 @@ describe("Spdx converter Tests", () => {
         expect(convertSpdx).toBeDefined();
     });
     test('Test convertSpdx function works as expected', async () => {
-        const response = await convertSpdx('test_group_spec_spdx.json');
+        const linkingArgument = 'dynamic_linking';
+        const modificationArgument = false;
+        const response = await convertSpdx('test_group_spec_spdx.json', linkingArgument, modificationArgument);
         const path = './tests/data/input/test_group_spec_spdx.json';
         const resultFile = './tests/data/output/test_group_spec_spdx_aosd2.1.json';
-        const testDataArray = JSON.parse(fs.readFileSync(resultFile, 'utf8'));
+        const testDataArray = await JSON.parse(fs.readFileSync(resultFile, 'utf8'));
         expect(fs.existsSync(path)).toBe(true);
         expect(fs.existsSync(resultFile)).toBe(true);
         expect(testDataArray["schemaVersion"]).toBeDefined();
@@ -1131,4 +1134,109 @@ describe("Spdx converter Tests", () => {
         expect(testDataArray.components[3]["subcomponents"][1]["copyrights"]).toBeDefined();
         expect(testDataArray.components[3]["subcomponents"][1]["copyrights"]).toHaveLength(0);
     });
+});
+
+describe("findSpdxIdFromOsadl Tests", () => {
+    test('Test findSpdxIdFromOsadl to be defined', async () => {
+        expect(findSpdxIdFromOsadl).toBeDefined();
+    });
+    test('Test 01 - findSpdxId function works as expected', async () => {
+      let license = 'LicenseRef-Zlib-8d7a9af357ccf474eceb0fba284448f4';
+      const result = findSpdxIdFromOsadl(license);
+      expect(result).toBe('Zlib');
+    });
+    test('Test 02 - findSpdxId function works as expected', async () => {
+      let license = 'LicenseRef-LGPL-2.1-or-later';
+      const result = findSpdxIdFromOsadl(license);
+      expect(result).toBe('LGPL-2.1-or-later');
+    });
+    test('Test 03 - findSpdxId function works as expected', async () => {
+      let license = 'LicenseRef-Permission-Notice-5e98f2e2d511cf3a0cf988de8c81581d';
+      const result = findSpdxIdFromOsadl(license);
+      expect(result).toBe('Permission-Notice');
+    });
+    test('Test 04 - findSpdxId function works as expected', async () => {
+      let license = 'LicenseRef-ISC-a781e42aeb08a4e2c6904e8ac80f4566';
+      const result = findSpdxIdFromOsadl(license);
+      expect(result).toBe('ISC');
+    });
+    test('Test 05 - findSpdxId function works as expected', async () => {
+      let license = 'LicenseRef-LGPL-2.1-or-later-WITH-GNU-compiler-exception';
+      const result = findSpdxIdFromOsadl(license);
+      expect(result).toBe('LGPL-2.1-or-later WITH GNU-compiler-exception');
+    });
+    test('Test 06 - findSpdxId function works as expected', async () => {
+      let license = 'LicenseRef-BSD-3-Clause-83f66190c0c6e55ac0300eb367685502';
+      const result = findSpdxIdFromOsadl(license);
+      expect(result).toBe('BSD-3-Clause');
+    });
+    test('Test 07 - findSpdxId function works as expected', async () => {
+      let license = 'LicenseRef-BSD-3-Clause-83f66190c0c6e55ac0300eb367685503';
+      const result = findSpdxIdFromOsadl(license);
+      expect(result).toBe('BSD-3-Clause');
+    });
+    test('Test 08 - findSpdxId function works as expected', async () => {
+      let license = 'LicenseRef-SunPro-ab37670360a6824ae03694e6c862ee72';
+      const result = findSpdxIdFromOsadl(license);
+      expect(result).toBe('SunPro');
+    });
+    test('Test 09 - findSpdxId function works as expected', async () => {
+      let license = 'LicenseRef-HPND-83d00660c55256ca2de13184880dd910';
+      const result = findSpdxIdFromOsadl(license);
+      expect(result).toBe('HPND');
+    });
+});
+
+describe("checkModified Tests", () => {
+  const relArray: SpdxRelationsships[] = [
+    {
+      spdxElementId: 'SPDXRef-upload2319',
+      relationshipType: 'FILE_MODIFIED',
+      relatedSpdxElement: 'SPDXRef-1'
+    },
+    {
+      spdxElementId: 'SPDXRef-upload1885',
+      relationshipType: 'FILE_MODIFIED',
+      relatedSpdxElement: 'SPDXRef-2'
+    },
+    {
+      spdxElementId: 'SPDXRef-item8318850',
+      relationshipType: 'FILE_MODIFIED',
+      relatedSpdxElement: 'SPDXRef-2'
+    },
+    {
+      spdxElementId: 'SPDXRef-upload1885',
+      relationshipType: 'CONTAINS',
+      relatedSpdxElement: 'SPDXRef-item8318958'
+    },
+    {
+      spdxElementId: 'SPDXRef-upload1885',
+      relationshipType: 'CONTAINS',
+      relatedSpdxElement: 'SPDXRef-item8324809'
+    },
+    {
+      spdxElementId: 'SPDXRef-upload1885',
+      relationshipType: 'CONTAINS',
+      relatedSpdxElement: 'SPDXRef-item8305423'
+    }
+  ];
+  test('Test checkModified to be defined', async () => {
+    expect(checkModified).toBeDefined();
+  });
+  test('Test 01 - checkModified function works as expected', async () => {
+    const componentId = 'SPDXRef-1';
+    const result = checkModified(componentId, relArray);
+    expect(result).toBe(true);
+  });
+  test('Test 02 - checkModified function works as expected', async () => {
+    const componentId = 'SPDXRef-11';
+    const result = checkModified(componentId, relArray);
+    expect(result).toBe(false);
+  });
+  test('Test 03 - checkModified function works as expected', async () => {
+    const componentId = 'SPDXRef-1';
+    const relArray: SpdxRelationsships[] = [];
+    const result = checkModified(componentId, relArray);
+    expect(result).toBe(false);
+  });
 });

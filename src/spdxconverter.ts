@@ -3,7 +3,7 @@ const JSONStream = require('JSONStream');
 require('dotenv').config();
 import { validateAosd } from './aosdvalidator';
 import { LicenseDataObject, ExtractedLicense, MappedLicense, AosdObject, AosdComponent, AosdSubComponent, SpdxPackages, SpdxFiles, SpdxRelationsships, SpdxIdToInternalId, exportMapper } from '../interfaces/interfaces';
-import { generateDataValidationMessage, generateStringFromJsonObject, loadSPDXKeys, validateComponentsForModificationAndLinking, validateSelectedLicenseForDualLicenses, validateSPDXIds } from './helper';
+import { generateDataValidationMessage, generateStringFromJsonObject, loadSPDXKeys, validateComponentsForModificationAndLinking, validateSelectedLicenseForDualLicenses, validateSPDXIds, findSpdxIdFromOsadl, checkModified } from './helper';
 let inputJsonPath: string | undefined = '';
 let outputJsonPath: string | undefined = '';
 let outputFile: string = '';
@@ -14,9 +14,14 @@ let validationResults: Array<string> = [];
 let tmpLicense: Array<ExtractedLicense> = [];
 const COPYRIGHT_REPLACE_PATTERN: Array<string> = ["NOASSERTION", "NONE"];
 let jsonInputArray: Array<string> = [];
+let linkingArg: string | null = null;
+let modificationArg: boolean | null = null;
 
-export const convertSpdx = async (cliArgument: string): Promise<void> => {
+export const convertSpdx = async (cliArgument: string, linkingArgument: string | null, modificationArgument: boolean | null): Promise<void> => {
     try {
+        // Set linking and modification from input
+        linkingArg = linkingArgument;
+        modificationArg = modificationArgument;
         // Check update status of licenses
         if (fs.existsSync(process.env.LICENSE_FILE_PATH)) {
             const checkData = fs.readFileSync(process.env.LICENSE_FILE_PATH);
@@ -47,7 +52,6 @@ export const convertSpdx = async (cliArgument: string): Promise<void> => {
 
         // Finally return the result array
         parser.on('end', async () => await convertData(jsonInputArray, cliArgument));
-        console.log('Parsing complete.');
 
         // On error log
         parser.on('error', (error: any) => {
@@ -58,8 +62,6 @@ export const convertSpdx = async (cliArgument: string): Promise<void> => {
         console.log("Sorry for that - something went wrong! Please check the  file in the root folder for detailed information.");
     }
 }
-
-
 const convertData = async (jsonData: Array<string>, cliArgument: string) => {
     try {
         let tmpExtractedLicensesData: Array<object> = [];
@@ -89,12 +91,14 @@ const convertData = async (jsonData: Array<string>, cliArgument: string) => {
         const licenseFileData = tmpFileData.length > 0 ? JSON.parse(JSON.stringify(tmpFileData)) : [];
         const relationshipsData = tmpRelationshipsData.length > 0 ? JSON.parse(JSON.stringify(tmpRelationshipsData)) : [];
 
+        /*
         console.log('SPDX data blocks: ', jsonData.length);
         console.log('SPDX input file name:', cliArgument);
         console.log('extractedLicense blocks:', extractedLicensesData.length);
         console.log('Number of packages:', packageData.length);
         console.log('Number of files:', licenseFileData.length);
         console.log('Number of relationships:', relationshipsData.length);
+        */
 
         // Collect license id and license text
         let licenseTextMap: Array<MappedLicense> = [];
@@ -130,7 +134,8 @@ const convertData = async (jsonData: Array<string>, cliArgument: string) => {
 
         // Convert SPDXIDs to internal Ids
         const dependenciesArray: Array<SpdxPackages> = packageData;
-        const spdxIdToInternalIdMap: Array<SpdxIdToInternalId> = [];
+        //const spdxIdToInternalIdMap: Array<SpdxIdToInternalId> = [];
+        /*
         dependenciesArray?.forEach((spdxBlock: SpdxPackages, index: number) => {
             let spdxb: SpdxIdToInternalId = {
                 SPDXID : spdxBlock.SPDXID,
@@ -138,6 +143,7 @@ const convertData = async (jsonData: Array<string>, cliArgument: string) => {
             }
             spdxIdToInternalIdMap.push(spdxb);
         });
+        */
         
         // Get transitive dependencies for a given component ID
         const relationships: Array<SpdxRelationsships> = JSON.parse(JSON.stringify(relationshipsData));
@@ -182,7 +188,7 @@ const convertData = async (jsonData: Array<string>, cliArgument: string) => {
             }
         };
         
-        // Get file from package bekause hasFiles is depricated
+        // Get file from package because hasFiles is depricated
         const getPackageFiles = (componentId: string, relationships: Array<SpdxRelationsships>) => {
             let linkingType = relationships.filter(rel => rel.spdxElementId === componentId && rel.relationshipType === 'CONTAINS')
             let filesArray: Array<string> = [];
@@ -191,16 +197,6 @@ const convertData = async (jsonData: Array<string>, cliArgument: string) => {
             }
             return filesArray;
         }
-
-        // Check modified value for a given component ID
-        const isModified = (componentId: string, relationships: Array<SpdxRelationsships>) => {
-            relationships?.forEach(rel => {
-                if (rel.spdxElementId === componentId && rel.relationshipType === "OTHER" && !rel.comment) {
-                    validationResults.push(`Comment "MODIFIED" is missing for relationshipType "OTHER" in component ${componentId}`);
-                }
-            });
-            return relationships.some(rel => rel.spdxElementId === componentId && (rel.comment === "MODIFIED" || rel.comment === "FILE_MODIFIED"));
-        };
         
         // Validate component ids vs directDependencies and transitiveDependencies
         const validateComponentIds = (component: AosdComponent, directDependencies: Array<number>): Array<number> => {
@@ -210,7 +206,7 @@ const convertData = async (jsonData: Array<string>, cliArgument: string) => {
 
         // Process each dependency
         dependenciesArray?.forEach((dependency: SpdxPackages) => {
-            console.log('DEBUG-DEPENDENCIES');
+            //console.log('DEBUG-DEPENDENCIES');
             const mappingObject: exportMapper = {
                 mapId: counter,
                 originalId: dependency.SPDXID,
@@ -221,8 +217,8 @@ const convertData = async (jsonData: Array<string>, cliArgument: string) => {
                 componentName: dependency['name'],
                 componentVersion: dependency['versionInfo'],
                 scmUrl: dependency['downloadLocation'] !== "NOASSERTION" ? dependency['downloadLocation'] : "",
-                modified: isModified(dependency['SPDXID'], relationships) ? true : false,
-                linking: getLinkingType(dependency['SPDXID'], relationships),
+                modified: modificationArg !== null ? modificationArg : checkModified(dependency['SPDXID'], relationships),
+                linking: linkingArg !== null ? linkingArg : getLinkingType(dependency['SPDXID'], relationships),
                 transitiveDependencies: getTransitiveDependencies(dependency['SPDXID'], relationships),
                 subcomponents: [],
             };
@@ -233,12 +229,10 @@ const convertData = async (jsonData: Array<string>, cliArgument: string) => {
             // Collect data from the spdx files array
             const filesArray: Array<SpdxFiles> = licenseFileData;
             // If we have no hasFiles Property we create one from relationships data
-            if(!dependency.hasOwnProperty('hasFiles')) {
-                dependency['hasFiles'] = getPackageFiles(dependency['SPDXID'], relationships);
-            }
-            // Check if we have file information
-            if (dependency['hasFiles'].length > 0) {
-                newObject.scanned = true;
+            if(dependency.hasOwnProperty('filesAnalyzed')) {
+                newObject.scanned = dependency.filesAnalyzed;
+            } else {
+                newObject.scanned = false;
             }
         
             const validSPDXKeys = loadSPDXKeys();
@@ -249,7 +243,7 @@ const convertData = async (jsonData: Array<string>, cliArgument: string) => {
                }
                let subcomponentObject: AosdSubComponent = {
                   subcomponentName: "main",
-                  spdxId: dependency.licenseConcluded,
+                  spdxId: findSpdxIdFromOsadl(dependency.licenseConcluded),
                   copyrights: !COPYRIGHT_REPLACE_PATTERN.includes(dependency.copyrightText) && dependency.copyrightText !== null && dependency.copyrightText !== undefined ? [dependency.copyrightText] : [],
                   authors: [],
                   licenseText: licenseText.trim(),
@@ -286,6 +280,7 @@ const convertData = async (jsonData: Array<string>, cliArgument: string) => {
                 const tempLicenses = spdxKey?.split("#");
                 let currentComponentName = dependency['name'];
                 
+                // To do - selected licens commes not from licenseComment for spdx2.3 specification
                 const resolveSelectedLicense = (licenseComment: string, source: string = '') => {
                     const currentSubcomponentName = fileData[0]?.fileName;
                     // Return empty string if licenseComment is empty
@@ -323,13 +318,15 @@ const convertData = async (jsonData: Array<string>, cliArgument: string) => {
                    for (let k=0; k<tempLicenses?.length; k++) {
                       tmpLicense = extractedLicensesData.filter((eInfo: { licenseId: string; }) => eInfo.licenseId ===  tempLicenses[k]);
                       if (tmpLicense.length === 1) {
-                        tmpSpdxKey = tmpSpdxKey.replace(tmpLicense[0]['licenseId'], tmpLicense[0]['name']);
+                        //tmpSpdxKey = tmpSpdxKey.replace(tmpLicense[0]['licenseId'], tmpLicense[0]['name']);
+                        // OSADL special !!!!
+                        tmpSpdxKey = tmpLicense[0]['licenseId'];
                       }
                    }
                 }
                 // Update the selectedLicense based on licenseComments
-                let selectedLicense = fileData[0]?.licenseComments || "";
-                selectedLicense = resolveSelectedLicense(selectedLicense, 'licenseComment');
+                // TO we need  new logic for the selected license
+                let selectedLicense = "";
                 // Determine copyright text to use
                 let copyrightText = "";
                 if (index === 0) {
@@ -342,21 +339,26 @@ const convertData = async (jsonData: Array<string>, cliArgument: string) => {
                     // For other subcomponents, only use file-level copyrightText
                     copyrightText = fileData[0]?.copyrightText;
                 }
-                let subcomponentObject: AosdSubComponent = {
-                    subcomponentName: index === 0 ? "main" : fileData[0]?.fileName,
-                    spdxId: tmpSpdxKey,
-                    copyrights: !COPYRIGHT_REPLACE_PATTERN.includes(copyrightText) && copyrightText !== null && copyrightText !== undefined ? [copyrightText] : [],
-                    authors: [],
-                    licenseText: licenseText.trim(),
-                    licenseTextUrl: "",
-                    selectedLicense: selectedLicense,
-                    additionalLicenseInfos: fileData[0]?.noticeText? fileData[0].noticeText : ""
-                };
-                componentObject['subcomponents'].push(subcomponentObject);
-        
-                // Validate spdxId
-                const spdxValidationMessages = validateSPDXIds([tmpSpdxKey], validSPDXKeys, dependency.name, fileData[0]?.fileName);
-                validationResults.push(...spdxValidationMessages);
+                // OSADL special
+                // Log subcomponents with NOASSERTION
+                if (tmpSpdxKey !== "NOASSERTION") {
+                    let subcomponentObject: AosdSubComponent = {
+                        subcomponentName: index === 0 ? "main" : fileData[0]?.fileName,
+                        spdxId: findSpdxIdFromOsadl(tmpSpdxKey),
+                        copyrights: !COPYRIGHT_REPLACE_PATTERN.includes(copyrightText) && copyrightText !== null && copyrightText !== undefined ? [copyrightText] : [],
+                        authors: [],
+                        licenseText: licenseText.trim(),
+                        licenseTextUrl: "",
+                        selectedLicense: selectedLicense,
+                        additionalLicenseInfos: fileData[0]?.noticeText? fileData[0].noticeText : ""
+                    };
+                    componentObject['subcomponents'].push(subcomponentObject);
+                    // Validate spdxId
+                    const spdxValidationMessages = validateSPDXIds([findSpdxIdFromOsadl(tmpSpdxKey)], validSPDXKeys, dependency.name, fileData[0]?.fileName);
+                    validationResults.push(...spdxValidationMessages);
+                } else {
+                    validationResults.push(`Info: SPDX key(s) with NOASSERTION in File - "${fileData[0]?.fileName}" - component name: ${currentComponentName} - no subcomponent will be exported!`);
+                }      
             });
             newObject['components'].push(componentObject);
             counter++;
@@ -435,7 +437,7 @@ const convertData = async (jsonData: Array<string>, cliArgument: string) => {
         }
         // Check for validation error
         const validationMessage: string = generateDataValidationMessage(validationResults);
-        const result = fs.writeFileSync(process.env.LOG_FILE_PATH, validationMessage, { encoding: 'utf8' });
+        const result = await fs.writeFileSync(process.env.LOG_FILE_PATH, validationMessage, { encoding: 'utf8' });
         // Display success message
         console.log("We are done! - Thank's for using spdx to aosd2.1 converter!");
     } catch(error: any) {
