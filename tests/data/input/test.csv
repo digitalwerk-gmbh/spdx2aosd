@@ -1,0 +1,5 @@
+id;software_name;software_version;software_download_link;license_spdx;license_text;use_linkage;use_modification;use_start;use_end;use_comment;use_comment_2;use_comment_3;license_text_complete;modul_id;modul_name;projekt_id;use_distribution;obsolet
+1;packageA;1.0.0;http://www.testurl1.de;MIT;Text License A;no;yes;use_start;use_end;use_comment;use_comment_2;use_comment_3;license_text_complete;modul_id;modul_name;projekt_id;as object code;obsolet
+2;packageB;2.0.0;http://www.testurl2.de;Apache-2.0;Text License B;yes, statically;no;use_start;use_end;use_comment;use_comment_2;use_comment_3;license_text_complete;modul_id;modul_name;projekt_id;as object code;obsolet
+3;packageC;3.0.0;http://www.testurl3.de;MIT;Text License C;dynamisch;nein;use_start;use_end;use_comment;use_comment_2;use_comment_3;license_text_complete;modul_id;modul_name;projekt_id;as object code;obsolet
+4;packageD;4.0.0;http://www.testurl4.de;Apache-2.0;Text License D;yes, dynamically;ja;use_start;use_end;use_comment;use_comment_2;use_comment_3;license_text_complete;modul_id;modul_name;projekt_id;as object code;obsolet
