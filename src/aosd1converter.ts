@@ -36,7 +36,6 @@ export const convertUpXls = async (cliArgument: string): Promise<void> => {
 		            license_text: '',
 		            use_linkage: '',
 		            use_modification: '',
-		            use_distribution: '',
 		            use_start: '',
 		            use_end: '',
 		            use_comment: ''
@@ -81,17 +80,28 @@ export const convertUpXls = async (cliArgument: string): Promise<void> => {
                         cell.value = cell.value.text;
                     } 
                     switch(colNumber) {
-                        case 1: rowObject.id = rowCounter; 
-		                case 2: rowObject.software_name = cell.value;
-		                case 3: rowObject.software_version = cell.value;
-		                case 4: rowObject.software_download_link = cell.value;
-		                case 5: rowObject.license_spdx = cell.value; 
-		                case 6: rowObject.license_text = cell.value; 
-		                case 7: rowObject.use_linkage = cell.value; 
-                        case 8: rowObject.use_modification = cell.value; 
-		                case 9: rowObject.use_start = cell.value;  
-		                case 10: rowObject.use_end = cell.value; 
-		                case 11: rowObject.use_comment = cell.value;
+                        case 1: rowObject.id = rowCounter
+                        break; 
+		                case 2: rowObject.software_name = cell.value
+                        break; 
+		                case 3: rowObject.software_version = cell.value
+                        break; 
+		                case 4: rowObject.software_download_link = cell.value
+                        break; 
+		                case 5: rowObject.license_spdx = cell.value
+                        break;  
+		                case 6: rowObject.license_text = cell.value
+                        break; 
+		                case 7: rowObject.use_linkage = cell.value
+                        break; 
+                        case 8: rowObject.use_modification = cell.value
+                        break;  
+		                case 9: rowObject.use_start = cell.value
+                        break;  
+		                case 10: rowObject.use_end = cell.value
+                        break; 
+		                case 11: rowObject.use_comment = cell.value
+                        break;
                     }
                     colCounter++;
                 })
