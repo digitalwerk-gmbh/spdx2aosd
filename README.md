@@ -140,7 +140,7 @@ spdx2aosd
 │  └──data
 │  │   │
 │  │   └──input
-│  │   │  aosd1.0_excel_import.json
+│  │   │  aosd1.0_excel_import.xlsx
 │  │   │  aosd2.0_import.json
 │  │   │  aosd2.1_import.json
 │  │   │  aosd2.1_json_accumulate.json
