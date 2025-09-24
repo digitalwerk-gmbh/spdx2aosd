@@ -125,7 +125,7 @@ export const accumulate = async (cliArgument: string): Promise<void> => {
         logData += removedSubcomponents;
         const result = fs.writeFileSync(process.env.LOG_FILE_PATH, logData, { encoding: 'utf8' });
         // Display success message
-        console.log('We are done! - Thank\'s for using aosd2.1 accumulation script!\nATTENTION!: This feature is currently provided as experimental.\nWe recommend checking the results again thoroughly to ensure that you don not lose any data.\n');
+        console.log('We are done! - Thank\'s for using aosd2.1 accumulation script!\nATTENTION!: This feature is currently provided as experimental.\nWe recommend checking the results again thoroughly to ensure that you don not lose any data.\n - Please look at the error.log for Info / Warning / Error');
 
     } catch(error: any) {
         fs.writeFileSync(process.env.LOG_FILE_PATH, error.toString(), { encoding: 'utf8' });

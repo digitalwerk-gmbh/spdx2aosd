@@ -3,7 +3,7 @@ const JSONStream = require('JSONStream');
 require('dotenv').config();
 import { validateAosd } from './aosdvalidator';
 import { LicenseDataObject, ExtractedLicense, MappedLicense, AosdObject, AosdComponent, AosdSubComponent, SpdxPackages, SpdxFiles, SpdxRelationsships, SpdxIdToInternalId, exportMapper } from '../interfaces/interfaces';
-import { generateDataValidationMessage, generateStringFromJsonObject, loadSPDXKeys, validateComponentsForModificationAndLinking, validateSelectedLicenseForDualLicenses, validateSPDXIds } from './helper';
+import { generateDataValidationMessage, generateStringFromJsonObject, loadDeprecatedSPDXKeys, loadSPDXKeys, validateComponentsForModificationAndLinking, validateSelectedLicenseForDualLicenses, validateSPDXIds } from './helper';
 let inputJsonPath: string | undefined = '';
 let outputJsonPath: string | undefined = '';
 let outputFile: string = '';
@@ -170,6 +170,7 @@ export const convertSpdx = async (cliArgument: string): Promise<void> => {
             }
 
             const validSPDXKeys = loadSPDXKeys();
+            const deprecatedSPDXKeys = loadDeprecatedSPDXKeys();
             // Check for licenseConcluded and create a subcomponent if it exists
             if (dependency.licenseConcluded && dependency.licenseConcluded !== 'NOASSERTION'  && dependency.licenseConcluded !== 'NONE' && !dependency.hasFiles.length) {
                let licenseText = getLicenseText(dependency.licenseConcluded);
@@ -282,7 +283,7 @@ export const convertSpdx = async (cliArgument: string): Promise<void> => {
                 componentObject['subcomponents'].push(subcomponentObject);
 
                 // Validate spdxId
-                const spdxValidationMessages = validateSPDXIds([tmpSpdxKey], validSPDXKeys, dependency.name, fileData[0]?.fileName);
+                const spdxValidationMessages = validateSPDXIds([tmpSpdxKey], validSPDXKeys, deprecatedSPDXKeys, dependency.name, fileData[0]?.fileName);
                 validationResults.push(...spdxValidationMessages);
             });
             newObject['components'].push(componentObject);
@@ -337,7 +338,7 @@ export const convertSpdx = async (cliArgument: string): Promise<void> => {
         const validationMessage: string = generateDataValidationMessage(validationResults);
         const result = fs.writeFileSync(process.env.LOG_FILE_PATH, validationMessage, { encoding: 'utf8' });
         // Display success message
-        console.log("We are done! - Thank's for using spdx to aosd2.1 converter!");
+        console.log("We are done! - Thank's for using spdx to aosd2.1 converter! - Please look at the error.log for Info / Warning / Error");
     } catch(error: any) {
         console.log(error);
         console.log("Sorry for that - something went wrong! Please check the  file in the root folder for detailed information.");
