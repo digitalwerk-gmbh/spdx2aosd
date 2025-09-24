@@ -5,7 +5,7 @@ import { convertUp } from '../../src/upconverter';
 import { convertSpdxSpec } from "../../src/spdxspecconverter";
 import { convertSpdx } from "../../src/spdxconverter";
 import { accumulate } from "../../src/accumulate";
-import { getUniqueValues, getMultibleUsedIds, getMissingComponentIds, generateDataValidationMessage, generateUniqueSubcomponentName, generateStringFromJsonObject, validateDependencies, validateSPDXIds, validateSelectedLicenseForDualLicenses, validateLicenseTextUrl, validateComponentsForModificationAndLinking, findSpdxIdFromOsadl, checkModified } from '../../src/helper';
+import { getUniqueValues, getMultibleUsedIds, getMissingComponentIds, generateDataValidationMessage, generateUniqueSubcomponentName, generateStringFromJsonObject, validateDependencies, validateSPDXIds, validateSelectedLicenseForDualLicenses, validateLicenseTextUrl, validateComponentsForModificationAndLinking, checkModified, findSpdxIdFromExtractedLicenses } from '../../src/helper';
 import { SpdxRelationsships } from "../../interfaces/interfaces";
 
 describe("Test for helper functions", () => {
@@ -1136,54 +1136,178 @@ describe("Spdx converter Tests", () => {
     });
 });
 
-describe("findSpdxIdFromOsadl Tests", () => {
-    test('Test findSpdxIdFromOsadl to be defined', async () => {
-        expect(findSpdxIdFromOsadl).toBeDefined();
+describe("findSpdxIdFromExtractedLicenses Tests", () => {
+    test('Test findSpdxIdFromExtractedLicenses to be defined', async () => {
+        expect(findSpdxIdFromExtractedLicenses).toBeDefined();
     });
-    test('Test 01 - findSpdxId function works as expected', async () => {
+    //-------------------------------------------------------------------
+    //  OSADL - version
+    //-------------------------------------------------------------------
+    test('Test 01 - findSpdxIdFromExtractedLicenses function works as expected', async () => {
       let license = 'LicenseRef-Zlib-8d7a9af357ccf474eceb0fba284448f4';
-      const result = findSpdxIdFromOsadl(license);
+      const result = findSpdxIdFromExtractedLicenses(license);
       expect(result).toBe('Zlib');
     });
     test('Test 02 - findSpdxId function works as expected', async () => {
       let license = 'LicenseRef-LGPL-2.1-or-later';
-      const result = findSpdxIdFromOsadl(license);
+      const result = findSpdxIdFromExtractedLicenses(license);
       expect(result).toBe('LGPL-2.1-or-later');
     });
     test('Test 03 - findSpdxId function works as expected', async () => {
       let license = 'LicenseRef-Permission-Notice-5e98f2e2d511cf3a0cf988de8c81581d';
-      const result = findSpdxIdFromOsadl(license);
+      const result = findSpdxIdFromExtractedLicenses(license);
       expect(result).toBe('Permission-Notice');
     });
     test('Test 04 - findSpdxId function works as expected', async () => {
       let license = 'LicenseRef-ISC-a781e42aeb08a4e2c6904e8ac80f4566';
-      const result = findSpdxIdFromOsadl(license);
+      const result = findSpdxIdFromExtractedLicenses(license);
       expect(result).toBe('ISC');
     });
     test('Test 05 - findSpdxId function works as expected', async () => {
       let license = 'LicenseRef-LGPL-2.1-or-later-WITH-GNU-compiler-exception';
-      const result = findSpdxIdFromOsadl(license);
+      const result = findSpdxIdFromExtractedLicenses(license);
       expect(result).toBe('LGPL-2.1-or-later WITH GNU-compiler-exception');
     });
     test('Test 06 - findSpdxId function works as expected', async () => {
       let license = 'LicenseRef-BSD-3-Clause-83f66190c0c6e55ac0300eb367685502';
-      const result = findSpdxIdFromOsadl(license);
+      const result = findSpdxIdFromExtractedLicenses(license);
       expect(result).toBe('BSD-3-Clause');
     });
     test('Test 07 - findSpdxId function works as expected', async () => {
       let license = 'LicenseRef-BSD-3-Clause-83f66190c0c6e55ac0300eb367685503';
-      const result = findSpdxIdFromOsadl(license);
+      const result = findSpdxIdFromExtractedLicenses(license);
       expect(result).toBe('BSD-3-Clause');
     });
     test('Test 08 - findSpdxId function works as expected', async () => {
       let license = 'LicenseRef-SunPro-ab37670360a6824ae03694e6c862ee72';
-      const result = findSpdxIdFromOsadl(license);
+      const result = findSpdxIdFromExtractedLicenses(license);
       expect(result).toBe('SunPro');
     });
     test('Test 09 - findSpdxId function works as expected', async () => {
       let license = 'LicenseRef-HPND-83d00660c55256ca2de13184880dd910';
-      const result = findSpdxIdFromOsadl(license);
+      const result = findSpdxIdFromExtractedLicenses(license);
       expect(result).toBe('HPND');
+    });
+    //-------------------------------------------------------------------
+    //  Unknown - version
+    //-------------------------------------------------------------------
+    test('Test 10 - findSpdxId function works as expected', async () => {
+    const license = 'LicenseRef-mit-synopsys';
+      const result = findSpdxIdFromExtractedLicenses(license);
+      expect(result).toBe('mit-synopsys');
+    });
+    test('Test 11 - findSpdxId function works as expected', async () => {
+    const license = 'LicenseRef-jamie-kyle';
+      const result = findSpdxIdFromExtractedLicenses(license);
+      expect(result).toBe('jamie-kyle');
+    });
+    test('Test 12 - findSpdxId function works as expected', async () => {
+    const license = 'LicenseRef-blueoak-1.0.0-53355112';
+      const result = findSpdxIdFromExtractedLicenses(license);
+      expect(result).toBe('blueoak-1.0.0');
+    });
+    test('Test 13 - findSpdxId function works as expected', async () => {
+    const license = 'LicenseRef-blueoak-1.0.0-50524862';
+      const result = findSpdxIdFromExtractedLicenses(license);
+      expect(result).toBe('blueoak-1.0.0');
+    });
+    test('Test 14 - findSpdxId function works as expected', async () => {
+    const license = 'LicenseRef-bsd-2-clause-views';
+      const result = findSpdxIdFromExtractedLicenses(license);
+      expect(result).toBe('bsd-2-clause-views');
+    });
+    test('Test 15 - findSpdxId function works as expected', async () => {
+    const license = 'LicenseRef-facebook-patent-rights';
+      const result = findSpdxIdFromExtractedLicenses(license);
+      expect(result).toBe('facebook-patent-rights');
+    });
+    test('Test 16 - findSpdxId function works as expected', async () => {
+    const license = 'LicenseRef-blueoak-1.0.0-55562732';
+      const result = findSpdxIdFromExtractedLicenses(license);
+      expect(result).toBe('blueoak-1.0.0');
+    });
+    test('Test 17 - findSpdxId function works as expected', async () => {
+    const license = 'LicenseRef-blueoak-1.0.0-54865455';
+      const result = findSpdxIdFromExtractedLicenses(license);
+      expect(result).toBe('blueoak-1.0.0');
+    });
+    test('Test 18 - findSpdxId function works as expected', async () => {
+    const license = 'LicenseRef-public-domain-55222115';
+      const result = findSpdxIdFromExtractedLicenses(license);
+      expect(result).toBe('public-domain');
+    });
+    test('Test 19 - findSpdxId function works as expected', async () => {
+    const license = 'LicenseRef-public-domain-55221947';
+      const result = findSpdxIdFromExtractedLicenses(license);
+      expect(result).toBe('public-domain');
+    });
+    test('Test 20 - findSpdxId function works as expected', async () => {
+    const license = 'LicenseRef-blueoak-1.0.0-54899357';
+      const result = findSpdxIdFromExtractedLicenses(license);
+      expect(result).toBe('blueoak-1.0.0');
+    });
+    test('Test 21 - findSpdxId function works as expected', async () => {
+    const license = 'LicenseRef-blueoak-1.0.0-52936334';
+      const result = findSpdxIdFromExtractedLicenses(license);
+      expect(result).toBe('blueoak-1.0.0');
+    });
+    test('Test 22 - findSpdxId function works as expected', async () => {
+    const license = 'LicenseRef-blueoak-1.0.0-55482624';
+      const result = findSpdxIdFromExtractedLicenses(license);
+      expect(result).toBe('blueoak-1.0.0');
+    });
+    test('Test 23 - findSpdxId function works as expected', async () => {
+    const license = 'LicenseRef-bsd-2-clause-views-40980948';
+      const result = findSpdxIdFromExtractedLicenses(license);
+      expect(result).toBe('bsd-2-clause-views');
+    });
+    test('Test 24 - findSpdxId function works as expected', async () => {
+    const license = 'LicenseRef-mit-synopsys-41014179';
+      const result = findSpdxIdFromExtractedLicenses(license);
+      expect(result).toBe('mit-synopsys');
+    });
+    test('Test 25 - findSpdxId function works as expected', async () => {
+    const license = 'LicenseRef-blueoak-1.0.0-50524813';
+      const result = findSpdxIdFromExtractedLicenses(license);
+      expect(result).toBe('blueoak-1.0.0');
+    });
+    //-------------------------------------------------------------------
+    //  FOSSA - version
+    //------------------------------------------------------------------- 
+    test('Test 26 - findSpdxId function works as expected', async () => {
+    const license = 'LGPL-2.1-or-later';
+      const result = findSpdxIdFromExtractedLicenses(license);
+      expect(result).toBe('LGPL-2.1-or-later');
+    });
+    test('Test 27 - findSpdxId function works as expected', async () => {
+    const license = 'LGPL-2.1-or-later';
+      const result = findSpdxIdFromExtractedLicenses(license);
+      expect(result).toBe('LGPL-2.1-or-later');
+    });
+    test('Test 28 - findSpdxId function works as expected', async () => {
+    const license = 'LicenseRef-MIT-13651727';
+      const result = findSpdxIdFromExtractedLicenses(license);
+      expect(result).toBe('MIT');
+    });
+    test('Test 29 - findSpdxId function works as expected', async () => {
+    const license = 'LicenseRef-MIT-13437100';
+      const result = findSpdxIdFromExtractedLicenses(license);
+      expect(result).toBe('MIT');
+    });
+    test('Test 30 - findSpdxId function works as expected', async () => {
+    const license = 'LicenseRef-BSD-3-Clause-40972371';
+      const result = findSpdxIdFromExtractedLicenses(license);
+      expect(result).toBe('BSD-3-Clause');
+    });
+    test('Test 31 - findSpdxId function works as expected', async () => {
+    const license = 'LicenseRef-MIT-41012174';
+      const result = findSpdxIdFromExtractedLicenses(license);
+      expect(result).toBe('MIT');
+    });
+    test('Test 32 - findSpdxId function works as expected', async () => {
+    const license = 'LicenseRef-Apache-2.0-41017867';
+      const result = findSpdxIdFromExtractedLicenses(license);
+      expect(result).toBe('Apache-2.0');
     });
 });
 

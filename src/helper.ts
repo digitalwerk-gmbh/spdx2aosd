@@ -228,13 +228,18 @@ export const validateComponentsForModificationAndLinking = (
   });
 };
 
-export const findSpdxIdFromOsadl = (license: string) => {
+export const findSpdxIdFromExtractedLicenses = (license:string) => {
   try {
-    let tmpStr1 = license.replace(/-[0-9A-Za-z]{32}/, "");
-    let tmpStr2 = tmpStr1.replaceAll("LicenseRef-","");
-    let tmpStr3 = tmpStr2.replaceAll("-WITH-", " WITH ");
-    let tmpStr4 = tmpStr3.replaceAll("-with-", " WITH ");
-    const finalExpression: string = tmpStr4;
+    let tmpStr1 = license.replace(/-[0-9A-Za-z]{32}$/, "");
+    let tmpStr2 = tmpStr1.replace(/-[0-9]{1,}$/, "");
+    let tmpStr3 = tmpStr2.replaceAll("LicenseRef-","");
+    let tmpStr4 = tmpStr3.replaceAll("-WITH-", " WITH ");
+    let tmpStr5 = tmpStr4.replaceAll("-with-", " WITH ");
+    // check for smal letters in SPDX key
+    if (tmpStr5.match(/^[a-z]/)) {
+      console.log('Call Mapper: ', tmpStr5);
+    }
+    const finalExpression: string = tmpStr5;
     return finalExpression;
   } catch(error) {
     return '';
@@ -300,4 +305,62 @@ export const checkModified = (componentId: string, relationships: Array<SpdxRela
   } catch(error) {
     return null;
   }
+}
+
+/*
+* SPDX Key Mapper for AOSD1.0 xls format
+**/
+export const spdxKeyMapper = (spdxKeyInformation: string = '', validationResults: Array<string>): string => {
+    try {
+        switch(spdxKeyInformation) {
+            // AOSD1.0 specific
+            case '_different licenses including such with strict copyleft [no official SPDX]': validationResults.push(`Info mapped spdxKey from "_different licenses including such with strict copyleft [no official SPDX]" to "LicenseRef-scancode-other-copyleft". - AOSD1.0 specific`); return 'LicenseRef-scancode-other-copyleft';
+            case '_different licenses including such with limited but no strict copyleft [no official SPDX]': validationResults.push(`Info mapped spdxKey from "_different licenses including such with limited but no strict copyleft [no official SPDX]" to "LicenseRef-scancode-other-copyleft". - AOSD1.0 specific`); return 'LicenseRef-scancode-other-copyleft';
+            case '_different licenses all without copyleft [no official SPDX]': validationResults.push(`Info mapped spdxKey from "_different licenses all without copyleft [no official SPDX]" to "LicenseRef-scancode-other-permissive". - AOSD1.0 specific`); return 'LicenseRef-scancode-other-permissive';
+            case '_Public Domain [no official SPDX]': validationResults.push(`Info mapped spdxKey from "_Public Domain [no official SPDX]" to "LicenseRef-scancode-public-domain". - AOSD1.0 specific`); return 'LicenseRef-scancode-public-domain';
+            // Generell SPDX Keys
+            case 'AGPL-1.0': validationResults.push(`Info mapped spdxKey from "AGPL-1.0" to "AGPL-1.0-or-later".`); return 'AGPL-1.0-or-later'
+            case 'AGPL-3.0': validationResults.push(`Info mapped spdxKey from "AGPL-3.0" to "LicenseRef-scancode-unknown".`); return 'LicenseRef-scancode-unknown'
+            case 'BSD-2-Clause-FreeBSD': validationResults.push(`Info mapped spdxKey from "BSD-2-Clause-FreeBSD" to "LicenseRef-scancode-unknown".`); return 'LicenseRef-scancode-unknown'
+            case 'BSD-2-Clause-NetBSD': validationResults.push(`Info mapped spdxKey from "BSD-2-Clause-NetBSD" to "LicenseRef-scancode-unknown".`); return 'LicenseRef-scancode-unknown'
+            case 'bzip2-1.0.5': validationResults.push(`Info mapped spdxKey from "bzip2-1.0.5" to "LicenseRef-scancode-unknown".`); return 'LicenseRef-scancode-unknown'
+            case 'eCos-2.0': validationResults.push(`Info mapped spdxKey from "eCos-2.0" to "eCos-exception-2.0".`); return 'eCos-exception-2.0'
+            case 'GFDL-1.1': validationResults.push(`Info mapped spdxKey from "GFDL-1.1" to "LicenseRef-scancode-unknown".`); return 'LicenseRef-scancode-unknown'
+            case 'GFDL-1.2': validationResults.push(`Info mapped spdxKey from "GFDL-1.2" to "LicenseRef-scancode-unknown".`); return 'LicenseRef-scancode-unknown'
+            case 'GFDL-1.3': validationResults.push(`Info mapped spdxKey from "GFDL-1.3" to "LicenseRef-scancode-unknown".`); return 'LicenseRef-scancode-unknown'
+            case 'GPL-1.0': validationResults.push(`Info mapped spdxKey from "GPL-1.0" to "GPL-1.0-only".`); return 'GPL-1.0-only'
+            case 'GPL-1.0+': validationResults.push(`Info mapped spdxKey from "GPL-1.0+" to "GPL-1.0-or-later".`); return 'GPL-1.0-or-later'
+            case 'GPL-2.0': validationResults.push(`Info mapped spdxKey from "GPL-2.0" to "GPL-2.0-only".`); return 'GPL-2.0-only'
+            case 'GPL-2.0+': validationResults.push(`Info mapped spdxKey from "GPL-2.0+" to "GPL-2.0-or-later"`); return 'GPL-2.0-or-later'
+            case 'GPL-2.0-with-autoconf-exception': validationResults.push(`Info mapped spdxKey from "GPL-2.0-with-autoconf-exception" to "GPL-2.0-only WITH Autoconf-exception-2.0".`); return 'GPL-2.0-only WITH Autoconf-exception-2.0'
+            case 'GPL-2.0-with-bison-exception': validationResults.push(`Info mapped spdxKey from "GPL-2.0-with-bison-exception" to "GPL-2.0-only WITH Bison-exception-2.2".`); return 'GPL-2.0-only WITH Bison-exception-2.2'
+            case 'GPL-2.0-with-classpath-exception': validationResults.push(`Info mapped spdxKey from "GPL-2.0-with-classpath-exception" to "GPL-2.0-only WITH Classpath-exception-2.0".`); return 'GPL-2.0-only WITH Classpath-exception-2.0'
+            case 'GPL-2.0-with-font-exception': validationResults.push(`Info mapped spdxKey from "GPL-2.0-with-font-exception" to "GPL-2.0-only WITH Font-exception-2.0".`); return 'GPL-2.0-only WITH Font-exception-2.0'
+            case 'GPL-2.0-with-GCC-exception': validationResults.push(`Info mapped spdxKey from "GPL-2.0-with-GCC-exception" to "GPL-2.0-only WITH GCC-exception-2.0".`); return 'GPL-2.0-only WITH GCC-exception-2.0'
+            case 'GPL-3.0': validationResults.push(`Info mapped spdxKey from "GPL-3.0" to "GPL-3.0-only".`); return 'GPL-3.0-only'
+            case 'GPL-3.0+': validationResults.push(`Info mapped spdxKey from "GPL-3.0+" to "GPL-3.0-or-later".`); return 'GPL-3.0-or-later'
+            case 'GPL-3.0-with-autoconf-exception': validationResults.push(`Info mapped spdxKey from "GPL-3.0-with-autoconf-exception" to "GPL-3.0-only WITH Autoconf-exception-3.0".`); return 'GPL-3.0-only WITH Autoconf-exception-3.0'
+            case 'GPL-3.0-with-GCC-exception': validationResults.push(`Info mapped spdxKey from "GPL-3.0-with-GCC-exception" to "GPL-3.0-only WITH GCC-exception-3.1".`); return 'GPL-3.0-only WITH GCC-exception-3.1'
+            case 'LGPL-2.0': validationResults.push(`Info mapped spdxKey from "LGPL-2.0" to "LGPL-2.0-only".`); return 'LGPL-2.0-only'
+            case 'LGPL-2.0+': validationResults.push(`Info mapped spdxKey from "LGPL-2.0+" to "LGPL-2.0-or-later".`); return 'LGPL-2.0-or-later'
+            case 'LGPL-2.1': validationResults.push(`Info mapped spdxKey from "LGPL-2.1" to "LGPL-2.1-only".`); return 'LGPL-2.1-only'
+            case 'LGPL-2.1+': validationResults.push(`Info mapped spdxKey from "LGPL-2.1+" to "LGPL-2.1-or-later".`); return 'LGPL-2.1-or-later'
+            case 'LGPL-3.0': validationResults.push(`Info mapped spdxKey from "LGPL-3.0" to "LGPL-3.0-only".`); return 'LGPL-3.0-only'
+            case 'LGPL-3.0+': validationResults.push(`Info mapped spdxKey from "LGPL-3.0+" to "LGPL-3.0-or-later".`); return 'LGPL-3.0-or-later'
+            case 'Net-SNMP': validationResults.push(`Info mapped spdxKey from "Net-SNMP" to "LicenseRef-scancode-unknown".`); return 'LicenseRef-scancode-unknown'
+            case 'Nunit': validationResults.push(`Info mapped spdxKey from "Nunit" to "LicenseRef-scancode-unknown".`); return 'LicenseRef-scancode-unknown'
+            case 'StandardML-NJ': validationResults.push(`Info mapped spdxKey from "StandardML-NJ" to "SMLNJ".`); return 'SMLNJ'
+            case 'wxWindows': validationResults.push(`Info mapped spdxKey from "wxWindows" to "WxWindows-exception-3.1".`); return 'WxWindows-exception-3.1'
+            case 'BSD-style license': validationResults.push(`Info mapped spdxKey from "BSD-style license" to "LicenseRef-scancode-unknown".`); return 'LicenseRef-scancode-unknown'
+            // OSADL Osselot special
+            case 'Public-domain': validationResults.push(`Info mapped spdxKey from "Public-domain" to "LicenseRef-scancode-public-domain".`); return 'LicenseRef-scancode-public-domain'
+            case 'Permission-Notice': validationResults.push(`Info mapped spdxKey from "Permission-Notice" to "LicenseRef-scancode-unknown".`); return 'LicenseRef-scancode-unknown'
+            // SPDX Exceptions
+            case 'Nokia-Qt-exception-1.1': validationResults.push(`Info mapped spdxKey from "Nokia-Qt-exception-1.1" to "LicenseRef-scancode-unknown".`); return 'LicenseRef-scancode-unknown'
+            default: spdxKeyInformation;
+        }
+        return spdxKeyInformation;
+    } catch(error: any) {
+        return spdxKeyInformation;
+    }
 }

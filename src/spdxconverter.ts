@@ -3,7 +3,8 @@ const JSONStream = require('JSONStream');
 require('dotenv').config();
 import { validateAosd } from './aosdvalidator';
 import { LicenseDataObject, ExtractedLicense, MappedLicense, AosdObject, AosdComponent, AosdSubComponent, SpdxPackages, SpdxFiles, SpdxRelationsships, SpdxIdToInternalId, exportMapper } from '../interfaces/interfaces';
-import { generateDataValidationMessage, generateStringFromJsonObject, loadSPDXKeys, validateComponentsForModificationAndLinking, validateSelectedLicenseForDualLicenses, validateSPDXIds, findSpdxIdFromOsadl, checkModified } from './helper';
+import { generateDataValidationMessage, generateStringFromJsonObject, loadSPDXKeys, validateComponentsForModificationAndLinking, validateSelectedLicenseForDualLicenses, validateSPDXIds, findSpdxIdFromExtractedLicenses, checkModified, spdxKeyMapper } from './helper';
+import { accumulate } from './accumulate';
 let inputJsonPath: string | undefined = '';
 let outputJsonPath: string | undefined = '';
 let outputFile: string = '';
@@ -91,14 +92,12 @@ const convertData = async (jsonData: Array<string>, cliArgument: string) => {
         const licenseFileData = tmpFileData.length > 0 ? JSON.parse(JSON.stringify(tmpFileData)) : [];
         const relationshipsData = tmpRelationshipsData.length > 0 ? JSON.parse(JSON.stringify(tmpRelationshipsData)) : [];
 
-        /*
         console.log('SPDX data blocks: ', jsonData.length);
         console.log('SPDX input file name:', cliArgument);
         console.log('extractedLicense blocks:', extractedLicensesData.length);
         console.log('Number of packages:', packageData.length);
         console.log('Number of files:', licenseFileData.length);
         console.log('Number of relationships:', relationshipsData.length);
-        */
 
         // Collect license id and license text
         let licenseTextMap: Array<MappedLicense> = [];
@@ -198,15 +197,8 @@ const convertData = async (jsonData: Array<string>, cliArgument: string) => {
             return filesArray;
         }
         
-        // Validate component ids vs directDependencies and transitiveDependencies
-        const validateComponentIds = (component: AosdComponent, directDependencies: Array<number>): Array<number> => {
-            const missingIds: Array<number> = [];
-            return missingIds;
-        }
-
         // Process each dependency
         dependenciesArray?.forEach((dependency: SpdxPackages) => {
-            //console.log('DEBUG-DEPENDENCIES');
             const mappingObject: exportMapper = {
                 mapId: counter,
                 originalId: dependency.SPDXID,
@@ -216,19 +208,28 @@ const convertData = async (jsonData: Array<string>, cliArgument: string) => {
                 id: Number(mappingObject.mapId),
                 componentName: dependency['name'],
                 componentVersion: dependency['versionInfo'],
-                scmUrl: dependency['downloadLocation'] !== "NOASSERTION" ? dependency['downloadLocation'] : "",
+                scmUrl: dependency['downloadLocation'] !== "NOASSERTION" ? dependency['downloadLocation'] : "no-scmurl-found",
                 modified: modificationArg !== null ? modificationArg : checkModified(dependency['SPDXID'], relationships),
                 linking: linkingArg !== null ? linkingArg : getLinkingType(dependency['SPDXID'], relationships),
                 transitiveDependencies: getTransitiveDependencies(dependency['SPDXID'], relationships),
                 subcomponents: [],
             };
+            // Validate component name
             if (!componentObject.componentName) {
-                validationResults.push(`Component name is missing for component with ID ${mappingObject.mapId}`);
+                validationResults.push(`Warning: Component name is missing for component with ID ${mappingObject.mapId}`);
+            }
+            // Validate component scmUrl
+            if (componentObject.scmUrl === 'no-scmurl-found') {
+                validationResults.push(`Warning: component scmUrl is missing - component name: ${componentObject.componentName} - the following text was added instead - no-scmurl-found.`);
             }
 
             // Collect data from the spdx files array
             const filesArray: Array<SpdxFiles> = licenseFileData;
             // If we have no hasFiles Property we create one from relationships data
+            if(!dependency.hasOwnProperty('hasFiles')) {
+                dependency['hasFiles'] = getPackageFiles(dependency['SPDXID'], relationships);
+            }
+            // Check if we have file information
             if(dependency.hasOwnProperty('filesAnalyzed')) {
                 newObject.scanned = dependency.filesAnalyzed;
             } else {
@@ -243,7 +244,7 @@ const convertData = async (jsonData: Array<string>, cliArgument: string) => {
                }
                let subcomponentObject: AosdSubComponent = {
                   subcomponentName: "main",
-                  spdxId: findSpdxIdFromOsadl(dependency.licenseConcluded),
+                  spdxId: spdxKeyMapper(findSpdxIdFromExtractedLicenses(dependency.licenseConcluded),validationResults),
                   copyrights: !COPYRIGHT_REPLACE_PATTERN.includes(dependency.copyrightText) && dependency.copyrightText !== null && dependency.copyrightText !== undefined ? [dependency.copyrightText] : [],
                   authors: [],
                   licenseText: licenseText.trim(),
@@ -252,6 +253,7 @@ const convertData = async (jsonData: Array<string>, cliArgument: string) => {
                   additionalLicenseInfos: "",
                };
                componentObject['subcomponents'].push(subcomponentObject);
+               console.log('Pushed subcomponent - 1: ');
             }
             
             // Iterate over files
@@ -344,7 +346,7 @@ const convertData = async (jsonData: Array<string>, cliArgument: string) => {
                 if (tmpSpdxKey !== "NOASSERTION") {
                     let subcomponentObject: AosdSubComponent = {
                         subcomponentName: index === 0 ? "main" : fileData[0]?.fileName,
-                        spdxId: findSpdxIdFromOsadl(tmpSpdxKey),
+                        spdxId: spdxKeyMapper(findSpdxIdFromExtractedLicenses(tmpSpdxKey),validationResults),
                         copyrights: !COPYRIGHT_REPLACE_PATTERN.includes(copyrightText) && copyrightText !== null && copyrightText !== undefined ? [copyrightText] : [],
                         authors: [],
                         licenseText: licenseText.trim(),
@@ -353,8 +355,9 @@ const convertData = async (jsonData: Array<string>, cliArgument: string) => {
                         additionalLicenseInfos: fileData[0]?.noticeText? fileData[0].noticeText : ""
                     };
                     componentObject['subcomponents'].push(subcomponentObject);
+                    console.log('Pushed subcomponent - 2: ');
                     // Validate spdxId
-                    const spdxValidationMessages = validateSPDXIds([findSpdxIdFromOsadl(tmpSpdxKey)], validSPDXKeys, dependency.name, fileData[0]?.fileName);
+                    const spdxValidationMessages = validateSPDXIds([spdxKeyMapper(findSpdxIdFromExtractedLicenses(tmpSpdxKey),validationResults)], validSPDXKeys, dependency.name, fileData[0]?.fileName);
                     validationResults.push(...spdxValidationMessages);
                 } else {
                     validationResults.push(`Info: SPDX key(s) with NOASSERTION in File - "${fileData[0]?.fileName}" - component name: ${currentComponentName} - no subcomponent will be exported!`);
@@ -405,6 +408,8 @@ const convertData = async (jsonData: Array<string>, cliArgument: string) => {
         // Stringify
         const fileString = await generateStringFromJsonObject(newObject);
         fs.writeFileSync(outputFile, fileString);
+
+        const accumulateResult = await accumulate(outputFileName);
 
         ////------------------------------------------------------------------------------
         //// New Stuff write data with JSONstream

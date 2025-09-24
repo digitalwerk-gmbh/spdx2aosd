@@ -133,11 +133,6 @@ export const convertSpdxSpec = async (cliArgument: string): Promise<void> => {
             });
             return relationships.some(rel => rel.spdxElementId === componentId && (rel.comment === "MODIFIED" || rel.comment === "FILE_MODIFIED"));
         };
-        // Validate component ids vs directDependencies and transitiveDependencies
-        const validateComponentIds = (component: AosdComponent, directDependencies: Array<number>): Array<number> => {
-            const missingIds: Array<number> = [];
-            return missingIds;
-        }
         // Process each dependency
         dependenciesArray?.forEach((dependency: SpdxPackages) => {
             const mappingObject: exportMapper = {

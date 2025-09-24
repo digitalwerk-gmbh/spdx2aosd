@@ -11,7 +11,7 @@
     "upcsv": "cross-env RUN_MODE=production SCRIPT=upcsv ts-node main.ts",
     "up": "cross-env RUN_MODE=production SCRIPT=up ts-node main.ts",
     "down": "cross-env RUN_MODE=production SCRIPT=down ts-node main.ts",
-    "spdx": "cross-env --max-old-space-size=4096 RUN_MODE=production SCRIPT=spdx ts-node main.ts",
+    "spdx": "cross-env --max-old-space-size=6000 RUN_MODE=production SCRIPT=spdx ts-node main.ts",
     "spdxspec": "cross-env RUN_MODE=production SCRIPT=spdxspec ts-node main.ts",
     "accumulate": "cross-env RUN_MODE=production SCRIPT=accumulate ts-node main.ts",
     "licenses": "cross-env RUN_MODE=production ts-node ./src/licenses.ts",
