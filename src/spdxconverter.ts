@@ -241,10 +241,10 @@ export const convertSpdx = async (cliArgument: string): Promise<void> => {
                         licenseText += `\n\n${conjunction}\n\n`;
                     }
                     const resolvedLicense = resolveSelectedLicense(license.replace("chosen: ", "").trim() || "");
-                    licenseText += getLicenseText(resolvedLicense);
+                    licenseText = getLicenseText(resolvedLicense);
                     // maybe move this function to helper.ts
                     const text = getLicenseText(license.replace("chosen: ", "").trim() || "");
-                    licenseText += text;
+                    licenseText = text;
                 });
                 let tmpSpdxKey: string = fileData[0]?.licenseConcluded.replace("chosen: ", "").trim() || "";
                 if (jsonInputArray.hasOwnProperty("hasExtractedLicensingInfos")) {
